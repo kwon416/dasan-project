@@ -23,12 +23,24 @@ interface TopComplaint {
 interface TopComplaintsTableProps {
   data: TopComplaint[];
   title?: string;
+  timestamp?: string;
 }
 
 export function TopComplaintsTable({
   data,
   title = '오늘의 민원 Top10',
+  timestamp,
 }: TopComplaintsTableProps) {
+  const formatTime = (dateString?: string) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleString('ko-KR', {
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'up':
@@ -60,7 +72,14 @@ export function TopComplaintsTable({
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium">{title}</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-base font-medium">{title}</CardTitle>
+          {timestamp && (
+            <span className="text-xs text-muted-foreground">
+              기준: {formatTime(timestamp)}
+            </span>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         <Table>

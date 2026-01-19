@@ -42,14 +42,14 @@ import {
 // Import sample data
 import keywordsData from '@/data/keywords.json';
 
-// Top5 키워드와 색상
+// Top5 키워드와 색상 (연한 톤)
 const TOP5_KEYWORDS = ['불법주차', '도로파손', '쓰레기투기', '소음민원', '가로등고장'];
 const KEYWORD_COLORS: Record<string, string> = {
-  '불법주차': '#0033A0',
-  '도로파손': '#E53935',
-  '쓰레기투기': '#43A047',
-  '소음민원': '#FB8C00',
-  '가로등고장': '#8E24AA',
+  '불법주차': '#5B97FF',
+  '도로파손': '#FF6B6B',
+  '쓰레기투기': '#6FCF97',
+  '소음민원': '#FFA94D',
+  '가로등고장': '#A78BFA',
 };
 
 function Top5StatsContent() {

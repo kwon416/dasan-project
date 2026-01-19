@@ -1,4 +1,5 @@
 {
+  "todayIssuesTimestamp": "2024-12-20T14:30:00",
   "topKeywords": [
     { "id": "kw1", "text": "불법주차", "count": 4523, "trend": "up", "relatedKeywords": ["주정차", "견인", "단속", "아파트"] },
     { "id": "kw2", "text": "도로파손", "count": 3891, "trend": "stable", "relatedKeywords": ["포장", "보수", "싱크홀", "균열"] },

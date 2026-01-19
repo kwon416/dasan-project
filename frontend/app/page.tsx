@@ -128,11 +128,15 @@ export default function HomePage() {
           <WordCloud
             words={keywordsData.todayIssues}
             title="오늘의 이슈 키워드"
+            timestamp={keywordsData.todayIssuesTimestamp}
             onWordClick={handleWordClick}
           />
 
           {/* 오늘의 민원 Top10 테이블 */}
-          <TopComplaintsTable data={complaintsData.todayTopComplaints} />
+          <TopComplaintsTable
+            data={complaintsData.todayTopComplaints}
+            timestamp={complaintsData.todayTopComplaintsTimestamp}
+          />
         </div>
       </div>
     </div>

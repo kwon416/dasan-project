@@ -6,10 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 interface WordCloudProps {
   words: Array<{ text: string; value: number }>;
   title?: string;
+  timestamp?: string;
   onWordClick?: (word: string) => void;
 }
 
-export function WordCloud({ words, title = '오늘의 이슈', onWordClick }: WordCloudProps) {
+export function WordCloud({ words, title = '오늘의 이슈', timestamp, onWordClick }: WordCloudProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -97,10 +98,28 @@ export function WordCloud({ words, title = '오늘의 이슈', onWordClick }: Wo
     };
   }, [words, colors, handleClick]);
 
+  const formatTime = (dateString?: string) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleString('ko-KR', {
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium">{title}</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-base font-medium">{title}</CardTitle>
+          {timestamp && (
+            <span className="text-xs text-muted-foreground">
+              기준: {formatTime(timestamp)}
+            </span>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         <div ref={containerRef} className="flex justify-center items-center min-h-[320px]">
