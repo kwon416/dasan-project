@@ -1,0 +1,172 @@
+{
+  "topKeywords": [
+    { "id": "kw1", "text": "불법주차", "count": 4523, "trend": "up", "relatedKeywords": ["주정차", "견인", "단속", "아파트"] },
+    { "id": "kw2", "text": "도로파손", "count": 3891, "trend": "stable", "relatedKeywords": ["포장", "보수", "싱크홀", "균열"] },
+    { "id": "kw3", "text": "쓰레기투기", "count": 3456, "trend": "up", "relatedKeywords": ["무단투기", "음식물", "재활용", "수거"] },
+    { "id": "kw4", "text": "소음민원", "count": 3210, "trend": "up", "relatedKeywords": ["층간소음", "공사소음", "야간소음", "생활소음"] },
+    { "id": "kw5", "text": "가로등고장", "count": 2890, "trend": "down", "relatedKeywords": ["LED", "점등", "교체", "어두움"] },
+    { "id": "kw6", "text": "신호등", "count": 2654, "trend": "stable", "relatedKeywords": ["고장", "설치요청", "시간조정", "보행신호"] },
+    { "id": "kw7", "text": "보도블록", "count": 2432, "trend": "stable", "relatedKeywords": ["파손", "교체", "침하", "정비"] },
+    { "id": "kw8", "text": "악취", "count": 2187, "trend": "up", "relatedKeywords": ["음식물", "하수구", "음식점", "축사"] },
+    { "id": "kw9", "text": "건축소음", "count": 1956, "trend": "down", "relatedKeywords": ["공사", "야간", "진동", "분진"] },
+    { "id": "kw10", "text": "노점상", "count": 1823, "trend": "stable", "relatedKeywords": ["무허가", "단속", "위생", "통행방해"] }
+  ],
+  "keywordMonthlyStats": {
+    "불법주차": [
+      { "month": "1월", "count": 320 }, { "month": "2월", "count": 295 }, { "month": "3월", "count": 385 },
+      { "month": "4월", "count": 410 }, { "month": "5월", "count": 425 }, { "month": "6월", "count": 398 },
+      { "month": "7월", "count": 456 }, { "month": "8월", "count": 489 }, { "month": "9월", "count": 412 },
+      { "month": "10월", "count": 378 }, { "month": "11월", "count": 312 }, { "month": "12월", "count": 243 }
+    ],
+    "도로파손": [
+      { "month": "1월", "count": 456 }, { "month": "2월", "count": 423 }, { "month": "3월", "count": 312 },
+      { "month": "4월", "count": 278 }, { "month": "5월", "count": 256 }, { "month": "6월", "count": 234 },
+      { "month": "7월", "count": 298 }, { "month": "8월", "count": 345 }, { "month": "9월", "count": 312 },
+      { "month": "10월", "count": 289 }, { "month": "11월", "count": 334 }, { "month": "12월", "count": 354 }
+    ],
+    "쓰레기투기": [
+      { "month": "1월", "count": 212 }, { "month": "2월", "count": 198 }, { "month": "3월", "count": 267 },
+      { "month": "4월", "count": 312 }, { "month": "5월", "count": 345 }, { "month": "6월", "count": 389 },
+      { "month": "7월", "count": 423 }, { "month": "8월", "count": 456 }, { "month": "9월", "count": 367 },
+      { "month": "10월", "count": 289 }, { "month": "11월", "count": 234 }, { "month": "12월", "count": 164 }
+    ],
+    "소음민원": [
+      { "month": "1월", "count": 189 }, { "month": "2월", "count": 176 }, { "month": "3월", "count": 234 },
+      { "month": "4월", "count": 289 }, { "month": "5월", "count": 312 }, { "month": "6월", "count": 356 },
+      { "month": "7월", "count": 398 }, { "month": "8월", "count": 412 }, { "month": "9월", "count": 334 },
+      { "month": "10월", "count": 267 }, { "month": "11월", "count": 198 }, { "month": "12월", "count": 145 }
+    ],
+    "가로등고장": [
+      { "month": "1월", "count": 312 }, { "month": "2월", "count": 289 }, { "month": "3월", "count": 234 },
+      { "month": "4월", "count": 198 }, { "month": "5월", "count": 187 }, { "month": "6월", "count": 176 },
+      { "month": "7월", "count": 189 }, { "month": "8월", "count": 198 }, { "month": "9월", "count": 223 },
+      { "month": "10월", "count": 267 }, { "month": "11월", "count": 312 }, { "month": "12월", "count": 305 }
+    ]
+  },
+  "keywordHourlyStats": {
+    "불법주차": [
+      { "hour": 0, "count": 12 }, { "hour": 1, "count": 8 }, { "hour": 2, "count": 5 }, { "hour": 3, "count": 3 },
+      { "hour": 4, "count": 2 }, { "hour": 5, "count": 5 }, { "hour": 6, "count": 18 }, { "hour": 7, "count": 45 },
+      { "hour": 8, "count": 78 }, { "hour": 9, "count": 112 }, { "hour": 10, "count": 134 }, { "hour": 11, "count": 145 },
+      { "hour": 12, "count": 98 }, { "hour": 13, "count": 123 }, { "hour": 14, "count": 134 }, { "hour": 15, "count": 112 },
+      { "hour": 16, "count": 98 }, { "hour": 17, "count": 89 }, { "hour": 18, "count": 78 }, { "hour": 19, "count": 67 },
+      { "hour": 20, "count": 56 }, { "hour": 21, "count": 45 }, { "hour": 22, "count": 34 }, { "hour": 23, "count": 23 }
+    ],
+    "도로파손": [
+      { "hour": 0, "count": 5 }, { "hour": 1, "count": 3 }, { "hour": 2, "count": 2 }, { "hour": 3, "count": 1 },
+      { "hour": 4, "count": 2 }, { "hour": 5, "count": 8 }, { "hour": 6, "count": 23 }, { "hour": 7, "count": 56 },
+      { "hour": 8, "count": 89 }, { "hour": 9, "count": 123 }, { "hour": 10, "count": 145 }, { "hour": 11, "count": 156 },
+      { "hour": 12, "count": 112 }, { "hour": 13, "count": 134 }, { "hour": 14, "count": 145 }, { "hour": 15, "count": 123 },
+      { "hour": 16, "count": 98 }, { "hour": 17, "count": 78 }, { "hour": 18, "count": 56 }, { "hour": 19, "count": 45 },
+      { "hour": 20, "count": 34 }, { "hour": 21, "count": 23 }, { "hour": 22, "count": 15 }, { "hour": 23, "count": 8 }
+    ],
+    "쓰레기투기": [
+      { "hour": 0, "count": 23 }, { "hour": 1, "count": 18 }, { "hour": 2, "count": 12 }, { "hour": 3, "count": 8 },
+      { "hour": 4, "count": 5 }, { "hour": 5, "count": 12 }, { "hour": 6, "count": 34 }, { "hour": 7, "count": 67 },
+      { "hour": 8, "count": 89 }, { "hour": 9, "count": 98 }, { "hour": 10, "count": 112 }, { "hour": 11, "count": 123 },
+      { "hour": 12, "count": 89 }, { "hour": 13, "count": 98 }, { "hour": 14, "count": 112 }, { "hour": 15, "count": 98 },
+      { "hour": 16, "count": 89 }, { "hour": 17, "count": 78 }, { "hour": 18, "count": 67 }, { "hour": 19, "count": 78 },
+      { "hour": 20, "count": 89 }, { "hour": 21, "count": 78 }, { "hour": 22, "count": 56 }, { "hour": 23, "count": 34 }
+    ],
+    "소음민원": [
+      { "hour": 0, "count": 34 }, { "hour": 1, "count": 28 }, { "hour": 2, "count": 23 }, { "hour": 3, "count": 18 },
+      { "hour": 4, "count": 12 }, { "hour": 5, "count": 8 }, { "hour": 6, "count": 15 }, { "hour": 7, "count": 23 },
+      { "hour": 8, "count": 45 }, { "hour": 9, "count": 67 }, { "hour": 10, "count": 89 }, { "hour": 11, "count": 98 },
+      { "hour": 12, "count": 78 }, { "hour": 13, "count": 89 }, { "hour": 14, "count": 98 }, { "hour": 15, "count": 89 },
+      { "hour": 16, "count": 78 }, { "hour": 17, "count": 67 }, { "hour": 18, "count": 89 }, { "hour": 19, "count": 112 },
+      { "hour": 20, "count": 134 }, { "hour": 21, "count": 145 }, { "hour": 22, "count": 112 }, { "hour": 23, "count": 67 }
+    ],
+    "가로등고장": [
+      { "hour": 0, "count": 45 }, { "hour": 1, "count": 34 }, { "hour": 2, "count": 23 }, { "hour": 3, "count": 18 },
+      { "hour": 4, "count": 12 }, { "hour": 5, "count": 23 }, { "hour": 6, "count": 45 }, { "hour": 7, "count": 34 },
+      { "hour": 8, "count": 56 }, { "hour": 9, "count": 78 }, { "hour": 10, "count": 89 }, { "hour": 11, "count": 98 },
+      { "hour": 12, "count": 78 }, { "hour": 13, "count": 89 }, { "hour": 14, "count": 98 }, { "hour": 15, "count": 89 },
+      { "hour": 16, "count": 78 }, { "hour": 17, "count": 89 }, { "hour": 18, "count": 112 }, { "hour": 19, "count": 145 },
+      { "hour": 20, "count": 178 }, { "hour": 21, "count": 156 }, { "hour": 22, "count": 123 }, { "hour": 23, "count": 78 }
+    ]
+  },
+  "keywordWeekdayStats": {
+    "불법주차": [
+      { "weekday": "월", "count": 712 }, { "weekday": "화", "count": 734 }, { "weekday": "수", "count": 698 },
+      { "weekday": "목", "count": 678 }, { "weekday": "금", "count": 645 }, { "weekday": "토", "count": 534 }, { "weekday": "일", "count": 522 }
+    ],
+    "도로파손": [
+      { "weekday": "월", "count": 623 }, { "weekday": "화", "count": 645 }, { "weekday": "수", "count": 612 },
+      { "weekday": "목", "count": 598 }, { "weekday": "금", "count": 567 }, { "weekday": "토", "count": 423 }, { "weekday": "일", "count": 423 }
+    ],
+    "쓰레기투기": [
+      { "weekday": "월", "count": 567 }, { "weekday": "화", "count": 578 }, { "weekday": "수", "count": 556 },
+      { "weekday": "목", "count": 534 }, { "weekday": "금", "count": 512 }, { "weekday": "토", "count": 356 }, { "weekday": "일", "count": 353 }
+    ],
+    "소음민원": [
+      { "weekday": "월", "count": 456 }, { "weekday": "화", "count": 478 }, { "weekday": "수", "count": 467 },
+      { "weekday": "목", "count": 445 }, { "weekday": "금", "count": 423 }, { "weekday": "토", "count": 489 }, { "weekday": "일", "count": 452 }
+    ],
+    "가로등고장": [
+      { "weekday": "월", "count": 412 }, { "weekday": "화", "count": 423 }, { "weekday": "수", "count": 398 },
+      { "weekday": "목", "count": 389 }, { "weekday": "금", "count": 367 }, { "weekday": "토", "count": 445 }, { "weekday": "일", "count": 456 }
+    ]
+  },
+  "keywordSeasonStats": {
+    "불법주차": [
+      { "season": "봄", "count": 1220, "months": "3~5월" },
+      { "season": "여름", "count": 1343, "months": "6~8월" },
+      { "season": "가을", "count": 1102, "months": "9~11월" },
+      { "season": "겨울", "count": 858, "months": "12~2월" }
+    ],
+    "도로파손": [
+      { "season": "봄", "count": 846, "months": "3~5월" },
+      { "season": "여름", "count": 877, "months": "6~8월" },
+      { "season": "가을", "count": 935, "months": "9~11월" },
+      { "season": "겨울", "count": 1233, "months": "12~2월" }
+    ],
+    "쓰레기투기": [
+      { "season": "봄", "count": 924, "months": "3~5월" },
+      { "season": "여름", "count": 1268, "months": "6~8월" },
+      { "season": "가을", "count": 890, "months": "9~11월" },
+      { "season": "겨울", "count": 574, "months": "12~2월" }
+    ],
+    "소음민원": [
+      { "season": "봄", "count": 835, "months": "3~5월" },
+      { "season": "여름", "count": 1166, "months": "6~8월" },
+      { "season": "가을", "count": 799, "months": "9~11월" },
+      { "season": "겨울", "count": 510, "months": "12~2월" }
+    ],
+    "가로등고장": [
+      { "season": "봄", "count": 619, "months": "3~5월" },
+      { "season": "여름", "count": 563, "months": "6~8월" },
+      { "season": "가을", "count": 802, "months": "9~11월" },
+      { "season": "겨울", "count": 906, "months": "12~2월" }
+    ]
+  },
+  "todayIssues": [
+    { "text": "불법주차", "value": 156 },
+    { "text": "도로파손", "value": 134 },
+    { "text": "쓰레기", "value": 128 },
+    { "text": "소음", "value": 112 },
+    { "text": "가로등", "value": 98 },
+    { "text": "신호등", "value": 87 },
+    { "text": "보도블록", "value": 76 },
+    { "text": "악취", "value": 72 },
+    { "text": "건축", "value": 65 },
+    { "text": "노점상", "value": 58 },
+    { "text": "청소", "value": 54 },
+    { "text": "견인", "value": 48 },
+    { "text": "공원", "value": 45 },
+    { "text": "하수구", "value": 42 },
+    { "text": "버스", "value": 38 },
+    { "text": "택시", "value": 35 },
+    { "text": "지하철", "value": 32 },
+    { "text": "인도", "value": 28 },
+    { "text": "전신주", "value": 25 },
+    { "text": "CCTV", "value": 22 }
+  ],
+  "categoryKeywords": {
+    "교통·주차": ["불법주차", "주정차", "견인", "단속", "주차장", "노상주차", "이면도로", "아파트주차"],
+    "도로·시설물": ["도로파손", "포장", "가로등", "신호등", "보도블록", "맨홀", "표지판", "과속방지턱"],
+    "환경·청소": ["쓰레기투기", "무단투기", "악취", "청소", "재활용", "음식물쓰레기", "가로청소", "낙엽"],
+    "건축·주택": ["건축소음", "공사", "무허가건축", "불법증축", "균열", "누수", "리모델링", "철거"],
+    "복지·보건": ["의료", "복지카드", "장애인", "어르신", "보건소", "예방접종", "돌봄", "지원금"],
+    "안전·재난": ["침수", "소방", "재난", "안전점검", "대피", "화재", "붕괴위험", "가스누출"]
+  }
+}
