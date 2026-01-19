@@ -6,7 +6,9 @@
       "mcp__plugin_context7_context7__resolve-library-id",
       "WebFetch(domain:krds.js.org)",
       "Bash(npm run build:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm view:*)"
     ]
   }
 }
