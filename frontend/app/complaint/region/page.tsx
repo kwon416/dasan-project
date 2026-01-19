@@ -24,7 +24,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
-import { format, eachMonthOfInterval, eachWeekOfInterval, eachDayOfInterval } from 'date-fns';
+import { format, eachMonthOfInterval, eachWeekOfInterval, eachDayOfInterval, subDays } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import type { DateRange, ComplaintCategory, GeoJSONCollection, HangJeongDongCollection } from '@/types';
 
@@ -155,9 +155,12 @@ export default function RegionPage() {
   const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null);
   const [selectedDong, setSelectedDong] = useState<string | null>(null);
   const [selectedDongCode, setSelectedDongCode] = useState<string | null>(null);
-  const [dateRange, setDateRange] = useState<DateRange>({
-    from: new Date(2024, 0, 1),
-    to: new Date(2024, 11, 31),
+  const [dateRange, setDateRange] = useState<DateRange>(() => {
+    const today = new Date();
+    return {
+      from: subDays(today, 6), // 1주일 (오늘 포함 7일)
+      to: today,
+    };
   });
 
   // Get selected district data
@@ -337,12 +340,12 @@ export default function RegionPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* 왼쪽: Top 5 민원 표 */}
                   <div className="space-y-3">
-                    <p className="text-sm font-medium">Top 5 민원 분류</p>
+                    <p className="text-sm font-medium">Top 5 민원 키워드</p>
                     <Table>
                       <TableHeader>
                         <TableRow>
                           <TableHead className="w-[60px] text-center">순위</TableHead>
-                          <TableHead>분류</TableHead>
+                          <TableHead>키워드</TableHead>
                           <TableHead className="text-right w-[100px]">건수</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -373,7 +376,7 @@ export default function RegionPage() {
 
                   {/* 오른쪽: 기간별 추세 그래프 */}
                   <div className="space-y-3">
-                    <p className="text-sm font-medium">Top 5 민원 추세 (누적)</p>
+                    <p className="text-sm font-medium">Top 5 민원 추세</p>
                     <div className="h-[220px]">
                       <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={dongTrendData}>
@@ -451,12 +454,12 @@ export default function RegionPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* 왼쪽: Top 5 민원 표 */}
                   <div className="space-y-3">
-                    <p className="text-sm font-medium">Top 5 민원 분류</p>
+                    <p className="text-sm font-medium">Top 5 민원 키워드</p>
                     <Table>
                       <TableHeader>
                         <TableRow>
                           <TableHead className="w-[60px] text-center">순위</TableHead>
-                          <TableHead>분류</TableHead>
+                          <TableHead>키워드</TableHead>
                           <TableHead className="text-right w-[100px]">건수</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -487,7 +490,7 @@ export default function RegionPage() {
 
                   {/* 오른쪽: 기간별 추세 그래프 */}
                   <div className="space-y-3">
-                    <p className="text-sm font-medium">Top 5 민원 추세 (누적)</p>
+                    <p className="text-sm font-medium">Top 5 민원 추세</p>
                     <div className="h-[220px]">
                       <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={districtTrendData}>

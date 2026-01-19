@@ -31,7 +31,7 @@ export function Sidebar({
   showDatePicker = true,
   showDistrictList = true,
 }: SidebarProps) {
-  const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const [datePickerOpen, setDatePickerOpen] = useState(true);
   const [districtListOpen, setDistrictListOpen] = useState(true);
 
   // Sort districts by complaint count

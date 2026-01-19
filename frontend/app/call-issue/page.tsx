@@ -371,24 +371,6 @@ function CallIssueContent() {
                             </div>
                           </CardContent>
                         </Card>
-
-                        {/* 연관 키워드 */}
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-sm text-muted-foreground">연관 키워드:</span>
-                          {expandedKeyword.relatedKeywords.map((related) => (
-                            <Badge
-                              key={related}
-                              variant="outline"
-                              className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
-                              onClick={() => {
-                                setExpandedKeywordId(null);
-                                setSearchQuery(related);
-                              }}
-                            >
-                              {related}
-                            </Badge>
-                          ))}
-                        </div>
                       </div>
                     )}
                   </div>

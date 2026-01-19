@@ -11,9 +11,6 @@ import {
   ChevronUp,
   ArrowLeft,
   CalendarDays,
-  TrendingUp,
-  TrendingDown,
-  Minus,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -98,18 +95,6 @@ function KeywordSearchContent() {
         part
       )
     );
-  };
-
-  // 트렌드 아이콘
-  const getTrendIcon = (trend: 'up' | 'down' | 'stable') => {
-    switch (trend) {
-      case 'up':
-        return <TrendingUp className="w-4 h-4 text-red-500" />;
-      case 'down':
-        return <TrendingDown className="w-4 h-4 text-blue-500" />;
-      default:
-        return <Minus className="w-4 h-4 text-gray-400" />;
-    }
   };
 
   // 키워드별 일별 추이 데이터 생성
@@ -225,14 +210,11 @@ function KeywordSearchContent() {
                     {/* 키워드 로우 */}
                     <div
                       className={cn(
-                        'grid grid-cols-[auto_1fr_auto_1fr_auto] gap-4 px-4 py-3 cursor-pointer hover:bg-muted/50 items-center',
+                        'grid grid-cols-[1fr_auto_1fr_auto] gap-4 px-4 py-3 cursor-pointer hover:bg-muted/50 items-center',
                         isExpanded && 'bg-muted/30'
                       )}
                       onClick={() => handleKeywordClick(keyword)}
                     >
-                      {/* 트렌드 아이콘 */}
-                      <div>{getTrendIcon(keyword.trend)}</div>
-
                       {/* 키워드명 */}
                       <div className="font-medium">
                         {highlightKeyword(keyword.text, debouncedQuery)}
@@ -323,24 +305,6 @@ function KeywordSearchContent() {
                               {Math.min(...generateDailyTrendData.map(d => d.totalCount)).toLocaleString()}건
                             </div>
                           </div>
-                        </div>
-
-                        {/* 연관 키워드 */}
-                        <div className="flex flex-wrap items-center gap-2 pt-2 border-t">
-                          <span className="text-sm text-muted-foreground">연관 키워드:</span>
-                          {expandedKeyword.relatedKeywords.map((related) => (
-                            <Badge
-                              key={related}
-                              variant="outline"
-                              className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
-                              onClick={() => {
-                                setExpandedKeywordId(null);
-                                setSearchQuery(related);
-                              }}
-                            >
-                              {related}
-                            </Badge>
-                          ))}
                         </div>
                       </div>
                     )}

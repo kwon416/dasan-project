@@ -29,7 +29,7 @@ export function SeoulMapLegend() {
       <div className="mt-2 pt-2 border-t border-border">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-yellow-400" />
-          <span className="text-xs text-muted-foreground">선택/호버</span>
+          <span className="text-xs text-muted-foreground">선택</span>
         </div>
       </div>
     </div>

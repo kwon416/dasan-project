@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { Eye, Users, Download, MousePointerClick, Activity, Clock } from 'lucide-react';
+import { Eye, Users, Download } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -12,7 +11,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { DailyComplaintChart } from '@/components/charts';
 
 // Sample admin data
@@ -66,8 +64,6 @@ const dailyVisitors = [
 ];
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'stats' | 'logs'>('stats');
-
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString('ko-KR', {
@@ -143,28 +139,9 @@ export default function AdminPage() {
 
       </div>
 
-      {/* 탭 네비게이션 */}
-      <div className="flex gap-2">
-        <Button
-          variant={activeTab === 'stats' ? 'default' : 'outline'}
-          onClick={() => setActiveTab('stats')}
-          className={activeTab === 'stats' ? 'bg-[#0033A0]' : ''}
-        >
-          <MousePointerClick className="h-4 w-4 mr-2" />
-          이용 통계
-        </Button>
-        <Button
-          variant={activeTab === 'logs' ? 'default' : 'outline'}
-          onClick={() => setActiveTab('logs')}
-          className={activeTab === 'logs' ? 'bg-[#0033A0]' : ''}
-        >
-          <Activity className="h-4 w-4 mr-2" />
-          활동 로그
-        </Button>
-      </div>
-
-      {/* 탭 콘텐츠 */}
-      {activeTab === 'stats' && (
+      {/* 이용 통계 섹션 */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">이용 통계</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 일별 방문자 차트 */}
           <DailyComplaintChart
@@ -204,9 +181,11 @@ export default function AdminPage() {
             </CardContent>
           </Card>
         </div>
-      )}
+      </div>
 
-      {activeTab === 'logs' && (
+      {/* 활동 로그 섹션 */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">활동 로그</h2>
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium">최근 활동 로그</CardTitle>
@@ -240,7 +219,7 @@ export default function AdminPage() {
             </Table>
           </CardContent>
         </Card>
-      )}
+      </div>
     </div>
   );
 }
