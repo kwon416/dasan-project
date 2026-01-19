@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다산콜재단 120 민원공개시스템 - 기간별 조회</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-subtitle {
+            font-size: 15px;
+            color: #666;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 8px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #555;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .nav-item.active {
+            color: #1976d2;
+            background-color: #e3f2fd;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-input {
+            width: 280px;
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        }
+
+        .search-btn {
+            padding: 10px 20px;
+            background-color: #1976d2;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .search-btn:hover {
+            background-color: #1565c0;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* Page Title */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-title-icon {
+            width: 24px;
+            height: 24px;
+            color: #1976d2;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+            background-color: #fff;
+        }
+
+        .filter-select:focus {
+            border-color: #1976d2;
+        }
+
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .date-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .date-input:focus {
+            border-color: #1976d2;
+        }
+
+        .btn-apply {
+            padding: 8px 16px;
+            background-color: #1976d2;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-apply:hover {
+            background-color: #1565c0;
+        }
+
+        /* Cards */
+        .card {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #eee;
+            overflow: hidden;
+            margin-bottom: 24px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: #fafafa;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title-icon {
+            width: 20px;
+            height: 20px;
+            color: #1976d2;
+        }
+
+        .card-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .tab-btn {
+            padding: 6px 14px;
+            font-size: 12px;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        .tab-btn.active {
+            background-color: #1976d2;
+            color: white;
+            border-color: #1976d2;
+        }
+
+        .card-body {
+            padding: 20px 24px;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-container-lg {
+            height: 350px;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background-color: #fff;
+            border-radius: 16px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-info h4 {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .stat-sub {
+            font-size: 11px;
+            color: #888;
+            margin-left: 6px;
+        }
+
+        .stat-change {
+            color: #e53935;
+            font-weight: 500;
+        }
+
+        .stat-change.positive {
+            color: #43a047;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon.blue { background-color: #e3f2fd; color: #1976d2; }
+        .stat-icon.green { background-color: #e8f5e9; color: #43a047; }
+        .stat-icon.orange { background-color: #fff3e0; color: #f57c00; }
+        .stat-icon.purple { background-color: #ede7f6; color: #5e35b1; }
+
+        .stat-icon i {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Heatmap */
+        .heatmap-container {
+            overflow-x: auto;
+        }
+
+        .heatmap-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .heatmap-table th {
+            padding: 8px 4px;
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            background-color: #fafafa;
+        }
+
+        .heatmap-table td {
+            padding: 6px 4px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .heatmap-cell {
+            display: inline-block;
+            width: 32px;
+            height: 24px;
+            line-height: 24px;
+            border-radius: 4px;
+            font-size: 10px;
+            color: #fff;
+        }
+
+        .heat-0 { background-color: #e3f2fd; color: #1976d2; }
+        .heat-1 { background-color: #90caf9; color: #0d47a1; }
+        .heat-2 { background-color: #42a5f5; color: #fff; }
+        .heat-3 { background-color: #1e88e5; color: #fff; }
+        .heat-4 { background-color: #1565c0; color: #fff; }
+        .heat-5 { background-color: #0d47a1; color: #fff; }
+
+        /* Season Cards */
+        .season-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .season-card {
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .season-card.spring { background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%); }
+        .season-card.summer { background: linear-gradient(135deg, #ffcc80 0%, #ffb74d 100%); }
+        .season-card.fall { background: linear-gradient(135deg, #ffccbc 0%, #ffab91 100%); }
+        .season-card.winter { background: linear-gradient(135deg, #b3e5fc 0%, #81d4fa 100%); }
+
+        .season-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .season-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .season-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .season-percent {
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Wordcloud */
+        .wordcloud-container {
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .word {
+            position: absolute;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .word:hover {
+            transform: scale(1.15);
+        }
+
+        /* Download Buttons */
+        .download-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-download {
+            padding: 5px 10px;
+            font-size: 11px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-download:hover {
+            background-color: #f5f5f5;
+            border-color: #1976d2;
+            color: #1976d2;
+        }
+
+        .btn-download i {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #fff;
+            border-top: 1px solid #e0e0e0;
+            padding: 24px;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-link {
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            color: #1976d2;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .season-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                height: auto;
+                padding: 16px;
+                gap: 16px;
+            }
+            .header-left {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .season-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .filter-controls {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <img src="/logo/logo.jpg" alt="120 다산콜재단 로고">
+                <span class="logo-subtitle">민원공개시스템</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="main1.html" class="nav-item">Home</a>
+                <a href="main2.html" class="nav-item">지역별 조회</a>
+                <a href="complaint-status.html" class="nav-item">민원현황</a>
+                <a href="period.html" class="nav-item active">기간 조회</a>
+            </nav>
+        </div>
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="키워드를 입력하세요">
+            <button class="search-btn">검색</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i data-lucide="calendar-range" class="page-title-icon"></i>
+                기간별 민원 분석
+            </h1>
+            <div class="filter-controls">
+                <select class="filter-select">
+                    <option value="all">전체 카테고리</option>
+                    <option value="traffic">교통·주차</option>
+                    <option value="road">도로·시설물</option>
+                    <option value="env">환경·청소</option>
+                    <option value="building">건축·주택</option>
+                    <option value="welfare">복지·보건</option>
+                    <option value="tax">세무·요금</option>
+                    <option value="safety">안전·재난</option>
+                    <option value="culture">문화·관광</option>
+                    <option value="education">교육·청소년</option>
+                    <option value="admin">민원행정</option>
+                    <option value="etc">기타</option>
+                </select>
+                <div class="date-range">
+                    <input type="date" class="date-input" value="2025-01-01">
+                    <span>~</span>
+                    <input type="date" class="date-input" value="2026-01-10">
+                </div>
+                <button class="btn-apply">적용</button>
+            </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="grid-4">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>조회 기간 총 민원</h4>
+                    <span class="stat-value">127,456</span>
+                    <span class="stat-sub">건</span>
+                </div>
+                <div class="stat-icon blue">
+                    <i data-lucide="file-text"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>일 평균</h4>
+                    <span class="stat-value">348</span>
+                    <span class="stat-sub stat-change positive">+12%</span>
+                </div>
+                <div class="stat-icon green">
+                    <i data-lucide="trending-up"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>최다 발생일</h4>
+                    <span class="stat-value">1/6(월)</span>
+                    <span class="stat-sub">892건</span>
+                </div>
+                <div class="stat-icon orange">
+                    <i data-lucide="calendar-check"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>피크 시간대</h4>
+                    <span class="stat-value">10~11시</span>
+                    <span class="stat-sub">15.2%</span>
+                </div>
+                <div class="stat-icon purple">
+                    <i data-lucide="clock"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Trend Chart -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">
+                    <i data-lucide="line-chart" class="card-title-icon"></i>
+                    일별 민원 발생 추이
+                </span>
+                <div class="card-controls">
+                    <div class="tab-btn active" data-period="daily">일별</div>
+                    <div class="tab-btn" data-period="weekly">주별</div>
+                    <div class="tab-btn" data-period="monthly">월별</div>
+                    <div class="download-btns">
+                        <button class="btn-download"><i data-lucide="download"></i>CSV</button>
+                        <button class="btn-download"><i data-lucide="image"></i>이미지</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container chart-container-lg">
+                    <canvas id="dailyTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Two Column Grid -->
+        <div class="grid-2">
+            <!-- Hourly Heatmap -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="grid-3x3" class="card-title-icon"></i>
+                        요일·시간대별 분포
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="heatmap-container">
+                        <table class="heatmap-table" id="heatmapTable">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>0시</th>
+                                    <th>3시</th>
+                                    <th>6시</th>
+                                    <th>9시</th>
+                                    <th>12시</th>
+                                    <th>15시</th>
+                                    <th>18시</th>
+                                    <th>21시</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weekday vs Weekend -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="bar-chart-3" class="card-title-icon"></i>
+                        평일/주말 비교
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="weekdayChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Three Column Grid -->
+        <div class="grid-3">
+            <!-- Monthly Chart -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="bar-chart" class="card-title-icon"></i>
+                        월별 발생량
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day of Week Chart -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="calendar-days" class="card-title-icon"></i>
+                        요일별 발생량
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="dayOfWeekChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hourly Chart -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="clock" class="card-title-icon"></i>
+                        시간대별 발생량
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="hourlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Season Analysis -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">
+                    <i data-lucide="sun" class="card-title-icon"></i>
+                    계절별 민원 분석
+                </span>
+                <div class="download-btns">
+                    <button class="btn-download"><i data-lucide="download"></i>CSV</button>
+                    <button class="btn-download"><i data-lucide="image"></i>이미지</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="grid-2">
+                    <div class="season-grid">
+                        <div class="season-card spring">
+                            <div class="season-icon">🌸</div>
+                            <div class="season-name">봄 (3~5월)</div>
+                            <div class="season-count">28,456</div>
+                            <div class="season-percent">22.3%</div>
+                        </div>
+                        <div class="season-card summer">
+                            <div class="season-icon">☀️</div>
+                            <div class="season-name">여름 (6~8월)</div>
+                            <div class="season-count">35,892</div>
+                            <div class="season-percent">28.2%</div>
+                        </div>
+                        <div class="season-card fall">
+                            <div class="season-icon">🍂</div>
+                            <div class="season-name">가을 (9~11월)</div>
+                            <div class="season-count">31,245</div>
+                            <div class="season-percent">24.5%</div>
+                        </div>
+                        <div class="season-card winter">
+                            <div class="season-icon">❄️</div>
+                            <div class="season-name">겨울 (12~2월)</div>
+                            <div class="season-count">31,863</div>
+                            <div class="season-percent">25.0%</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="seasonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wordcloud & Related Keywords -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="cloud" class="card-title-icon"></i>
+                        키워드 워드클라우드
+                    </span>
+                    <div class="download-btns">
+                        <button class="btn-download"><i data-lucide="image"></i>이미지</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="wordcloud-container" id="wordcloud"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="git-branch" class="card-title-icon"></i>
+                        연관어 분석
+                    </span>
+                    <div class="download-btns">
+                        <button class="btn-download"><i data-lucide="download"></i>CSV</button>
+                        <button class="btn-download"><i data-lucide="image"></i>이미지</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="relatedChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-text">
+                © 2026 서울특별시 120다산콜재단. All rights reserved.
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">이용약관</a>
+                <a href="#" class="footer-link">개인정보처리방침</a>
+                <a href="#" class="footer-link">고객센터</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Daily Trend Chart
+        const dailyTrendCtx = document.getElementById('dailyTrendChart').getContext('2d');
+        new Chart(dailyTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['1/1', '1/2', '1/3', '1/4', '1/5', '1/6', '1/7', '1/8', '1/9', '1/10'],
+                datasets: [{
+                    label: '민원 건수',
+                    data: [245, 312, 287, 156, 134, 892, 567, 623, 589, 478],
+                    borderColor: '#1976d2',
+                    backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#1976d2'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f0f0f0' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Weekday vs Weekend Chart
+        const weekdayCtx = document.getElementById('weekdayChart').getContext('2d');
+        new Chart(weekdayCtx, {
+            type: 'bar',
+            data: {
+                labels: ['평일', '주말'],
+                datasets: [{
+                    label: '일 평균 민원',
+                    data: [425, 186],
+                    backgroundColor: ['#42a5f5', '#ef5350'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f0f0f0' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Monthly Chart
+        const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(monthlyCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                datasets: [{
+                    label: '민원 건수',
+                    data: [9823, 8756, 9234, 10567, 9876, 12345, 13456, 12234, 10987, 9876, 10234, 9068],
+                    backgroundColor: function(context) {
+                        const value = context.raw;
+                        if (value >= 12000) return '#d32f2f';
+                        if (value >= 10000) return '#f57c00';
+                        return '#42a5f5';
+                    },
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f0f0f0' },
+                        ticks: { font: { size: 10 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        // Day of Week Chart
+        const dayOfWeekCtx = document.getElementById('dayOfWeekChart').getContext('2d');
+        new Chart(dayOfWeekCtx, {
+            type: 'bar',
+            data: {
+                labels: ['월', '화', '수', '목', '금', '토', '일'],
+                datasets: [{
+                    label: '민원 건수',
+                    data: [2456, 2234, 2567, 2345, 2123, 1234, 987],
+                    backgroundColor: ['#42a5f5', '#42a5f5', '#42a5f5', '#42a5f5', '#42a5f5', '#ffb74d', '#ffb74d'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f0f0f0' },
+                        ticks: { font: { size: 10 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        // Hourly Chart
+        const hourlyCtx = document.getElementById('hourlyChart').getContext('2d');
+        new Chart(hourlyCtx, {
+            type: 'line',
+            data: {
+                labels: ['0', '2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '22'],
+                datasets: [{
+                    label: '민원 건수',
+                    data: [45, 23, 12, 34, 156, 423, 512, 456, 389, 287, 178, 89],
+                    borderColor: '#5e35b1',
+                    backgroundColor: 'rgba(94, 53, 177, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f0f0f0' },
+                        ticks: { font: { size: 10 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        // Season Chart
+        const seasonCtx = document.getElementById('seasonChart').getContext('2d');
+        new Chart(seasonCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['봄', '여름', '가을', '겨울'],
+                datasets: [{
+                    data: [22.3, 28.2, 24.5, 25.0],
+                    backgroundColor: ['#81c784', '#ffb74d', '#ff8a65', '#4fc3f7'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            padding: 12,
+                            usePointStyle: true,
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Related Keywords Chart (Radar)
+        const relatedCtx = document.getElementById('relatedChart').getContext('2d');
+        new Chart(relatedCtx, {
+            type: 'radar',
+            data: {
+                labels: ['교통·주차', '도로·시설물', '환경·청소', '건축·주택', '안전·재난', '복지·보건'],
+                datasets: [{
+                    label: '연관도',
+                    data: [85, 72, 68, 45, 52, 38],
+                    backgroundColor: 'rgba(25, 118, 210, 0.2)',
+                    borderColor: '#1976d2',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#1976d2'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { font: { size: 9 } },
+                        pointLabels: { font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        // Generate Heatmap
+        const days = ['월', '화', '수', '목', '금', '토', '일'];
+        const heatmapData = [
+            [12, 8, 15, 78, 156, 134, 98, 45],
+            [10, 6, 12, 82, 167, 145, 89, 38],
+            [14, 9, 18, 85, 178, 156, 102, 52],
+            [11, 7, 14, 76, 162, 138, 92, 41],
+            [13, 8, 16, 72, 145, 128, 85, 36],
+            [8, 5, 10, 45, 89, 76, 54, 28],
+            [5, 3, 6, 32, 56, 48, 38, 18]
+        ];
+
+        function getHeatLevel(value) {
+            if (value < 20) return 0;
+            if (value < 50) return 1;
+            if (value < 80) return 2;
+            if (value < 120) return 3;
+            if (value < 160) return 4;
+            return 5;
+        }
+
+        const heatmapBody = document.querySelector('#heatmapTable tbody');
+        days.forEach((day, i) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<th>${day}</th>`;
+            heatmapData[i].forEach(value => {
+                const level = getHeatLevel(value);
+                row.innerHTML += `<td><span class="heatmap-cell heat-${level}">${value}</span></td>`;
+            });
+            heatmapBody.appendChild(row);
+        });
+
+        // Wordcloud
+        const words = [
+            { text: '교통·주차', size: 28, color: '#d32f2f', x: 50, y: 30 },
+            { text: '도로·시설물', size: 24, color: '#1976d2', x: 25, y: 55 },
+            { text: '환경·청소', size: 22, color: '#2e7d32', x: 75, y: 45 },
+            { text: '건축·주택', size: 18, color: '#5e35b1', x: 35, y: 75 },
+            { text: '복지·보건', size: 16, color: '#00897b', x: 70, y: 70 },
+            { text: '안전·재난', size: 20, color: '#c2185b', x: 80, y: 25 },
+            { text: '민원행정', size: 14, color: '#666', x: 20, y: 30 }
+        ];
+
+        const wordcloudContainer = document.getElementById('wordcloud');
+        words.forEach(word => {
+            const span = document.createElement('span');
+            span.className = 'word';
+            span.textContent = word.text;
+            span.style.fontSize = `${word.size}px`;
+            span.style.color = word.color;
+            span.style.left = `${word.x}%`;
+            span.style.top = `${word.y}%`;
+            span.style.transform = 'translate(-50%, -50%)';
+            wordcloudContainer.appendChild(span);
+        });
+
+        // Tab click handler
+        document.querySelectorAll('.tab-btn').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

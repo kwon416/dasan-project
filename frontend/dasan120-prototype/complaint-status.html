@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다산콜재단 120 민원공개시스템 - 민원 데이터 최신발생현황</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* Header - main1/main2와 동일 */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-subtitle {
+            font-size: 15px;
+            color: #666;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 8px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #555;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .nav-item.active {
+            color: #1976d2;
+            background-color: #e3f2fd;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .location-select {
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+
+        .location-select:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        }
+
+        /* Search Section */
+        .search-section {
+            background-color: #fff;
+            padding: 10px 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .search-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 6px;
+        }
+
+        .search-input {
+            width: 320px;
+            padding: 7px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+        }
+
+        .search-btn {
+            padding: 7px 14px;
+            background-color: #26a69a;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .search-btn:hover {
+            background-color: #00897b;
+        }
+
+        .search-btn i {
+            width: 14px;
+            height: 14px;
+        }
+
+        .keyword-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: nowrap;
+        }
+
+        .keyword-tag {
+            padding: 5px 10px;
+            background-color: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 14px;
+            font-size: 11px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .keyword-tag:hover {
+            background-color: #e3f2fd;
+            border-color: #1976d2;
+            color: #1976d2;
+        }
+
+        .keyword-tag.active {
+            background-color: #1976d2;
+            border-color: #1976d2;
+            color: #fff;
+        }
+
+        /* Status Banner */
+        .status-banner {
+            background: linear-gradient(135deg, #26a69a 0%, #00897b 100%);
+            padding: 12px 24px;
+            color: white;
+        }
+
+        .status-banner-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .status-banner i {
+            width: 18px;
+            height: 18px;
+        }
+
+        .status-highlight {
+            font-weight: 700;
+            color: #ffeb3b;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Stats Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-info h4 {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .stat-value-row {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.2;
+        }
+
+        .stat-sub {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .stat-change {
+            color: #e53935;
+            font-weight: 500;
+        }
+
+        .stat-change.positive {
+            color: #43a047;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.blue {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .stat-icon.green {
+            background-color: #e8f5e9;
+            color: #43a047;
+        }
+
+        .stat-icon.yellow {
+            background-color: #fff8e1;
+            color: #f9a825;
+        }
+
+        .stat-icon.purple {
+            background-color: #ede7f6;
+            color: #5e35b1;
+        }
+
+        .stat-icon i {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #eee;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: #fafafa;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-title-icon {
+            width: 16px;
+            height: 16px;
+            color: #1976d2;
+        }
+
+        .card-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        .date-input {
+            padding: 5px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .date-input:focus {
+            border-color: #1976d2;
+        }
+
+        .btn-apply {
+            padding: 5px 12px;
+            background-color: #1976d2;
+            border: none;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-apply:hover {
+            background-color: #1565c0;
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 4px;
+        }
+
+        .chart-tab {
+            padding: 5px 12px;
+            font-size: 11px;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .chart-tab:hover {
+            background-color: #f5f5f5;
+        }
+
+        .chart-tab.active {
+            background-color: #1976d2;
+            color: white;
+            border-color: #1976d2;
+        }
+
+        .card-body {
+            padding: 12px 16px;
+        }
+
+        /* Map Container */
+        #map {
+            width: 100%;
+            height: 320px;
+            border-radius: 12px;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            height: 320px;
+            position: relative;
+        }
+
+        /* Bottom Grid */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+        }
+
+        /* Table */
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .table-search {
+            position: relative;
+        }
+
+        .table-search input {
+            padding: 6px 12px 6px 32px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
+            width: 160px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .table-search input:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+        }
+
+        .table-search i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            color: #888;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 8px 8px;
+            border-bottom: 2px solid #eee;
+            color: #666;
+            font-weight: 600;
+            font-size: 11px;
+            background-color: #fafafa;
+        }
+
+        .data-table td {
+            padding: 8px 8px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .category-badge {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .category-traffic {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .category-env {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .category-facility {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .category-safety {
+            background-color: #fce4ec;
+            color: #c2185b;
+        }
+
+        .category-welfare {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .status-new {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-progress {
+            background-color: #fff8e1;
+            color: #f9a825;
+        }
+
+        .status-complete {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin-top: 10px;
+        }
+
+        .page-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .page-btn.active {
+            background-color: #1976d2;
+            color: white;
+            border-color: #1976d2;
+        }
+
+        .page-btn:hover:not(.active) {
+            background-color: #f5f5f5;
+        }
+
+        /* Wordcloud */
+        .wordcloud-container {
+            height: 340px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .word {
+            position: absolute;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .word:hover {
+            transform: scale(1.15);
+        }
+
+        /* Footer - main1/main2와 동일 */
+        .footer {
+            background-color: #fff;
+            border-top: 1px solid #e0e0e0;
+            padding: 24px;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-link {
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            color: #1976d2;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                height: auto;
+                padding: 16px;
+                gap: 16px;
+            }
+            .header-left {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+            .search-input {
+                width: 100%;
+            }
+            .search-box {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <img src="/logo/logo.jpg" alt="120 다산콜재단 로고">
+                <span class="logo-subtitle">민원공개시스템</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="main1.html" class="nav-item">Home</a>
+                <a href="main2.html" class="nav-item">지역별 조회</a>
+                <a href="complaint-status.html" class="nav-item active">민원현황</a>
+                <a href="period.html" class="nav-item">기간 조회</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <select class="location-select" id="districtSelect">
+                <option value="">전체 자치구</option>
+                <option value="gangnam">강남구</option>
+                <option value="gangdong">강동구</option>
+                <option value="gangbuk">강북구</option>
+                <option value="gangseo">강서구</option>
+                <option value="gwanak">관악구</option>
+                <option value="gwangjin">광진구</option>
+                <option value="guro">구로구</option>
+                <option value="geumcheon">금천구</option>
+                <option value="nowon">노원구</option>
+                <option value="dobong">도봉구</option>
+                <option value="dongdaemun">동대문구</option>
+                <option value="dongjak">동작구</option>
+                <option value="mapo">마포구</option>
+                <option value="seodaemun">서대문구</option>
+                <option value="seocho">서초구</option>
+                <option value="seongdong">성동구</option>
+                <option value="seongbuk">성북구</option>
+                <option value="songpa">송파구</option>
+                <option value="yangcheon">양천구</option>
+                <option value="yeongdeungpo">영등포구</option>
+                <option value="yongsan">용산구</option>
+                <option value="eunpyeong">은평구</option>
+                <option value="jongno">종로구</option>
+                <option value="jung">중구</option>
+                <option value="jungnang">중랑구</option>
+            </select>
+            <select class="location-select" id="dongSelect">
+                <option value="">전체 행정동</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="민원 키워드를 입력하세요 (예: 주정차, 소음, 가로등)">
+                <button class="search-btn"><i data-lucide="search"></i>검색</button>
+            </div>
+            <div class="keyword-tags">
+                <span class="keyword-tag active">주정차</span>
+                <span class="keyword-tag">소음</span>
+                <span class="keyword-tag">쓰레기</span>
+                <span class="keyword-tag">가로등</span>
+                <span class="keyword-tag">도로</span>
+                <span class="keyword-tag">CCTV</span>
+                <span class="keyword-tag">악취</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Status Banner -->
+    <div class="status-banner">
+        <div class="status-banner-content">
+            <i data-lucide="info"></i>
+            <span>검색된 민원 현황: <span class="status-highlight">'주정차'</span> 검색어 관련 최신 민원 <span class="status-highlight">200건</span> 검색됨</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>전체 민원</h4>
+                    <div class="stat-value-row">
+                        <span class="stat-value">200</span>
+                        <span class="stat-sub">건</span>
+                    </div>
+                </div>
+                <div class="stat-icon blue">
+                    <i data-lucide="file-text"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>오늘 접수</h4>
+                    <div class="stat-value-row">
+                        <span class="stat-value">10</span>
+                        <span class="stat-sub stat-change">+32%</span>
+                    </div>
+                </div>
+                <div class="stat-icon green">
+                    <i data-lucide="calendar"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>처리중</h4>
+                    <div class="stat-value-row">
+                        <span class="stat-value">24</span>
+                        <span class="stat-sub">12%</span>
+                    </div>
+                </div>
+                <div class="stat-icon yellow">
+                    <i data-lucide="clock"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>완료율</h4>
+                    <div class="stat-value-row">
+                        <span class="stat-value">58%</span>
+                        <span class="stat-sub stat-change positive">+5%</span>
+                    </div>
+                </div>
+                <div class="stat-icon purple">
+                    <i data-lucide="check-circle"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Map Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="map-pin" class="card-title-icon"></i>
+                        자치구별 민원 현황
+                    </span>
+                    <div class="card-controls">
+                        <div class="date-range">
+                            <input type="date" class="date-input" value="2025-12-10">
+                            <span>~</span>
+                            <input type="date" class="date-input" value="2026-01-09">
+                        </div>
+                        <button class="btn-apply">적용</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <!-- Chart Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="pie-chart" class="card-title-icon"></i>
+                        민원 분석
+                    </span>
+                    <div class="card-controls">
+                        <div class="chart-tabs">
+                            <button class="chart-tab active">카테고리별</button>
+                            <button class="chart-tab">일별 추이</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Grid -->
+        <div class="bottom-grid">
+            <!-- Table Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="table-header">
+                        <div class="table-title">
+                            <span class="card-title">
+                                <i data-lucide="list" class="card-title-icon"></i>
+                                민원 현황
+                            </span>
+                            <span class="badge">200</span>
+                        </div>
+                    </div>
+                    <div class="table-search">
+                        <i data-lucide="search"></i>
+                        <input type="text" placeholder="키워드 검색...">
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>NO</th>
+                                <th>카테고리</th>
+                                <th>제목</th>
+                                <th>지역</th>
+                                <th>날짜</th>
+                                <th>상태</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><span class="category-badge category-traffic">교통</span></td>
+                                <td>주정차 단속 요청</td>
+                                <td>강남구</td>
+                                <td>1/10</td>
+                                <td><span class="status-badge status-new">접수</span></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="category-badge category-traffic">교통</span></td>
+                                <td>어린이 보호구역 주정차</td>
+                                <td>송파구</td>
+                                <td>1/10</td>
+                                <td><span class="status-badge status-new">접수</span></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><span class="category-badge category-facility">시설</span></td>
+                                <td>불법시설물 및 주정차</td>
+                                <td>구로구</td>
+                                <td>1/10</td>
+                                <td><span class="status-badge status-progress">처리중</span></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><span class="category-badge category-facility">시설</span></td>
+                                <td>횡단 정보 요청</td>
+                                <td>관악구</td>
+                                <td>1/10</td>
+                                <td><span class="status-badge status-progress">처리중</span></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td><span class="category-badge category-traffic">교통</span></td>
+                                <td>스쿨존 주정차 위반</td>
+                                <td>서초구</td>
+                                <td>1/09</td>
+                                <td><span class="status-badge status-new">접수</span></td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td><span class="category-badge category-env">환경</span></td>
+                                <td>쓰레기 무단 주정차</td>
+                                <td>성동구</td>
+                                <td>1/09</td>
+                                <td><span class="status-badge status-complete">완료</span></td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td><span class="category-badge category-env">환경</span></td>
+                                <td>차량에서 음식물 투기</td>
+                                <td>중랑구</td>
+                                <td>1/09</td>
+                                <td><span class="status-badge status-complete">완료</span></td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td><span class="category-badge category-traffic">교통</span></td>
+                                <td>주정차 금지 요청</td>
+                                <td>중랑구</td>
+                                <td>1/09</td>
+                                <td><span class="status-badge status-progress">처리중</span></td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td><span class="category-badge category-safety">안전</span></td>
+                                <td>불법주차로 시야 가림</td>
+                                <td>서초구</td>
+                                <td>1/08</td>
+                                <td><span class="status-badge status-complete">완료</span></td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td><span class="category-badge category-facility">시설</span></td>
+                                <td>주차 시설 개선 건의</td>
+                                <td>노원구</td>
+                                <td>1/08</td>
+                                <td><span class="status-badge status-progress">처리중</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <button class="page-btn">&lt;</button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">4</button>
+                        <button class="page-btn">5</button>
+                        <button class="page-btn">...</button>
+                        <button class="page-btn">20</button>
+                        <button class="page-btn">&gt;</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wordcloud Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="cloud" class="card-title-icon"></i>
+                        키워드 워드클라우드
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="wordcloud-container" id="wordcloud">
+                        <!-- Wordcloud will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-text">
+                © 2026 서울특별시 120다산콜재단. All rights reserved.
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">이용약관</a>
+                <a href="#" class="footer-link">개인정보처리방침</a>
+                <a href="#" class="footer-link">고객센터</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Initialize Leaflet Map
+        var map = L.map('map').setView([37.5665, 126.9780], 11);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Sample district data with complaint counts
+        var districts = [
+            { name: '강남구', lat: 37.5172, lng: 127.0473, count: 15 },
+            { name: '송파구', lat: 37.5145, lng: 127.1066, count: 18 },
+            { name: '강서구', lat: 37.5509, lng: 126.8495, count: 12 },
+            { name: '노원구', lat: 37.6542, lng: 127.0568, count: 8 },
+            { name: '마포구', lat: 37.5663, lng: 126.9014, count: 10 },
+            { name: '서초구', lat: 37.4837, lng: 127.0324, count: 14 },
+            { name: '구로구', lat: 37.4954, lng: 126.8874, count: 9 },
+            { name: '관악구', lat: 37.4784, lng: 126.9516, count: 7 },
+            { name: '성동구', lat: 37.5633, lng: 127.0371, count: 6 },
+            { name: '중랑구', lat: 37.6063, lng: 127.0925, count: 11 }
+        ];
+
+        function getMarkerColor(count) {
+            if (count >= 15) return '#e53935';
+            if (count >= 10) return '#fb8c00';
+            if (count >= 5) return '#fdd835';
+            return '#43a047';
+        }
+
+        // Create custom icon for markers (main1 스타일과 동일)
+        function createMarkerIcon(count) {
+            var color = getMarkerColor(count);
+            return L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="background-color: ' + color + '; color: white; padding: 6px 12px; border-radius: 14px; font-size: 12px; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.3); text-align: center; border: 2px solid white;">' + count + '</div>',
+                iconSize: [40, 28],
+                iconAnchor: [20, 14]
+            });
+        }
+
+        districts.forEach(function(district) {
+            var marker = L.marker([district.lat, district.lng], {
+                icon: createMarkerIcon(district.count)
+            }).addTo(map);
+
+            marker.bindPopup('<div style="padding: 10px; font-size: 14px;"><strong style="color: #1976d2;">' + district.name + '</strong><br><br>민원 건수: <strong>' + district.count + '건</strong></div>');
+        });
+
+        // Doughnut Chart
+        const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
+        new Chart(doughnutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['교통', '환경', '시설', '복지', '안전', '기타'],
+                datasets: [{
+                    data: [35, 25, 20, 10, 7, 3],
+                    backgroundColor: [
+                        '#42a5f5',
+                        '#66bb6a',
+                        '#ffa726',
+                        '#ef5350',
+                        '#ab47bc',
+                        '#78909c'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            padding: 16,
+                            usePointStyle: true,
+                            font: {
+                                size: 13,
+                                family: "'Noto Sans KR', sans-serif"
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Wordcloud Data - 핫 키워드 기반 (민원 분류 카테고리)
+        const words = [
+            { text: '교통·주차', size: 32, color: '#d32f2f', x: 50, y: 30 },
+            { text: '도로·시설물', size: 28, color: '#1976d2', x: 25, y: 50 },
+            { text: '환경·청소', size: 26, color: '#2e7d32', x: 75, y: 45 },
+            { text: '건축·주택', size: 22, color: '#5e35b1', x: 35, y: 75 },
+            { text: '복지·보건', size: 20, color: '#00897b', x: 70, y: 70 },
+            { text: '세무·요금', size: 18, color: '#f57c00', x: 20, y: 25 },
+            { text: '안전·재난', size: 24, color: '#c2185b', x: 80, y: 25 },
+            { text: '문화·관광', size: 16, color: '#1976d2', x: 65, y: 85 },
+            { text: '교육·청소년', size: 15, color: '#388e3c', x: 15, y: 70 },
+            { text: '민원행정', size: 14, color: '#666', x: 85, y: 55 }
+        ];
+
+        const wordcloudContainer = document.getElementById('wordcloud');
+        words.forEach(word => {
+            const span = document.createElement('span');
+            span.className = 'word';
+            span.textContent = word.text;
+            span.style.fontSize = `${word.size}px`;
+            span.style.color = word.color;
+            span.style.left = `${word.x}%`;
+            span.style.top = `${word.y}%`;
+            span.style.transform = 'translate(-50%, -50%)';
+            wordcloudContainer.appendChild(span);
+        });
+
+        // Keyword tag click handler
+        document.querySelectorAll('.keyword-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                document.querySelectorAll('.keyword-tag').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Chart tab click handler
+        document.querySelectorAll('.chart-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // District select handler
+        document.getElementById('districtSelect').addEventListener('change', function() {
+            var selected = this.value;
+            console.log('선택된 구:', selected);
+        });
+
+        // Pagination click handler
+        document.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!this.textContent.includes('<') && !this.textContent.includes('>') && !this.textContent.includes('...')) {
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

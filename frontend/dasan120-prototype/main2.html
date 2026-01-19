@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다산콜재단 120 민원공개시스템 - 지역별 조회</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-subtitle {
+            font-size: 15px;
+            color: #666;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 8px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #555;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .nav-item.active {
+            color: #1976d2;
+            background-color: #e3f2fd;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-input {
+            width: 280px;
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        }
+
+        .search-btn {
+            padding: 10px 20px;
+            background-color: #1976d2;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .search-btn:hover {
+            background-color: #1565c0;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* Map Section */
+        .map-section {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .map-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .map-title-icon {
+            width: 24px;
+            height: 24px;
+            color: #1976d2;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .date-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .date-input:focus {
+            border-color: #1976d2;
+        }
+
+        .apply-btn {
+            padding: 8px 16px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .apply-btn:hover {
+            background-color: #1565c0;
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 520px;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .map-image-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+        }
+
+        .map-image-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        #naverMap {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        /* Keyword Sidebar */
+        .keyword-sidebar {
+            position: absolute;
+            top: 16px;
+            left: 60px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            width: 180px;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .keyword-header {
+            padding: 16px;
+            background: linear-gradient(135deg, #5c6bc0 0%, #3f51b5 100%);
+            color: white;
+        }
+
+        .keyword-title {
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .keyword-date {
+            font-size: 11px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .keyword-list {
+            list-style: none;
+            max-height: 380px;
+            overflow-y: auto;
+        }
+
+        .keyword-item {
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .keyword-item:hover {
+            background-color: #f5f9ff;
+        }
+
+        .keyword-item.active {
+            background-color: #fff8e1;
+            border-left-color: #ffc107;
+            font-weight: 600;
+            color: #f57c00;
+        }
+
+        .keyword-rank {
+            width: 20px;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .keyword-item.active .keyword-rank {
+            background-color: #ffc107;
+            color: #fff;
+        }
+
+        /* District Selector */
+        .district-selector {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+        }
+
+        .district-select {
+            padding: 12px 40px 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .district-select:focus {
+            outline: 2px solid #1976d2;
+        }
+
+        /* Stats Summary */
+        .stats-summary {
+            position: absolute;
+            bottom: 16px;
+            left: 60px;
+            right: 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        /* Map Legend */
+        .map-legend {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background-color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            z-index: 1000;
+            font-size: 12px;
+        }
+
+        .legend-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .legend-color.red {
+            background-color: #e53935;
+        }
+
+        .legend-color.orange {
+            background-color: #fb8c00;
+        }
+
+        .legend-color.yellow {
+            background-color: #fdd835;
+        }
+
+        .legend-color.none {
+            background-color: transparent;
+            border: 1px dashed #999;
+        }
+
+        .stat-chip {
+            background-color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-chip-icon {
+            width: 18px;
+            height: 18px;
+            color: #1976d2;
+        }
+
+        .stat-chip-value {
+            font-weight: 700;
+            color: #1976d2;
+        }
+
+        /* Info Cards Section */
+        .info-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .info-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 14px 16px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+            transition: all 0.3s;
+            border: 1px solid #eee;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .info-card-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-card-icon.blue {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .info-card-icon.green {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .info-card-icon.purple {
+            background-color: #ede7f6;
+            color: #5e35b1;
+        }
+
+        .info-card-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .info-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .info-card-description {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .view-details-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 4px;
+            color: #333;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .view-details-btn:hover {
+            background-color: #1976d2;
+            color: white;
+        }
+
+        .view-details-btn svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #fff;
+            border-top: 1px solid #e0e0e0;
+            padding: 24px;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-link {
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            color: #1976d2;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .info-section {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .stats-summary {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                height: auto;
+                padding: 16px;
+                gap: 16px;
+            }
+            .header-left {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .search-input {
+                width: 200px;
+            }
+            .keyword-sidebar {
+                width: 160px;
+                left: 50px;
+            }
+            .page-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <img src="/logo/logo.jpg" alt="120 다산콜재단 로고">
+                <span class="logo-subtitle">민원공개시스템</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="main1.html" class="nav-item">Home</a>
+                <a href="main2.html" class="nav-item active">지역별 조회</a>
+                <a href="complaint-status.html" class="nav-item">민원현황</a>
+                <a href="period.html" class="nav-item">기간 조회</a>
+            </nav>
+        </div>
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="키워드를 입력하세요">
+            <button class="search-btn">검색</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Map Section -->
+        <section class="map-section">
+            <div class="map-header">
+                <div class="map-title">
+                    <i data-lucide="map-pin" class="map-title-icon"></i>
+                    서울시 자치구별 민원 분포
+                </div>
+                <div class="map-controls">
+                    <div class="date-range">
+                        <input type="date" class="date-input" value="2025-12-10">
+                        <span>~</span>
+                        <input type="date" class="date-input" value="2026-01-09">
+                    </div>
+                    <button class="apply-btn">적용</button>
+                </div>
+            </div>
+            <div class="map-container">
+                <!-- Seoul Map Image -->
+                <div class="map-image-wrapper">
+                    <img src="/images/seoul-map.png" alt="서울시 민원 분포 지도" id="seoulMapImage">
+                </div>
+
+                <!-- Keyword Sidebar -->
+                <div class="keyword-sidebar">
+                    <div class="keyword-header">
+                        <div class="keyword-title">
+                            <i data-lucide="flame" style="width:16px;height:16px;"></i>
+                            오늘 핫 키워드
+                        </div>
+                        <div class="keyword-date">2026년 01월 10일 금요일</div>
+                    </div>
+                    <ul class="keyword-list">
+                        <li class="keyword-item"><span class="keyword-rank">1</span>교통·주차</li>
+                        <li class="keyword-item"><span class="keyword-rank">2</span>도로·시설물</li>
+                        <li class="keyword-item"><span class="keyword-rank">3</span>환경·청소</li>
+                        <li class="keyword-item"><span class="keyword-rank">4</span>건축·주택</li>
+                        <li class="keyword-item"><span class="keyword-rank">5</span>복지·보건</li>
+                        <li class="keyword-item"><span class="keyword-rank">6</span>세무·요금</li>
+                        <li class="keyword-item active"><span class="keyword-rank">7</span>안전·재난</li>
+                        <li class="keyword-item"><span class="keyword-rank">8</span>문화·관광</li>
+                        <li class="keyword-item"><span class="keyword-rank">9</span>교육·청소년</li>
+                        <li class="keyword-item"><span class="keyword-rank">10</span>민원행정</li>
+                    </ul>
+                </div>
+
+                <!-- District Selector -->
+                <div class="district-selector">
+                    <select class="district-select">
+                        <option value="">전체 자치구</option>
+                        <option value="gangnam">강남구</option>
+                        <option value="gangbuk">강북구</option>
+                        <option value="gangdong">강동구</option>
+                        <option value="gangseo">강서구</option>
+                        <option value="gwanak">관악구</option>
+                        <option value="gwangjin">광진구</option>
+                        <option value="guro">구로구</option>
+                        <option value="geumcheon">금천구</option>
+                        <option value="nowon">노원구</option>
+                        <option value="dobong">도봉구</option>
+                        <option value="dongdaemun">동대문구</option>
+                        <option value="dongjak">동작구</option>
+                        <option value="mapo">마포구</option>
+                        <option value="seodaemun">서대문구</option>
+                        <option value="seocho">서초구</option>
+                        <option value="seongdong">성동구</option>
+                        <option value="seongbuk">성북구</option>
+                        <option value="songpa">송파구</option>
+                        <option value="yangcheon">양천구</option>
+                        <option value="yeongdeungpo">영등포구</option>
+                        <option value="yongsan">용산구</option>
+                        <option value="eunpyeong">은평구</option>
+                        <option value="jongno">종로구</option>
+                        <option value="jung">중구</option>
+                        <option value="jungnang">중랑구</option>
+                    </select>
+                </div>
+
+                <!-- Stats Summary -->
+                <div class="stats-summary">
+                    <div class="stat-chip">
+                        <i data-lucide="file-text" class="stat-chip-icon"></i>
+                        <span>총 민원: <span class="stat-chip-value">2,456</span>건</span>
+                    </div>
+                    <div class="stat-chip">
+                        <i data-lucide="trending-up" class="stat-chip-icon"></i>
+                        <span>전일 대비: <span class="stat-chip-value">+12.5%</span></span>
+                    </div>
+                    <div class="stat-chip">
+                        <i data-lucide="map" class="stat-chip-icon"></i>
+                        <span>최다 지역: <span class="stat-chip-value">송파구</span></span>
+                    </div>
+                </div>
+
+                <!-- Map Legend -->
+                <div class="map-legend">
+                    <div class="legend-title">1주일 민원 순위</div>
+                    <div class="legend-item">
+                        <div class="legend-color red"></div>
+                        <span>1~5위</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color orange"></div>
+                        <span>6~10위</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color yellow"></div>
+                        <span>11~20위</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color none"></div>
+                        <span>21위 이하</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Info Cards Section -->
+        <section class="info-section">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon blue"><i data-lucide="map-pin"></i></div>
+                    <h2 class="info-card-title">지역별</h2>
+                </div>
+                <p class="info-card-description">
+                    키워드로 검색된 민원 건수를 자치구 및 행정동 지도를 통하여 분석합니다.
+                </p>
+                <a href="main2.html" class="view-details-btn">
+                    자세히 보기 <i data-lucide="arrow-right"></i>
+                </a>
+            </div>
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon green"><i data-lucide="calendar"></i></div>
+                    <h2 class="info-card-title">기간별</h2>
+                </div>
+                <p class="info-card-description">
+                    특정 민원 키워드를 시간, 년/월, 주말/평일 등 시계열로 분석합니다.
+                </p>
+                <a href="period.html" class="view-details-btn">
+                    자세히 보기 <i data-lucide="arrow-right"></i>
+                </a>
+            </div>
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon purple"><i data-lucide="bar-chart-3"></i></div>
+                    <h2 class="info-card-title">통계</h2>
+                </div>
+                <p class="info-card-description">
+                    서울시 전체 자치구별 민원 현황을 다양한 차트로 제공합니다.
+                </p>
+                <a href="complaint-status.html" class="view-details-btn">
+                    자세히 보기 <i data-lucide="arrow-right"></i>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-text">
+                © 2026 서울특별시 120다산콜재단. All rights reserved.
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">이용약관</a>
+                <a href="#" class="footer-link">개인정보처리방침</a>
+                <a href="#" class="footer-link">고객센터</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Keyword item click handler
+        document.querySelectorAll('.keyword-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.keyword-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // District selector change handler (shows alert for now since we're using static image)
+        document.querySelector('.district-select').addEventListener('change', function() {
+            var selected = this.options[this.selectedIndex].text;
+            if (selected !== '전체 자치구') {
+                console.log('선택된 자치구:', selected);
+            }
+        });
+    </script>
+</body>
+</html>

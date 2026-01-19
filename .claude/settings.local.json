@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn clean install:*)",
+      "Bash(mvn spring-boot:run:*)",
+      "Bash(timeout /t 15 /nobreak)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 20\")",
+      "Bash(curl:*)",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 25\")",
+      "Bash(powershell -Command:*)"
+    ]
+  },
+  "outputStyle": "Pragmatic Test-Driven Developer"
+}

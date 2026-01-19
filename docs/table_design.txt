@@ -1,0 +1,199 @@
+좋아. 그럼 **ERD 설계 관점**에서 각 테이블을 하나씩 정리하면서
+👉 **컬럼 코멘트 보완**
+👉 **관계 구조(논리 ERD)**
+👉 **설계상 보이는 의도/주의점**
+까지 같이 짚어줄게.
+
+---
+
+# 1️⃣ 실시간 시간 단위 테이블
+
+### `tb_real_time`
+
+> **역할**
+
+* 실시간으로 수신되는 **원본 이벤트 로그**
+* 이후 요일/월 집계의 **Source Table**
+
+### 컬럼 정의 + 코멘트
+
+| 컬럼명           | 타입      | 길이 | Nullable | 기본값  | 코멘트                       |
+| ------------- | ------- | -- | -------- | ---- | ------------------------- |
+| real_time_seq | BIGINT  | 20 | NOT NULL |      | 실시간 수신 데이터의 고유 식별자 (PK)   |
+| yy            | VARCHAR | 4  | NULL     | NULL | 수신 연도 (YYYY)              |
+| mm            | VARCHAR | 2  | NULL     | NULL | 수신 월 (MM)                 |
+| dd            | VARCHAR | 2  | NULL     | NULL | 수신 일 (DD)                 |
+| hh            | VARCHAR | 2  | NULL     | NULL | 수신 시각 (HH, 24시간 기준)       |
+| keyword       | VARCHAR | 50 | NULL     | NULL | 민원 또는 상담 키워드              |
+| call_id       | VARCHAR | 50 | NULL     | NULL | 상담/민원 단위 식별자 (콜 또는 요청 ID) |
+
+### ERD 관점 메모
+
+* **PK 단일 (real_time_seq)** → 단순하고 좋음
+* 시간 컬럼을 문자열로 둔 이유가 **파티셔닝 / 집계 편의성**으로 보임
+* 날짜를 하나의 DATETIME으로 두지 않은 것은 **의도적인 선택**으로 판단됨
+
+---
+
+# 2️⃣ 실시간 요일 단위 테이블 (7개)
+
+### 테이블
+
+* `tb_real_mon`
+* `tb_real_tue`
+* `tb_real_wed`
+* `tb_real_thu`
+* `tb_real_fri`
+* `tb_real_sat`
+* `tb_real_sun`
+
+> **역할**
+
+* 최근 1주일만 유지되는 **요일별 키워드 집계 캐시**
+* 실시간 화면 조회 최적화용
+
+---
+
+### 컬럼 정의 + 코멘트 (공통)
+
+| 컬럼명          | 타입      | 길이 | Nullable | 기본값  | 코멘트                 |
+| ------------ | ------- | -- | -------- | ---- | ------------------- |
+| real_mon_seq | BIGINT  | 20 | NOT NULL |      | 요일별 집계 데이터 식별자 (PK) |
+| keyword      | VARCHAR | 50 | NOT NULL | ""   | 요일 기준 집계 대상 키워드     |
+| count        | INT     | 11 | NULL     | NULL | 해당 요일 내 키워드 발생 건수   |
+
+### ERD 관점 메모
+
+* **요일별 테이블 분리**는:
+
+  * UNION 없이 단순 조회 가능
+  * 대신 테이블 수 증가(7개)
+* 구조적으로는 `tb_real_week(keyword, weekday, count)` 1개로도 가능하지만
+  👉 **요구사항상 분리 설계가 명확**
+
+---
+
+# 3️⃣ 상담사 상담 키워드 전체 테이블
+
+### `tb_bach_consultation`
+
+> **역할**
+
+* 배치로 수신되는 **상담 키워드 전체 원본 데이터**
+* 월/지역 집계의 Source
+
+---
+
+### 컬럼 정의 + 코멘트
+
+| 컬럼명                   | 타입      | 길이 | Nullable | 기본값  | 코멘트                   |
+| --------------------- | ------- | -- | -------- | ---- | --------------------- |
+| bach_consultation_seq | BIGINT  | 20 | NOT NULL |      | 배치 상담 데이터 고유 식별자 (PK) |
+| yy                    | VARCHAR | 4  | NULL     | NULL | 상담 발생 연도              |
+| mm                    | VARCHAR | 2  | NULL     | NULL | 상담 발생 월               |
+| dd                    | VARCHAR | 2  | NULL     | NULL | 상담 발생 일               |
+| hh                    | VARCHAR | 2  | NULL     | NULL | 상담 발생 시각              |
+| wk                    | VARCHAR | 1  | NULL     | NULL | 요일 코드 (1~7 또는 0~6 예상) |
+| gu                    | VARCHAR | 50 | NULL     | NULL | 서울시 자치구 명             |
+| dong                  | VARCHAR | 50 | NULL     | NULL | 행정동 또는 법정동 명          |
+| keyword               | VARCHAR | 50 | NULL     | NULL | 상담 키워드                |
+| call_id               | VARCHAR | 50 | NULL     | NULL | 상담 식별자                |
+
+---
+
+### 🔍 `wk` 컬럼 예상 의미 (중요)
+
+가장 합리적인 해석은:
+
+> **요일 코드**
+
+* `1~7` : 월~일
+  또는
+* `0~6` : 일~토
+
+**이유**
+
+* 이미 yy/mm/dd/hh 가 있음
+* 요일별 통계가 주요 요구사항
+* 문자열 1자리 → 숫자 코드 목적
+
+👉 ERD 상에서는
+**요일 Dimension 역할**
+
+---
+
+# 4️⃣ 상담사 상담 키워드 월 테이블
+
+### 예시: `tb_bach_1m` (1월)
+
+> **역할**
+
+* 월 단위 + 지역 + 키워드 **집계 결과 테이블**
+* 실제 서비스 조회의 핵심 테이블
+
+---
+
+### 컬럼 정의 + 코멘트
+
+| 컬럼명         | 타입      | 길이 | Nullable | 기본값  | 코멘트               |
+| ----------- | ------- | -- | -------- | ---- | ----------------- |
+| bach_1m_seq | BIGINT  | 20 | NOT NULL |      | 월 집계 데이터 식별자 (PK) |
+| yy          | VARCHAR | 4  | NOT NULL | ""   | 집계 기준 연도          |
+| mm          | VARCHAR | 2  | NOT NULL | ""   | 집계 기준 월 (01)      |
+| dd          | VARCHAR | 2  | NOT NULL | ""   | 집계 기준 일           |
+| hh          | VARCHAR | 2  | NOT NULL | ""   | 집계 기준 시각          |
+| wk          | VARCHAR | 1  | NULL     | NULL | 요일 코드             |
+| gu          | VARCHAR | 50 | NOT NULL | ""   | 서울시 자치구 명         |
+| dong        | VARCHAR | 50 | NOT NULL | ""   | 구 하위 동 명          |
+| keyword     | VARCHAR | 50 | NOT NULL | ""   | 집계 대상 키워드         |
+| count       | INT     | 11 | NULL     | 0    | 키워드 발생 누적 건수      |
+
+---
+
+# 🧩 ERD 전체 관계 요약 (논리)
+
+```
+tb_real_time
+   ↓ (요일 집계)
+tb_real_mon ~ tb_real_sun
+
+tb_bach_consultation
+   ↓ (월/지역/키워드 집계)
+tb_bach_1m ~ tb_bach_12m
+```
+
+* **모든 집계 테이블은 FK 없음**
+* 관계는 **논리적 관계(배치/집계 프로세스)** 로만 연결
+* 조회 성능 우선 설계
+
+---
+
+# ⚠️ ERD 설계 관점에서 보이는 포인트
+
+### 👍 잘 된 점
+
+* Raw / Aggregate 분리 명확
+* 실시간 / 배치 데이터 흐름이 깨끗함
+* 조회용 테이블이 명확히 존재
+
+### ⚠️ 나중에 고려할 수 있는 개선
+
+* 월 테이블 12개 → 1개 + 파티션 가능
+* keyword / gu / dong Dimension 분리 가능
+* yy/mm/dd/hh 문자열 → 조회 조건 기준 인덱스 필수
+
+---
+
+다음 단계로 추천:
+
+👉 **2번**
+
+* `PK / 인덱스 설계`
+* `ERD를 물리 ERD (MariaDB DDL)` 로 변환
+
+👉 또는
+👉 **3번**
+
+* “조회 화면 기준으로 역으로 필요한 인덱스 설계”
+
+원하는 다음 단계 말해줘.
