@@ -14,7 +14,6 @@ import { ko } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
@@ -216,31 +215,16 @@ function CallIssueContent() {
                     {/* 키워드 로우 */}
                     <div
                       className={cn(
-                        'grid grid-cols-[1fr_auto_1fr_auto] gap-4 px-4 py-3 cursor-pointer hover:bg-muted/50 items-center',
+                        'flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-muted/50',
                         isExpanded && 'bg-muted/30'
                       )}
                       onClick={() => handleKeywordClick(keyword)}
                     >
                       <div className="font-medium">{highlightKeyword(keyword.text, debouncedQuery)}</div>
-                      <div className="text-right text-sm">
-                        {keyword.count.toLocaleString()}건
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {keyword.relatedKeywords.slice(0, 3).map((related) => (
-                          <Badge
-                            key={related}
-                            variant="secondary"
-                            className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSearchQuery(related);
-                            }}
-                          >
-                            {related}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-muted-foreground">
+                          {keyword.count.toLocaleString()}건
+                        </span>
                         {isExpanded ? (
                           <ChevronUp className="h-4 w-4 text-muted-foreground" />
                         ) : (

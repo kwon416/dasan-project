@@ -7,7 +7,6 @@ import { ko } from 'date-fns/locale';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { Badge } from '@/components/ui/badge';
 import {
   Popover,
   PopoverContent,
@@ -235,11 +234,6 @@ export default function PeriodPage() {
                 <p className="text-sm text-muted-foreground mb-4">
                   특정 키워드를 검색하여 선택한 기간 동안의 민원 발생 추이를 분석합니다.
                 </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge variant="secondary">키워드 검색</Badge>
-                  <Badge variant="secondary">발생 추이</Badge>
-                  <Badge variant="secondary">연관 키워드</Badge>
-                </div>
                 <Button
                   disabled={!isDateSelected}
                   className="gap-2"
@@ -282,12 +276,6 @@ export default function PeriodPage() {
                 <p className="text-sm text-muted-foreground mb-4">
                   선택한 기간 동안 가장 많이 발생한 Top5 키워드의 통계를 비교 분석합니다.
                 </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge variant="secondary">월별 추세</Badge>
-                  <Badge variant="secondary">시간대별</Badge>
-                  <Badge variant="secondary">요일별</Badge>
-                  <Badge variant="secondary">계절별</Badge>
-                </div>
                 <Button
                   disabled={!isDateSelected}
                   variant="outline"

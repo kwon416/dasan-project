@@ -15,7 +15,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DailyComplaintChart } from '@/components/charts';
 import { DownloadButtons } from '@/components/common/DownloadButtons';
@@ -210,40 +209,18 @@ function KeywordSearchContent() {
                     {/* 키워드 로우 */}
                     <div
                       className={cn(
-                        'grid grid-cols-[1fr_auto_1fr_auto] gap-4 px-4 py-3 cursor-pointer hover:bg-muted/50 items-center',
+                        'flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-muted/50',
                         isExpanded && 'bg-muted/30'
                       )}
                       onClick={() => handleKeywordClick(keyword)}
                     >
-                      {/* 키워드명 */}
                       <div className="font-medium">
                         {highlightKeyword(keyword.text, debouncedQuery)}
                       </div>
-
-                      {/* 건수 */}
-                      <div className="text-right text-sm font-medium">
-                        {keyword.count.toLocaleString()}건
-                      </div>
-
-                      {/* 연관 키워드 */}
-                      <div className="flex flex-wrap gap-1">
-                        {keyword.relatedKeywords.slice(0, 3).map((related) => (
-                          <Badge
-                            key={related}
-                            variant="secondary"
-                            className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSearchQuery(related);
-                            }}
-                          >
-                            {related}
-                          </Badge>
-                        ))}
-                      </div>
-
-                      {/* 확장 아이콘 */}
-                      <div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-muted-foreground">
+                          {keyword.count.toLocaleString()}건
+                        </span>
                         {isExpanded ? (
                           <ChevronUp className="h-4 w-4 text-muted-foreground" />
                         ) : (
