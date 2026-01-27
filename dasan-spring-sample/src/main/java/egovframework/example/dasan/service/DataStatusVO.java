@@ -29,6 +29,9 @@ public class DataStatusVO {
     /** 포맷된 최종 업데이트 일시 */
     private String lastUpdatedFormatted;
 
+    /** 구별 평균 민원 건수 */
+    private int avgComplaintsPerDistrict;
+
     public String getCollectionStart() {
         return collectionStart;
     }
@@ -91,5 +94,13 @@ public class DataStatusVO {
 
     public void setLastUpdatedFormatted(String lastUpdatedFormatted) {
         this.lastUpdatedFormatted = lastUpdatedFormatted;
+    }
+
+    public int getAvgComplaintsPerDistrict() {
+        return avgComplaintsPerDistrict;
+    }
+
+    public void setAvgComplaintsPerDistrict(int avgComplaintsPerDistrict) {
+        this.avgComplaintsPerDistrict = avgComplaintsPerDistrict;
     }
 }

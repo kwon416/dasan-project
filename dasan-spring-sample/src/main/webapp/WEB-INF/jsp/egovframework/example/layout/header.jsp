@@ -43,7 +43,7 @@
 				</div>
 				<div class="header-branding">
 					<a href="<c:url value='/main.do'/>" class="logo-link">
-						<img src="<c:url value='/resources/img/logo.jpg'/>" alt="120 다산콜 민원공개시스템 - 홈으로" class="logo-img">
+						<img src="<c:url value='/resources/img/logo.png'/>" alt="120 다산콜" class="logo-img">
 					</a>
 					<div class="header-actions">
 						<!-- 검색 입력창 -->
@@ -260,7 +260,7 @@
 
 <!-- 글자·화면 설정 모달 -->
 <div id="display-settings-modal"
-	 class="krds-modal"
+	 class="krds-modal display-settings-modal"
 	 role="dialog"
 	 aria-modal="true"
 	 aria-labelledby="display-settings-title">
@@ -268,106 +268,104 @@
 	<div class="modal-back" aria-hidden="true"></div>
 
 	<!-- 모달 다이얼로그 -->
-	<div class="modal-dialog modal-sm">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content" tabindex="-1">
+			<!-- X 닫기 버튼 (우상단) -->
+			<button type="button" class="krds-btn medium icon btn-close close-modal">
+				<span class="sr-only">닫기</span>
+				<i class="svg-icon ico-popup-close"></i>
+			</button>
+
 			<!-- 모달 헤더 -->
 			<div class="modal-header">
-				<h2 id="display-settings-title" class="modal-title">글자·화면 설정</h2>
+				<h2 id="display-settings-title" class="modal-title">글자·화면 표시 설정</h2>
 			</div>
 
 			<!-- 모달 본문 -->
 			<div class="modal-conts">
-				<div class="conts-area">
-					<!-- 화면 크기 조정 섹션 -->
-					<div class="settings-section">
-						<h3 class="settings-section-title">화면 크기</h3>
-						<p class="settings-section-desc">화면에 표시되는 모든 요소의 크기를 조정합니다.</p>
+				<div class="conts-area display-settings-grid">
+					<!-- 왼쪽: 글자·화면 표시 설정 (KRDS 라디오 버튼) -->
+					<div class="settings-column">
+						<fieldset class="krds-check-area chk-column">
+							<legend class="settings-section-title">글자·화면 표시 설정</legend>
 
-						<div class="zoom-options" role="radiogroup" aria-label="화면 크기 선택">
-							<button type="button"
-									class="zoom-option sm"
-									data-zoom="0.9"
-									role="radio"
-									aria-checked="false">
-								<span class="zoom-icon" aria-hidden="true"></span>
-								<span class="zoom-label">작게<span class="zoom-percent">90%</span></span>
-							</button>
-							<button type="button"
-									class="zoom-option md active"
-									data-zoom="1"
-									role="radio"
-									aria-checked="true">
-								<span class="zoom-icon" aria-hidden="true"></span>
-								<span class="zoom-label">보통<span class="zoom-percent">100%</span></span>
-							</button>
-							<button type="button"
-									class="zoom-option lg"
-									data-zoom="1.1"
-									role="radio"
-									aria-checked="false">
-								<span class="zoom-icon" aria-hidden="true"></span>
-								<span class="zoom-label">조금 크게<span class="zoom-percent">110%</span></span>
-							</button>
-							<button type="button"
-									class="zoom-option xlg"
-									data-zoom="1.3"
-									role="radio"
-									aria-checked="false">
-								<span class="zoom-icon" aria-hidden="true"></span>
-								<span class="zoom-label">크게<span class="zoom-percent">130%</span></span>
-							</button>
-							<button type="button"
-									class="zoom-option xxlg"
-									data-zoom="1.5"
-									role="radio"
-									aria-checked="false">
-								<span class="zoom-icon" aria-hidden="true"></span>
-								<span class="zoom-label">가장 크게<span class="zoom-percent">150%</span></span>
-							</button>
-						</div>
+							<div class="krds-form-check medium">
+								<input type="radio" name="zoom-scale" id="zoom-sm" value="0.9" data-adjust-scale="sm">
+								<label for="zoom-sm">작게</label>
+							</div>
+							<div class="krds-form-check medium">
+								<input type="radio" name="zoom-scale" id="zoom-md" value="1" data-adjust-scale="md" checked>
+								<label for="zoom-md">보통</label>
+							</div>
+							<div class="krds-form-check medium">
+								<input type="radio" name="zoom-scale" id="zoom-lg" value="1.1" data-adjust-scale="lg">
+								<label for="zoom-lg">조금 크게</label>
+							</div>
+							<div class="krds-form-check medium">
+								<input type="radio" name="zoom-scale" id="zoom-xlg" value="1.3" data-adjust-scale="xlg">
+								<label for="zoom-xlg">크게</label>
+							</div>
+							<div class="krds-form-check medium">
+								<input type="radio" name="zoom-scale" id="zoom-xxlg" value="1.5" data-adjust-scale="xxlg">
+								<label for="zoom-xxlg">가장 크게</label>
+							</div>
+						</fieldset>
 					</div>
 
-					<!-- 고대비 모드 섹션 -->
-					<div class="settings-section">
-						<h3 class="settings-section-title">화면 모드</h3>
-						<p class="settings-section-desc">시인성을 높이기 위한 화면 모드를 선택합니다.</p>
+					<!-- 오른쪽: 화면 표시 모드 -->
+					<div class="settings-column">
+						<fieldset class="krds-check-area chk-column mode-fieldset">
+							<legend class="settings-section-title">화면 표시 모드</legend>
 
-						<div class="mode-options" role="radiogroup" aria-label="화면 모드 선택">
-							<button type="button"
-									class="mode-option active"
-									data-mode="light"
-									role="radio"
-									aria-checked="true">
-								<span class="mode-icon light" aria-hidden="true"></span>
-								<span class="mode-label">일반 모드</span>
-							</button>
-							<button type="button"
-									class="mode-option"
-									data-mode="high-contrast"
-									role="radio"
-									aria-checked="false">
-								<span class="mode-icon high-contrast" aria-hidden="true"></span>
-								<span class="mode-label">선명한 화면</span>
-							</button>
-						</div>
+							<div class="mode-card-option">
+								<div class="mode-preview light-preview" aria-hidden="true">
+									<div class="preview-header"></div>
+									<div class="preview-sidebar"></div>
+									<div class="preview-content"></div>
+								</div>
+								<div class="krds-form-check medium">
+									<input type="radio" name="display-mode" id="mode-light" value="light" data-mode="light" checked>
+									<label for="mode-light">기본 (밝은 배경)</label>
+								</div>
+							</div>
+
+							<div class="mode-card-option">
+								<div class="mode-preview dark-preview" aria-hidden="true">
+									<div class="preview-header"></div>
+									<div class="preview-sidebar"></div>
+									<div class="preview-content"></div>
+								</div>
+								<div class="krds-form-check medium">
+									<input type="radio" name="display-mode" id="mode-high-contrast" value="high-contrast" data-mode="high-contrast">
+									<label for="mode-high-contrast">선명하게 (어두운 배경)</label>
+								</div>
+							</div>
+
+							<div class="mode-card-option">
+								<div class="mode-preview system-preview" aria-hidden="true">
+									<div class="preview-header"></div>
+									<div class="preview-sidebar"></div>
+									<div class="preview-content"></div>
+								</div>
+								<div class="krds-form-check medium">
+									<input type="radio" name="display-mode" id="mode-system" value="system" data-mode="system">
+									<label for="mode-system">시스템 설정</label>
+								</div>
+							</div>
+						</fieldset>
 					</div>
 				</div>
 			</div>
 
-			<!-- 모달 푸터 -->
-			<div class="modal-btn">
-				<button type="button" class="krds-btn medium tertiary btn-reset" id="display-settings-reset">
+			<!-- 모달 푸터 (우하단 버튼) -->
+			<div class="modal-footer-btns">
+				<button type="button" class="krds-btn medium tertiary" id="display-settings-reset">
 					초기화
 				</button>
-				<button type="button" class="krds-btn medium primary btn-apply" id="display-settings-apply">
-					적용
+				<button type="button" class="krds-btn medium primary btn-modal-close">
+					닫기
 				</button>
 			</div>
-
-			<!-- 닫기 버튼 -->
-			<button type="button" class="krds-btn medium icon btn-close" aria-label="닫기">
-				<i class="svg-icon ico-modal-close" aria-hidden="true"></i>
-			</button>
 		</div>
 	</div>
 </div>

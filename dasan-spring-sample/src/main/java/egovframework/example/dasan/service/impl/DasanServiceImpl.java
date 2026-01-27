@@ -69,6 +69,11 @@ public class DasanServiceImpl extends EgovAbstractServiceImpl implements DasanSe
         vo.setCollectionStartFormatted(formatDate(vo.getCollectionStart()));
         vo.setLastUpdatedFormatted(formatDateTime(vo.getLastUpdated()));
 
+        // 구별 평균 민원 건수 계산
+        if (vo.getTotalDistricts() > 0) {
+            vo.setAvgComplaintsPerDistrict(vo.getTotalRecords() / vo.getTotalDistricts());
+        }
+
         return vo;
     }
 

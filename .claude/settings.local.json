@@ -1,4 +1,8 @@
-{
+{ 
+  "env": {
+    "DISCORD_WEBHOOK_URL": "https://discord.com/api/webhooks/1463896753530212372/n0hdlham7uB0nUKWa7EdvcaYNWxkzATCOBSqHtsJtxtd5CrZpChE7EYuNndxdIgFEPXA",
+    "DISCORD_NOTIFY_ENABLED": "true"
+  },
   "permissions": {
     "allow": [
       "Bash(mvn clean install:*)",

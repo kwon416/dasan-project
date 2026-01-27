@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="<c:url value='/resources/css/dasan/main.css'/>">
 </head>
 <body>
+<div id="wrap">
     <!-- Header -->
     <%@ include file="/WEB-INF/jsp/egovframework/example/layout/header.jsp" %>
 
@@ -87,13 +88,26 @@
                             <span class="value"><fmt:formatNumber value="${dataStatus.monthlyRecords}"/>건</span>
                         </div>
                     </div>
+                    <!-- <div class="stat-card">
+                        <div class="icon-wrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="label">구별 평균</span>
+                            <span class="value"><fmt:formatNumber value="${dataStatus.avgComplaintsPerDistrict}"/>건</span>
+                        </div>
+                    </div> -->
                 </div>
             </div>
         </section>
 
         <!-- 콘텐츠 영역 -->
         <div class="content-section">
-            <div class="inner">
+            <div class="inner">                                           
                 <!-- 차트 그리드 -->
                 <div class="chart-grid">
                     <!-- 일별 민원 차트 -->
@@ -143,8 +157,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-center" style="width: 60px;">순위</th>
-                                        <th scope="col">민원 유형</th>
-                                        <th scope="col" style="width: 100px;">카테고리</th>
+                                        <th scope="col">키워드</th>
                                         <th scope="col" class="text-right" style="width: 100px;">건수</th>
                                     </tr>
                                 </thead>
@@ -166,9 +179,6 @@
                                                     <span class="trend-icon stable" title="유지">-</span>
                                                 </c:if>
                                             </td>
-                                            <td>
-                                                <span class="category-tag"><c:out value="${item.category}"/></span>
-                                            </td>
                                             <td class="text-right">
                                                 <strong><fmt:formatNumber value="${item.count}"/></strong>건
                                             </td>
@@ -186,6 +196,7 @@
 
     <!-- Footer -->
     <%@ include file="/WEB-INF/jsp/egovframework/example/layout/footer.jsp" %>
+</div><!-- //wrap -->
 
     <!-- KRDS JS -->
     <script src="<c:url value='/resources/js/cdn/krds.min.js'/>"></script>
@@ -193,6 +204,9 @@
 
     <!-- 글자·화면 설정 -->
     <script src="<c:url value='/resources/js/dasan/display-settings.js'/>"></script>
+
+    <!-- 모바일 사이드바 -->
+    <script src="<c:url value='/resources/js/dasan/mobile-sidebar.js'/>"></script>
 
     <!-- ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>

@@ -126,289 +126,262 @@
 
 /* ========================================
    글자·화면 설정 모달
-   KRDS 모달 + 화면 크기 조정 컴포넌트 스타일
+   KRDS 라디오 버튼 컴포넌트 기반
+   참조: https://www.krds.go.kr/html/site/component/component_06_01.html
    ======================================== */
-#display-settings-modal .settings-section {
-    margin-bottom: var(--krds-gap-7); /* 2.4rem */
+
+/* 2컬럼 그리드 레이아웃 */
+#display-settings-modal .display-settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: var(--krds-gap-10); /* 4rem */
 }
 
-#display-settings-modal .settings-section:last-child {
+/* 컬럼 */
+#display-settings-modal .settings-column {
+    min-width: 0;
+}
+
+/* 섹션 타이틀 (legend) */
+#display-settings-modal .settings-section-title {
+    /* KRDS Label Large Bold */
+    display: block;
+    font-size: var(--krds-pc-font-size-label-large); /* 1.7rem */
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+    margin-bottom: var(--krds-gap-6); /* 2rem */
+    padding: 0;
+    line-height: var(--krds-line-height-base);
+}
+
+/* KRDS 라디오 버튼 영역 */
+#display-settings-modal .krds-check-area {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+#display-settings-modal .krds-check-area.chk-column .krds-form-check {
+    margin-bottom: var(--krds-gap-4); /* 1.2rem */
+}
+
+#display-settings-modal .krds-check-area.chk-column .krds-form-check:last-child {
     margin-bottom: 0;
 }
 
-#display-settings-modal .settings-section-title {
-    /* KRDS Heading XXSmall */
-    font-size: var(--krds-pc-font-size-heading-xxsmall); /* 1.5rem */
-    font-weight: var(--krds-font-weight-bold);
-    color: var(--dasan-text-bolder);
-    margin: 0 0 var(--krds-gap-2); /* 0.4rem */
-    line-height: var(--krds-line-height-base);
+/* ========================================
+   화면 표시 모드 카드
+   ======================================== */
+#display-settings-modal .mode-fieldset .krds-form-check {
+    margin-bottom: 0;
 }
 
-#display-settings-modal .settings-section-desc {
-    /* KRDS Body Small */
-    font-size: var(--krds-pc-font-size-body-small); /* 1.5rem */
-    font-weight: var(--krds-font-weight-regular);
-    color: var(--dasan-text-subtle);
-    margin: 0 0 var(--krds-gap-5); /* 1.6rem */
-    line-height: var(--krds-line-height-base);
-}
-
-/* 화면 크기 옵션 그룹 */
-#display-settings-modal .zoom-options {
-    display: flex;
-    flex-direction: column;
-    gap: var(--krds-gap-3); /* 0.8rem */
-}
-
-/* 화면 크기 옵션 버튼 */
-#display-settings-modal .zoom-option {
+#display-settings-modal .mode-card-option {
     display: flex;
     align-items: center;
-    gap: var(--krds-gap-4); /* 1.2rem */
-    width: 100%;
-    padding: var(--krds-padding-4) var(--krds-padding-5); /* 1rem 1.4rem */
-    background-color: var(--krds-light-color-action-secondary);
-    border: var(--krds-light-border-width-static-regular) solid var(--dasan-border-light);
-    border-radius: var(--dasan-radius); /* 0.8rem */
-    cursor: pointer;
-    transition: all var(--krds-transition-base);
-    text-align: left;
+    gap: var(--krds-gap-5); /* 1.6rem */
+    margin-bottom: var(--krds-gap-5); /* 1.6rem */
 }
 
-#display-settings-modal .zoom-option:hover {
-    background-color: var(--krds-light-color-action-secondary-hover);
+#display-settings-modal .mode-card-option:last-child {
+    margin-bottom: 0;
 }
 
-#display-settings-modal .zoom-option:focus {
-    outline: var(--krds-number-2) solid var(--krds-light-color-border-primary);
-    outline-offset: var(--krds-number-1);
-}
-
-#display-settings-modal .zoom-option.active {
-    background-color: var(--krds-light-color-action-secondary-selected);
-    border-color: var(--krds-light-color-element-secondary);
-}
-
-/* 줌 아이콘 (KRDS 화면 크기 조정 스타일) */
-#display-settings-modal .zoom-option .zoom-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--krds-size-height-3); /* 2rem */
-    height: var(--krds-size-height-3);
-    border: var(--krds-light-border-width-static-regular) solid var(--krds-light-color-border-gray);
+/* 모드 미리보기 카드 */
+#display-settings-modal .mode-preview {
+    position: relative;
+    width: 12rem;
+    height: 7.2rem;
     border-radius: var(--krds-radius-small2); /* 0.4rem */
-    background-color: var(--krds-light-color-action-secondary);
+    overflow: hidden;
     flex-shrink: 0;
+    border: var(--krds-light-border-width-static-regular) solid var(--dasan-border);
 }
 
-#display-settings-modal .zoom-option.active .zoom-icon {
-    border-color: var(--krds-light-color-element-secondary);
-    background-color: var(--krds-light-color-element-secondary);
+/* 밝은 배경 미리보기 */
+#display-settings-modal .mode-preview.light-preview {
+    background-color: var(--krds-color-light-gray-5);
 }
 
-#display-settings-modal .zoom-option.active .zoom-icon::after {
-    content: '';
-    width: 0.8rem;
+#display-settings-modal .mode-preview.light-preview .preview-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1.2rem;
+    background-color: var(--krds-color-light-primary-60);
+}
+
+#display-settings-modal .mode-preview.light-preview .preview-sidebar {
+    position: absolute;
+    top: 1.2rem;
+    left: 0;
+    width: 2.4rem;
+    bottom: 0;
+    background-color: var(--krds-color-light-gray-20);
+}
+
+#display-settings-modal .mode-preview.light-preview .preview-content {
+    position: absolute;
+    top: 2rem;
+    left: 3.2rem;
+    right: 0.8rem;
     height: 0.8rem;
-    background-color: var(--krds-light-color-surface-white);
-    border-radius: var(--krds-radius-xsmall1);
+    background-color: var(--krds-color-light-gray-30);
+    border-radius: 0.2rem;
 }
 
-/* 줌 크기별 아이콘 크기 */
-#display-settings-modal .zoom-option.sm .zoom-icon {
-    width: 1.6rem;
-    height: 1.6rem;
+/* 어두운 배경 미리보기 */
+#display-settings-modal .mode-preview.dark-preview {
+    background-color: var(--krds-color-light-gray-90);
 }
 
-#display-settings-modal .zoom-option.md .zoom-icon {
-    width: 2rem;
-    height: 2rem;
+#display-settings-modal .mode-preview.dark-preview .preview-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1.2rem;
+    background-color: var(--krds-color-light-primary-40);
 }
 
-#display-settings-modal .zoom-option.lg .zoom-icon {
-    width: 2.2rem;
-    height: 2.2rem;
+#display-settings-modal .mode-preview.dark-preview .preview-sidebar {
+    position: absolute;
+    top: 1.2rem;
+    left: 0;
+    width: 2.4rem;
+    bottom: 0;
+    background-color: var(--krds-color-light-gray-80);
 }
 
-#display-settings-modal .zoom-option.xlg .zoom-icon {
-    width: 2.6rem;
-    height: 2.6rem;
+#display-settings-modal .mode-preview.dark-preview .preview-content {
+    position: absolute;
+    top: 2rem;
+    left: 3.2rem;
+    right: 0.8rem;
+    height: 0.8rem;
+    background-color: var(--krds-color-light-gray-70);
+    border-radius: 0.2rem;
 }
 
-#display-settings-modal .zoom-option.xxlg .zoom-icon {
-    width: 3rem;
-    height: 3rem;
+/* 시스템 설정 미리보기 (반반) */
+#display-settings-modal .mode-preview.system-preview {
+    background: linear-gradient(
+        to right,
+        var(--krds-color-light-gray-5) 50%,
+        var(--krds-color-light-gray-90) 50%
+    );
 }
 
-/* 줌 레이블 */
-#display-settings-modal .zoom-option .zoom-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex: 1;
-    /* KRDS Body Medium */
-    font-size: var(--krds-pc-font-size-body-medium); /* 1.7rem */
-    font-weight: var(--krds-font-weight-regular);
-    color: var(--dasan-text-basic);
-    line-height: var(--krds-line-height-base);
+#display-settings-modal .mode-preview.system-preview .preview-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1.2rem;
+    background: linear-gradient(
+        to right,
+        var(--krds-color-light-primary-60) 50%,
+        var(--krds-color-light-primary-40) 50%
+    );
 }
 
-#display-settings-modal .zoom-option.active .zoom-label {
-    font-weight: var(--krds-font-weight-bold);
-    color: var(--krds-light-color-text-secondary);
+#display-settings-modal .mode-preview.system-preview .preview-sidebar {
+    position: absolute;
+    top: 1.2rem;
+    left: 0;
+    width: 2.4rem;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        var(--krds-color-light-gray-20) 0%,
+        var(--krds-color-light-gray-80) 100%
+    );
 }
 
-#display-settings-modal .zoom-option .zoom-percent {
-    /* KRDS Label Small */
-    font-size: var(--krds-pc-font-size-label-small); /* 1.5rem */
-    color: var(--dasan-text-subtle);
+#display-settings-modal .mode-preview.system-preview .preview-content {
+    position: absolute;
+    top: 2rem;
+    left: 3.2rem;
+    right: 0.8rem;
+    height: 0.8rem;
+    background: linear-gradient(
+        to right,
+        var(--krds-color-light-gray-30) 50%,
+        var(--krds-color-light-gray-70) 50%
+    );
+    border-radius: 0.2rem;
 }
 
-#display-settings-modal .zoom-option.active .zoom-percent {
-    color: var(--krds-light-color-text-secondary);
+/* 모달 콘텐츠 - X 버튼 위치 기준점 */
+.display-settings-modal .modal-content {
+    position: relative !important;
 }
 
-/* 화면 모드 옵션 그룹 */
-#display-settings-modal .mode-options {
-    display: flex;
-    gap: var(--krds-gap-4); /* 1.2rem */
-}
-
-/* 화면 모드 옵션 버튼 */
-#display-settings-modal .mode-option {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--krds-gap-3); /* 0.8rem */
-    flex: 1;
-    padding: var(--krds-padding-6); /* 1.6rem */
-    background-color: var(--krds-light-color-action-secondary);
-    border: var(--krds-light-border-width-static-regular) solid var(--dasan-border-light);
-    border-radius: var(--dasan-radius); /* 0.8rem */
+/* X 닫기 버튼 - 우상단 고정 */
+.display-settings-modal .btn-close-x {
+    position: absolute !important;
+    top: 1.6rem !important;
+    right: 1.6rem !important;
+    z-index: 100 !important;
+    width: 4rem;
+    height: 4rem;
+    padding: 0;
+    border: none;
+    background: transparent;
     cursor: pointer;
-    transition: all var(--krds-transition-base);
-}
-
-#display-settings-modal .mode-option:hover {
-    background-color: var(--krds-light-color-action-secondary-hover);
-}
-
-#display-settings-modal .mode-option:focus {
-    outline: var(--krds-number-2) solid var(--krds-light-color-border-primary);
-    outline-offset: var(--krds-number-1);
-}
-
-#display-settings-modal .mode-option.active {
-    background-color: var(--krds-light-color-action-secondary-selected);
-    border-color: var(--krds-light-color-element-secondary);
-}
-
-/* 모드 아이콘 */
-#display-settings-modal .mode-option .mode-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--krds-size-height-6); /* 4.8rem */
-    height: var(--krds-size-height-6);
-    border-radius: var(--dasan-radius-sm); /* 0.4rem */
-    border: var(--krds-light-border-width-static-medium) solid;
+    border-radius: var(--krds-radius-small2);
+    transition: background-color 0.2s;
 }
 
-#display-settings-modal .mode-option .mode-icon.light {
-    background-color: var(--krds-color-light-gray-0);
-    border-color: var(--krds-color-light-gray-20);
+.display-settings-modal .btn-close-x:hover {
+    background-color: var(--krds-light-color-action-secondary-hover);
 }
 
-#display-settings-modal .mode-option .mode-icon.high-contrast {
-    background-color: var(--krds-color-light-gray-90);
-    border-color: var(--krds-color-light-gray-70);
+.display-settings-modal .btn-close-x .svg-icon {
+    width: 2.4rem;
+    height: 2.4rem;
 }
 
-/* 모드 레이블 */
-#display-settings-modal .mode-option .mode-label {
-    /* KRDS Body Small */
-    font-size: var(--krds-pc-font-size-body-small); /* 1.5rem */
-    font-weight: var(--krds-font-weight-regular);
-    color: var(--dasan-text-basic);
-    line-height: var(--krds-line-height-base);
+/* 모달 헤더 - KRDS 기본 스타일 오버라이드 */
+.display-settings-modal .modal-header {
+    padding-right: 5rem !important; /* X 버튼 공간 확보 */
 }
 
-#display-settings-modal .mode-option.active .mode-label {
-    font-weight: var(--krds-font-weight-bold);
-    color: var(--krds-light-color-text-secondary);
-}
-
-/* 모달 버튼 영역 */
-#display-settings-modal .modal-btn {
-    justify-content: flex-end;
+/* 모달 푸터 버튼 영역 - 우하단 정렬 */
+.display-settings-modal .modal-footer-btns {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 0.8rem !important;
+    padding: 1.6rem 2.4rem !important;
+    border-top: 1px solid var(--dasan-divider, #e5e7eb) !important;
+    background: var(--dasan-surface-white, #fff);
 }
 
 /* Mobile */
 @media (max-width: 767px) {
+    #display-settings-modal .display-settings-grid {
+        grid-template-columns: 1fr;
+        gap: var(--krds-gap-8); /* 2.8rem */
+    }
+
     #display-settings-modal .settings-section-title {
-        font-size: var(--krds-mobile-font-size-heading-xxsmall);
+        font-size: var(--krds-mobile-font-size-label-large);
+        margin-bottom: var(--krds-gap-5);
     }
 
-    #display-settings-modal .settings-section-desc {
-        font-size: var(--krds-mobile-font-size-body-small);
+    #display-settings-modal .mode-preview {
+        width: 10rem;
+        height: 6rem;
     }
 
-    #display-settings-modal .zoom-option .zoom-label {
-        font-size: var(--krds-mobile-font-size-body-medium);
+    #display-settings-modal .mode-card-option {
+        gap: var(--krds-gap-4);
     }
-
-    #display-settings-modal .zoom-option .zoom-percent {
-        font-size: var(--krds-mobile-font-size-label-small);
-    }
-
-    #display-settings-modal .mode-options {
-        flex-direction: column;
-    }
-
-    #display-settings-modal .mode-option .mode-label {
-        font-size: var(--krds-mobile-font-size-body-small);
-    }
-}
-
-/* High Contrast Mode */
-[data-krds-mode="high-contrast"] #display-settings-modal .zoom-option {
-    background-color: var(--krds-high-contrast-color-action-secondary);
-    border-color: var(--krds-high-contrast-color-border-gray-light);
-}
-
-[data-krds-mode="high-contrast"] #display-settings-modal .zoom-option:hover {
-    background-color: var(--krds-high-contrast-color-action-secondary-hover);
-}
-
-[data-krds-mode="high-contrast"] #display-settings-modal .zoom-option.active {
-    background-color: var(--krds-high-contrast-color-action-secondary-selected);
-    border-color: var(--krds-high-contrast-color-element-secondary);
-}
-
-[data-krds-mode="high-contrast"] #display-settings-modal .zoom-option .zoom-icon {
-    border-color: var(--krds-high-contrast-color-border-gray);
-    background-color: var(--krds-high-contrast-color-action-secondary);
-}
-
-[data-krds-mode="high-contrast"] #display-settings-modal .zoom-option.active .zoom-icon {
-    border-color: var(--krds-high-contrast-color-element-secondary);
-    background-color: var(--krds-high-contrast-color-element-secondary);
-}
-
-[data-krds-mode="high-contrast"] #display-settings-modal .mode-option {
-    background-color: var(--krds-high-contrast-color-action-secondary);
-    border-color: var(--krds-high-contrast-color-border-gray-light);
-}
-
-[data-krds-mode="high-contrast"] #display-settings-modal .mode-option:hover {
-    background-color: var(--krds-high-contrast-color-action-secondary-hover);
-}
-
-[data-krds-mode="high-contrast"] #display-settings-modal .mode-option.active {
-    background-color: var(--krds-high-contrast-color-action-secondary-selected);
-    border-color: var(--krds-high-contrast-color-element-secondary);
 }
 
 
@@ -661,11 +634,17 @@
     width: 100%;
     height: 320px;
     cursor: pointer;
+    /* 캔버스 정 가운데 정렬 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* Canvas 크기는 JavaScript에서 devicePixelRatio를 고려하여 설정됨 */
 #wordCloudCanvas {
-    width: 100% !important;
-    height: 100% !important;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 /* ========================================
@@ -745,7 +724,7 @@
     line-height: var(--krds-line-height-none);
     color: var(--krds-light-color-text-bolder-inverse);
     background: var(--dasan-primary);
-    border-radius: var(--dasan-radius-xs); /* 0.2rem */
+    border-radius: var(--dasan-radius-sm); /* 0.4rem - 앱 공통 radius */
 }
 
 .rank-badge.top-3 {
@@ -953,6 +932,13 @@
     --dasan-warning: var(--krds-color-high-contrast-warning-30);
     --dasan-info: var(--krds-color-high-contrast-information-50);
 
+    /* 그라데이션: High Contrast 색상 적용 */
+    --dasan-bg-gradient: linear-gradient(
+        135deg,
+        var(--krds-color-high-contrast-primary-60) 0%,
+        var(--krds-color-high-contrast-primary-50) 100%
+    );
+
     /* 그림자 */
     --dasan-shadow-sm: 0 0 var(--krds-number-2) 0 var(--krds-high-contrast-color-alpha-shadow1);
     --dasan-shadow: 0 0 var(--krds-number-2) 0 var(--krds-high-contrast-color-alpha-shadow1),
@@ -961,7 +947,30 @@
                        0 var(--krds-number-5) var(--krds-number-8) 0 var(--krds-high-contrast-color-alpha-shadow3);
 }
 
-/* Dark mode (prefers-color-scheme) */
+/* High Contrast Mode - Hero Section 직접 스타일 적용 */
+[data-krds-mode="high-contrast"] .hero-section {
+    /* High Contrast 테마에서 더 진한 배경 사용 */
+    background: linear-gradient(
+        135deg,
+        var(--krds-color-high-contrast-primary-70, #1a365d) 0%,
+        var(--krds-color-high-contrast-primary-60, #2c5282) 100%
+    );
+}
+
+/* High Contrast Mode - Stat Cards */
+[data-krds-mode="high-contrast"] .stat-card {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+[data-krds-mode="high-contrast"] .stat-card:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+[data-krds-mode="high-contrast"] .stat-card .icon-wrap {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Dark mode (prefers-color-scheme) - 시스템 설정 따르기 */
 @media (prefers-color-scheme: dark) {
     [data-krds-mode="theme"] {
         --dasan-primary: var(--krds-color-high-contrast-primary-50);
@@ -987,10 +996,39 @@
         --dasan-warning: var(--krds-color-high-contrast-warning-30);
         --dasan-info: var(--krds-color-high-contrast-information-50);
 
+        /* 그라데이션: High Contrast 색상 적용 */
+        --dasan-bg-gradient: linear-gradient(
+            135deg,
+            var(--krds-color-high-contrast-primary-60) 0%,
+            var(--krds-color-high-contrast-primary-50) 100%
+        );
+
         --dasan-shadow-sm: 0 0 var(--krds-number-2) 0 var(--krds-high-contrast-color-alpha-shadow1);
         --dasan-shadow: 0 0 var(--krds-number-2) 0 var(--krds-high-contrast-color-alpha-shadow1),
                         0 var(--krds-number-3) var(--krds-number-5) 0 var(--krds-high-contrast-color-alpha-shadow2);
         --dasan-shadow-lg: 0 0 var(--krds-number-3) 0 var(--krds-high-contrast-color-alpha-shadow2),
                            0 var(--krds-number-5) var(--krds-number-8) 0 var(--krds-high-contrast-color-alpha-shadow3);
+    }
+
+    /* System Dark Mode - Hero Section */
+    [data-krds-mode="theme"] .hero-section {
+        background: linear-gradient(
+            135deg,
+            var(--krds-color-high-contrast-primary-70, #1a365d) 0%,
+            var(--krds-color-high-contrast-primary-60, #2c5282) 100%
+        );
+    }
+
+    /* System Dark Mode - Stat Cards */
+    [data-krds-mode="theme"] .stat-card {
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    [data-krds-mode="theme"] .stat-card:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    [data-krds-mode="theme"] .stat-card .icon-wrap {
+        background: rgba(255, 255, 255, 0.25);
     }
 }

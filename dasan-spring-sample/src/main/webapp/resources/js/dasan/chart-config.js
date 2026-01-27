@@ -167,11 +167,27 @@ function initDistrictPieChart(containerId, data) {
  */
 function initWordCloud(canvasId, words, onWordClick) {
     var canvas = document.getElementById(canvasId);
+    var container = canvas.parentElement;
 
     if (!words || words.length === 0) {
         console.warn('워드클라우드 데이터가 없습니다.');
         return;
     }
+
+    // 컨테이너 크기 가져오기
+    var containerWidth = container.offsetWidth;
+    var containerHeight = container.offsetHeight;
+
+    // 고해상도 디스플레이 지원 (Retina 등)
+    var dpr = window.devicePixelRatio || 1;
+
+    // Canvas 실제 해상도 설정 (화질 개선의 핵심)
+    canvas.width = containerWidth * dpr;
+    canvas.height = containerHeight * dpr;
+
+    // Canvas CSS 크기 설정 (화면에 표시되는 크기)
+    canvas.style.width = containerWidth + 'px';
+    canvas.style.height = containerHeight + 'px';
 
     var values = words.map(function(w) { return w.value; });
     var maxValue = Math.max.apply(null, values);
@@ -180,15 +196,16 @@ function initWordCloud(canvasId, words, onWordClick) {
 
     var colors = ['#0033A0', '#1E5FC2', '#3D7BE4', '#5B97FF'];
 
+    // 폰트 크기를 dpr에 맞게 스케일링
     var list = words.map(function(word) {
         var normalized = (word.value - minValue) / range;
-        var weight = 14 + normalized * 40; // 14px ~ 54px
+        var weight = (14 + normalized * 40) * dpr; // 14px ~ 54px, dpr 적용
         return [word.text, weight];
     });
 
     WordCloud(canvas, {
         list: list,
-        gridSize: 16,
+        gridSize: Math.round(16 * dpr),
         fontFamily: 'Pretendard, "Noto Sans KR", sans-serif',
         fontWeight: 600,
         color: function() {
@@ -204,7 +221,8 @@ function initWordCloud(canvasId, words, onWordClick) {
         },
         shrinkToFit: true,
         drawOutOfBound: false,
-        minSize: 12
+        minSize: Math.round(12 * dpr),
+        clearCanvas: true
     });
 }
 

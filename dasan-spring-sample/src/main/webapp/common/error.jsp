@@ -4,84 +4,130 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오류 발생</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>오류 발생 - KRDS</title>
+
+    <!-- KRDS CSS -->
+    <link href="<c:url value='/resources/css/token/krds_tokens.css'/>" type="text/css" rel="stylesheet">
+    <link href="<c:url value='/resources/css/cdn/krds.min.css'/>" type="text/css" rel="stylesheet">
+
     <style>
-        body {
-            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-            background: #f5f5f5;
-            margin: 0;
-            padding: 0;
+        /* 에러 페이지 전용 스타일 (KRDS 공식 사이트 참조) */
+        .g-wrap.err {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            background-color: var(--krds-light-color-bg-secondary, #f5f5f5);
         }
-        .error-container {
+
+        [data-krds-mode="high-contrast"] .g-wrap.err {
+            background-color: var(--krds-high-contrast-color-bg-secondary, #1a1a1a);
+        }
+
+        .g-wrap.err #container {
+            width: 100%;
+            max-width: var(--krds-contents-wrap-size, 1248px);
+            padding: 0 var(--krds-contents-padding-x, 24px);
+        }
+
+        .g-wrap.err .inner {
+            display: flex;
+            justify-content: center;
+        }
+
+        .g-wrap.err .contents {
             text-align: center;
-            padding: 40px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            max-width: 500px;
+            padding: 60px 40px;
+            background-color: var(--krds-light-color-bg-primary, #ffffff);
+            border-radius: var(--krds-radius-4, 16px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 600px;
+            width: 100%;
         }
-        .error-code {
-            font-size: 72px;
-            font-weight: 700;
-            color: #DC2626;
-            margin-bottom: 16px;
+
+        [data-krds-mode="high-contrast"] .g-wrap.err .contents {
+            background-color: var(--krds-high-contrast-color-bg-primary, #000000);
+            box-shadow: 0 0 0 1px var(--krds-high-contrast-color-border-secondary, #444);
         }
-        .error-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 12px;
+
+        .heading-error {
+            font-family: var(--krds-typo-font-type, 'Pretendard', sans-serif);
+            font-size: var(--krds-typo-heading-4-pc-font-size, 2.4rem);
+            font-weight: var(--krds-typo-heading-4-pc-font-weight, 700);
+            line-height: var(--krds-typo-heading-4-pc-line-height, 1.4);
+            color: var(--krds-light-color-text-primary, #111827);
+            margin: 0 0 24px 0;
         }
-        .error-message {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 24px;
-            line-height: 1.6;
+
+        [data-krds-mode="high-contrast"] .heading-error {
+            color: var(--krds-high-contrast-color-text-primary, #ffffff);
         }
-        .error-detail {
-            font-size: 12px;
-            color: #9ca3af;
-            background: #f9fafb;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: left;
-            word-break: break-all;
-            margin-bottom: 24px;
+
+        .info-txt {
+            font-family: var(--krds-typo-font-type, 'Pretendard', sans-serif);
+            font-size: var(--krds-typo-body-2-pc-font-size, 1.6rem);
+            font-weight: var(--krds-typo-body-2-pc-font-weight, 400);
+            line-height: var(--krds-typo-body-2-pc-line-height, 1.6);
+            color: var(--krds-light-color-text-secondary, #6b7280);
+            margin: 0;
         }
-        .btn-home {
-            display: inline-block;
-            padding: 12px 24px;
-            background: #0033A0;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
+
+        [data-krds-mode="high-contrast"] .info-txt {
+            color: var(--krds-high-contrast-color-text-secondary, #cccccc);
         }
-        .btn-home:hover {
-            background: #1E5FC2;
+
+        .info-txt.ac {
+            text-align: center;
+        }
+
+        /* PC에서 줄바꿈 */
+        @media (min-width: 1024px) {
+            .pc-line {
+                display: block;
+                line-height: inherit;
+            }
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 1023px) {
+            .g-wrap.err .contents {
+                padding: 40px 24px;
+            }
+
+            .heading-error {
+                font-size: var(--krds-typo-heading-4-mobile-font-size, 2rem);
+            }
+
+            .pc-line {
+                display: inline;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="error-container">
-        <div class="error-code">500</div>
-        <h1 class="error-title">오류가 발생했습니다</h1>
-        <p class="error-message">
-            요청을 처리하는 중 문제가 발생했습니다.<br>
-            잠시 후 다시 시도해 주세요.
-        </p>
-        <c:if test="${not empty exception}">
-            <div class="error-detail">
-                <strong>오류 내용:</strong><br>
-                ${exception.message}
+    <div id="wrap" class="g-wrap err">
+        <!-- 컨테이너 영역 -->
+        <div id="container">
+            <!-- 컨텐츠 영역 -->
+            <div class="inner">
+                <div class="contents">
+                    <h1 class="heading-error">요청하신 페이지를 찾을 수 없습니다.</h1>
+                    <p class="info-txt ac">
+                        <span class="pc-line">찾으시는 웹페이지의 주소가 현재 사용할 수 없거나,</span>
+                        <span class="pc-line">변경 또는 삭제되어 페이지를 찾을 수 없습니다.</span>
+                        <span class="pc-line">다시 한 번 확인 후 접속하시기 바랍니다.</span>
+                    </p>
+                </div>
             </div>
-        </c:if>
-        <a href="<c:url value='/main.do'/>" class="btn-home">메인으로 돌아가기</a>
+            <!-- //컨텐츠 영역 -->
+        </div>
+        <!-- //컨테이너 영역 -->
     </div>
+
+    <!-- KRDS JS -->
+    <script src="<c:url value='/resources/js/cdn/krds.min.js'/>"></script>
 </body>
 </html>
