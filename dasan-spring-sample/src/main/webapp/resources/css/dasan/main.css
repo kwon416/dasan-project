@@ -1,0 +1,996 @@
+/**
+ * 다산콜 민원시스템 메인 페이지 스타일
+ * KRDS 디자인 스타일 가이드 기반 커스텀 스타일
+ *
+ * KRDS 가이드라인 준수 사항:
+ * - 색상: KRDS 토큰 기반 (--krds-color-*, --krds-light-color-*)
+ * - 타이포그래피: Pretendard GOV, 17px 기본, 1.5 행간
+ * - 형태: KRDS radius 토큰 (--krds-radius-*)
+ * - 레이아웃: KRDS gap/padding 토큰 (--krds-gap-*, --krds-padding-*)
+ * - 엘리베이션: KRDS shadow 토큰 (--krds-*-color-alpha-shadow*)
+ */
+
+/* ========================================
+   CSS 변수 (KRDS 토큰 확장)
+   - 앱 전용 변수는 KRDS 토큰을 참조하여 정의
+   ======================================== */
+:root {
+    /* === 색상: KRDS 토큰 기반 === */
+    /* Primary 색상 - KRDS primary 팔레트 사용 */
+    --dasan-primary: var(--krds-color-light-primary-60);          /* #0b50d0 */
+    --dasan-primary-light: var(--krds-color-light-primary-50);    /* #256ef4 */
+    --dasan-primary-lighter: var(--krds-color-light-primary-40);  /* #4c87f6 */
+    --dasan-primary-dark: var(--krds-color-light-primary-70);     /* #083891 */
+
+    /* Secondary 색상 */
+    --dasan-secondary: var(--krds-color-light-secondary-70);      /* #063a74 */
+    --dasan-secondary-light: var(--krds-color-light-secondary-50); /* #346fb2 */
+
+    /* Surface/Background 색상 */
+    --dasan-surface-white: var(--krds-light-color-surface-white);
+    --dasan-surface-gray: var(--krds-light-color-surface-gray-subtler);
+    --dasan-background: var(--krds-light-color-background-white);
+
+    /* Text 색상 */
+    --dasan-text-basic: var(--krds-light-color-text-basic);
+    --dasan-text-subtle: var(--krds-light-color-text-subtle);
+    --dasan-text-bolder: var(--krds-light-color-text-bolder);
+    --dasan-text-disabled: var(--krds-light-color-text-disabled);
+
+    /* Border 색상 */
+    --dasan-border-light: var(--krds-light-color-border-gray-light);
+    --dasan-border: var(--krds-light-color-border-gray);
+    --dasan-divider: var(--krds-light-color-divider-gray-light);
+
+    /* 상태 색상 */
+    --dasan-danger: var(--krds-color-light-danger-50);
+    --dasan-success: var(--krds-color-light-success-50);
+    --dasan-warning: var(--krds-color-light-warning-30);
+    --dasan-info: var(--krds-color-light-information-50);
+
+    /* === 그라데이션 === */
+    --dasan-bg-gradient: linear-gradient(
+        135deg,
+        var(--krds-color-light-primary-60) 0%,
+        var(--krds-color-light-primary-50) 100%
+    );
+
+    /* === 엘리베이션(그림자): KRDS 토큰 기반 === */
+    --dasan-shadow-sm: 0 0 var(--krds-number-2) 0 var(--krds-light-color-alpha-shadow1);
+    --dasan-shadow: 0 0 var(--krds-number-2) 0 var(--krds-light-color-alpha-shadow1),
+                    0 var(--krds-number-3) var(--krds-number-5) 0 var(--krds-light-color-alpha-shadow2);
+    --dasan-shadow-lg: 0 0 var(--krds-number-3) 0 var(--krds-light-color-alpha-shadow2),
+                       0 var(--krds-number-5) var(--krds-number-8) 0 var(--krds-light-color-alpha-shadow3);
+
+    /* === 형태(Border Radius): KRDS 토큰 기반 === */
+    --dasan-radius-xs: var(--krds-radius-xsmall2);  /* 0.2rem */
+    --dasan-radius-sm: var(--krds-radius-small2);   /* 0.4rem */
+    --dasan-radius: var(--krds-radius-medium3);     /* 0.8rem */
+    --dasan-radius-lg: var(--krds-radius-large1);   /* 1rem */
+    --dasan-radius-xl: var(--krds-radius-xlarge1);  /* 1.2rem */
+
+    /* === 레이아웃: KRDS 토큰 기반 === */
+    /* gap 토큰 */
+    --dasan-gap-xs: var(--krds-gap-1);   /* 0.2rem */
+    --dasan-gap-sm: var(--krds-gap-3);   /* 0.8rem */
+    --dasan-gap: var(--krds-gap-5);      /* 1.6rem */
+    --dasan-gap-lg: var(--krds-gap-7);   /* 2.4rem */
+    --dasan-gap-xl: var(--krds-gap-9);   /* 4rem */
+
+    /* padding 토큰 */
+    --dasan-padding-xs: var(--krds-padding-2);  /* 0.4rem */
+    --dasan-padding-sm: var(--krds-padding-4);  /* 1rem */
+    --dasan-padding: var(--krds-padding-6);     /* 1.6rem */
+    --dasan-padding-lg: var(--krds-padding-8);  /* 2.4rem */
+    --dasan-padding-xl: var(--krds-padding-10); /* 4rem */
+}
+
+/* ========================================
+   헤더 커스텀 스타일
+   ======================================== */
+/* 로고 크기 고정 - 검색 입력창과 동일한 높이 */
+#krds-header .header-branding .logo-img {
+    width: auto;
+    height: 5.6rem; /* 검색 입력창(krds-input large)과 동일한 높이: var(--krds-input--size-height-large) */
+    min-height: 5.6rem;
+    object-fit: contain;
+}
+
+#krds-header .logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dasan-primary);
+}
+
+/* 검색창 margin */
+#krds-header .header-actions .sch-input {
+    margin: 0 1rem;
+}
+
+#krds-header .gnb-main-trigger.active {
+    color: var(--dasan-primary);
+    font-weight: 600;
+}
+
+/* 글자·화면 설정 버튼 */
+#krds-header .btn-display-settings {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--krds-gap-2); /* 0.4rem */
+}
+
+#krds-header .btn-display-settings .svg-icon {
+    width: var(--krds-icon--size-small);
+    height: var(--krds-icon--size-small);
+}
+
+/* ========================================
+   글자·화면 설정 모달
+   KRDS 모달 + 화면 크기 조정 컴포넌트 스타일
+   ======================================== */
+#display-settings-modal .settings-section {
+    margin-bottom: var(--krds-gap-7); /* 2.4rem */
+}
+
+#display-settings-modal .settings-section:last-child {
+    margin-bottom: 0;
+}
+
+#display-settings-modal .settings-section-title {
+    /* KRDS Heading XXSmall */
+    font-size: var(--krds-pc-font-size-heading-xxsmall); /* 1.5rem */
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+    margin: 0 0 var(--krds-gap-2); /* 0.4rem */
+    line-height: var(--krds-line-height-base);
+}
+
+#display-settings-modal .settings-section-desc {
+    /* KRDS Body Small */
+    font-size: var(--krds-pc-font-size-body-small); /* 1.5rem */
+    font-weight: var(--krds-font-weight-regular);
+    color: var(--dasan-text-subtle);
+    margin: 0 0 var(--krds-gap-5); /* 1.6rem */
+    line-height: var(--krds-line-height-base);
+}
+
+/* 화면 크기 옵션 그룹 */
+#display-settings-modal .zoom-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--krds-gap-3); /* 0.8rem */
+}
+
+/* 화면 크기 옵션 버튼 */
+#display-settings-modal .zoom-option {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-4); /* 1.2rem */
+    width: 100%;
+    padding: var(--krds-padding-4) var(--krds-padding-5); /* 1rem 1.4rem */
+    background-color: var(--krds-light-color-action-secondary);
+    border: var(--krds-light-border-width-static-regular) solid var(--dasan-border-light);
+    border-radius: var(--dasan-radius); /* 0.8rem */
+    cursor: pointer;
+    transition: all var(--krds-transition-base);
+    text-align: left;
+}
+
+#display-settings-modal .zoom-option:hover {
+    background-color: var(--krds-light-color-action-secondary-hover);
+}
+
+#display-settings-modal .zoom-option:focus {
+    outline: var(--krds-number-2) solid var(--krds-light-color-border-primary);
+    outline-offset: var(--krds-number-1);
+}
+
+#display-settings-modal .zoom-option.active {
+    background-color: var(--krds-light-color-action-secondary-selected);
+    border-color: var(--krds-light-color-element-secondary);
+}
+
+/* 줌 아이콘 (KRDS 화면 크기 조정 스타일) */
+#display-settings-modal .zoom-option .zoom-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--krds-size-height-3); /* 2rem */
+    height: var(--krds-size-height-3);
+    border: var(--krds-light-border-width-static-regular) solid var(--krds-light-color-border-gray);
+    border-radius: var(--krds-radius-small2); /* 0.4rem */
+    background-color: var(--krds-light-color-action-secondary);
+    flex-shrink: 0;
+}
+
+#display-settings-modal .zoom-option.active .zoom-icon {
+    border-color: var(--krds-light-color-element-secondary);
+    background-color: var(--krds-light-color-element-secondary);
+}
+
+#display-settings-modal .zoom-option.active .zoom-icon::after {
+    content: '';
+    width: 0.8rem;
+    height: 0.8rem;
+    background-color: var(--krds-light-color-surface-white);
+    border-radius: var(--krds-radius-xsmall1);
+}
+
+/* 줌 크기별 아이콘 크기 */
+#display-settings-modal .zoom-option.sm .zoom-icon {
+    width: 1.6rem;
+    height: 1.6rem;
+}
+
+#display-settings-modal .zoom-option.md .zoom-icon {
+    width: 2rem;
+    height: 2rem;
+}
+
+#display-settings-modal .zoom-option.lg .zoom-icon {
+    width: 2.2rem;
+    height: 2.2rem;
+}
+
+#display-settings-modal .zoom-option.xlg .zoom-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+}
+
+#display-settings-modal .zoom-option.xxlg .zoom-icon {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* 줌 레이블 */
+#display-settings-modal .zoom-option .zoom-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    /* KRDS Body Medium */
+    font-size: var(--krds-pc-font-size-body-medium); /* 1.7rem */
+    font-weight: var(--krds-font-weight-regular);
+    color: var(--dasan-text-basic);
+    line-height: var(--krds-line-height-base);
+}
+
+#display-settings-modal .zoom-option.active .zoom-label {
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--krds-light-color-text-secondary);
+}
+
+#display-settings-modal .zoom-option .zoom-percent {
+    /* KRDS Label Small */
+    font-size: var(--krds-pc-font-size-label-small); /* 1.5rem */
+    color: var(--dasan-text-subtle);
+}
+
+#display-settings-modal .zoom-option.active .zoom-percent {
+    color: var(--krds-light-color-text-secondary);
+}
+
+/* 화면 모드 옵션 그룹 */
+#display-settings-modal .mode-options {
+    display: flex;
+    gap: var(--krds-gap-4); /* 1.2rem */
+}
+
+/* 화면 모드 옵션 버튼 */
+#display-settings-modal .mode-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--krds-gap-3); /* 0.8rem */
+    flex: 1;
+    padding: var(--krds-padding-6); /* 1.6rem */
+    background-color: var(--krds-light-color-action-secondary);
+    border: var(--krds-light-border-width-static-regular) solid var(--dasan-border-light);
+    border-radius: var(--dasan-radius); /* 0.8rem */
+    cursor: pointer;
+    transition: all var(--krds-transition-base);
+}
+
+#display-settings-modal .mode-option:hover {
+    background-color: var(--krds-light-color-action-secondary-hover);
+}
+
+#display-settings-modal .mode-option:focus {
+    outline: var(--krds-number-2) solid var(--krds-light-color-border-primary);
+    outline-offset: var(--krds-number-1);
+}
+
+#display-settings-modal .mode-option.active {
+    background-color: var(--krds-light-color-action-secondary-selected);
+    border-color: var(--krds-light-color-element-secondary);
+}
+
+/* 모드 아이콘 */
+#display-settings-modal .mode-option .mode-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--krds-size-height-6); /* 4.8rem */
+    height: var(--krds-size-height-6);
+    border-radius: var(--dasan-radius-sm); /* 0.4rem */
+    border: var(--krds-light-border-width-static-medium) solid;
+}
+
+#display-settings-modal .mode-option .mode-icon.light {
+    background-color: var(--krds-color-light-gray-0);
+    border-color: var(--krds-color-light-gray-20);
+}
+
+#display-settings-modal .mode-option .mode-icon.high-contrast {
+    background-color: var(--krds-color-light-gray-90);
+    border-color: var(--krds-color-light-gray-70);
+}
+
+/* 모드 레이블 */
+#display-settings-modal .mode-option .mode-label {
+    /* KRDS Body Small */
+    font-size: var(--krds-pc-font-size-body-small); /* 1.5rem */
+    font-weight: var(--krds-font-weight-regular);
+    color: var(--dasan-text-basic);
+    line-height: var(--krds-line-height-base);
+}
+
+#display-settings-modal .mode-option.active .mode-label {
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--krds-light-color-text-secondary);
+}
+
+/* 모달 버튼 영역 */
+#display-settings-modal .modal-btn {
+    justify-content: flex-end;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    #display-settings-modal .settings-section-title {
+        font-size: var(--krds-mobile-font-size-heading-xxsmall);
+    }
+
+    #display-settings-modal .settings-section-desc {
+        font-size: var(--krds-mobile-font-size-body-small);
+    }
+
+    #display-settings-modal .zoom-option .zoom-label {
+        font-size: var(--krds-mobile-font-size-body-medium);
+    }
+
+    #display-settings-modal .zoom-option .zoom-percent {
+        font-size: var(--krds-mobile-font-size-label-small);
+    }
+
+    #display-settings-modal .mode-options {
+        flex-direction: column;
+    }
+
+    #display-settings-modal .mode-option .mode-label {
+        font-size: var(--krds-mobile-font-size-body-small);
+    }
+}
+
+/* High Contrast Mode */
+[data-krds-mode="high-contrast"] #display-settings-modal .zoom-option {
+    background-color: var(--krds-high-contrast-color-action-secondary);
+    border-color: var(--krds-high-contrast-color-border-gray-light);
+}
+
+[data-krds-mode="high-contrast"] #display-settings-modal .zoom-option:hover {
+    background-color: var(--krds-high-contrast-color-action-secondary-hover);
+}
+
+[data-krds-mode="high-contrast"] #display-settings-modal .zoom-option.active {
+    background-color: var(--krds-high-contrast-color-action-secondary-selected);
+    border-color: var(--krds-high-contrast-color-element-secondary);
+}
+
+[data-krds-mode="high-contrast"] #display-settings-modal .zoom-option .zoom-icon {
+    border-color: var(--krds-high-contrast-color-border-gray);
+    background-color: var(--krds-high-contrast-color-action-secondary);
+}
+
+[data-krds-mode="high-contrast"] #display-settings-modal .zoom-option.active .zoom-icon {
+    border-color: var(--krds-high-contrast-color-element-secondary);
+    background-color: var(--krds-high-contrast-color-element-secondary);
+}
+
+[data-krds-mode="high-contrast"] #display-settings-modal .mode-option {
+    background-color: var(--krds-high-contrast-color-action-secondary);
+    border-color: var(--krds-high-contrast-color-border-gray-light);
+}
+
+[data-krds-mode="high-contrast"] #display-settings-modal .mode-option:hover {
+    background-color: var(--krds-high-contrast-color-action-secondary-hover);
+}
+
+[data-krds-mode="high-contrast"] #display-settings-modal .mode-option.active {
+    background-color: var(--krds-high-contrast-color-action-secondary-selected);
+    border-color: var(--krds-high-contrast-color-element-secondary);
+}
+
+
+/* ========================================
+   Hero 섹션
+   KRDS 타이포그래피 가이드 적용
+   ======================================== */
+.hero-section {
+    background: var(--dasan-bg-gradient);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: var(--krds-gap-8) 0; /* Mobile: 2.4rem */
+}
+
+.hero-section .inner {
+    width: 100%;
+    max-width: var(--krds-contents-wrap-size);
+    margin: 0 auto;
+    padding: 0 var(--krds-contents-padding-x);
+}
+
+.hero-title {
+    /* KRDS Heading Large (Mobile) */
+    font-size: var(--krds-mobile-font-size-heading-large); /* 2.4rem */
+    font-weight: var(--krds-font-weight-bold);
+    margin-bottom: var(--krds-gap-7); /* 2rem */
+    line-height: var(--krds-line-height-base); /* 1.5 */
+    letter-spacing: var(--krds-typo-letter-spacing-1); /* 0.1rem */
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+    .hero-section {
+        padding: var(--krds-gap-10) 0; /* 4rem */
+    }
+
+    .hero-title {
+        /* KRDS Heading XLarge (PC) */
+        font-size: var(--krds-pc-font-size-heading-xlarge); /* 4rem */
+        margin-bottom: var(--krds-gap-8); /* 2.4rem */
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .hero-section {
+        padding: var(--krds-gap-11) 0; /* 5.6rem */
+    }
+
+    .hero-title {
+        /* KRDS Display Large: 6rem (60px) */
+        font-size: var(--krds-pc-font-size-display-large);
+    }
+}
+
+/* ========================================
+   통계 카드
+   KRDS 타이포그래피 가이드 적용
+   ======================================== */
+.stat-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--krds-gap-5); /* 1.6rem */
+}
+
+@media (min-width: 768px) {
+    .stat-cards {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--krds-gap-6); /* 2rem */
+    }
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-4); /* 1.2rem */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: var(--krds-radius-medium3); /* 0.8rem */
+    padding: var(--krds-padding-6); /* 1.6rem */
+    transition: background var(--krds-transition-base);
+}
+
+.stat-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.stat-card .icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--krds-size-height-6); /* 4.8rem */
+    height: var(--krds-size-height-6);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--krds-radius-medium2); /* 0.6rem */
+    flex-shrink: 0;
+}
+
+.stat-card .icon-wrap svg {
+    width: var(--krds-icon--size-large); /* 2.4rem */
+    height: var(--krds-icon--size-large);
+    color: #fff;
+}
+
+.stat-card .stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--krds-gap-1); /* 0.2rem */
+}
+
+.stat-card .label {
+    /* KRDS Label Small */
+    font-size: var(--krds-mobile-font-size-label-small); /* 1.5rem */
+    font-weight: var(--krds-font-weight-regular);
+    line-height: var(--krds-line-height-base);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.stat-card .value {
+    /* KRDS Body Medium Bold */
+    font-size: var(--krds-mobile-font-size-body-medium); /* 1.7rem */
+    font-weight: var(--krds-font-weight-bold);
+    line-height: var(--krds-line-height-base);
+    color: #fff;
+}
+
+@media (min-width: 768px) {
+    .stat-card .label {
+        font-size: var(--krds-pc-font-size-label-small); /* 1.5rem */
+    }
+
+    .stat-card .value {
+        font-size: var(--krds-pc-font-size-body-large); /* 1.9rem */
+    }
+}
+
+/* ========================================
+   콘텐츠 섹션
+   KRDS 레이아웃 토큰 적용
+   ======================================== */
+.content-section {
+    padding: var(--dasan-gap) 0; /* 1.6rem - hero 섹션과 가깝게 */
+}
+
+.content-section .inner {
+    max-width: var(--krds-contents-size); /* 1200px */
+    margin: 0 auto;
+    padding: 0 var(--krds-contents-padding-x); /* 24px (PC), 16px (Mobile) */
+}
+
+/* ========================================
+   차트 그리드
+   KRDS gap 토큰 적용
+   ======================================== */
+.chart-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--dasan-gap); /* 1.6rem */
+    margin-bottom: var(--dasan-gap); /* 1.6rem */
+}
+
+@media (min-width: 1024px) {
+    .chart-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--dasan-gap-lg); /* 2.4rem */
+    }
+}
+
+.bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--dasan-gap); /* 1.6rem */
+}
+
+@media (min-width: 1024px) {
+    .bottom-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--dasan-gap-lg); /* 2.4rem */
+    }
+}
+
+/* ========================================
+   카드 스타일
+   KRDS 토큰 기반 스타일
+   ======================================== */
+.dasan-card {
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius-lg); /* KRDS large1: 1rem */
+    box-shadow: var(--dasan-shadow);
+    border: var(--krds-light-border-width-static-regular) solid var(--dasan-border-light);
+    overflow: hidden;
+}
+
+.dasan-card .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--dasan-padding-sm) var(--dasan-padding); /* 1rem 1.6rem */
+}
+
+.dasan-card .card-title {
+    /* KRDS Heading XSmall */
+    font-size: var(--krds-pc-font-size-heading-xsmall); /* 1.7rem */
+    font-weight: var(--krds-font-weight-bold); /* 700 */
+    color: var(--dasan-text-bolder);
+    margin: 0;
+    line-height: var(--krds-line-height-base);
+}
+
+.dasan-card .card-timestamp {
+    /* KRDS Label XSmall */
+    font-size: var(--krds-pc-font-size-label-xsmall); /* 1.3rem */
+    font-weight: var(--krds-font-weight-regular);
+    color: var(--dasan-text-subtle);
+    line-height: var(--krds-line-height-base);
+}
+
+.dasan-card .card-body {
+    padding: var(--dasan-padding); /* 1.6rem */
+}
+
+.dasan-card .card-body.no-padding {
+    padding: 0;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .dasan-card .card-title {
+        font-size: var(--krds-mobile-font-size-heading-xsmall); /* 1.7rem */
+    }
+
+    .dasan-card .card-timestamp {
+        font-size: var(--krds-mobile-font-size-label-xsmall); /* 1.3rem */
+    }
+}
+
+/* ========================================
+   차트 컨테이너
+   ======================================== */
+.chart-container {
+    width: 100%;
+    height: 300px;
+}
+
+/* ========================================
+   워드클라우드
+   ======================================== */
+.wordcloud-container {
+    width: 100%;
+    height: 320px;
+    cursor: pointer;
+}
+
+#wordCloudCanvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* ========================================
+   테이블 스타일
+   KRDS 타이포그래피 및 색상 토큰 적용
+   ======================================== */
+.dasan-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dasan-table th,
+.dasan-table td {
+    padding: var(--krds-padding-5) var(--dasan-padding-sm); /* 1.4rem 1rem */
+    text-align: left;
+    border-bottom: var(--krds-light-border-width-static-regular) solid var(--dasan-divider);
+    line-height: var(--krds-line-height-base);
+}
+
+.dasan-table th {
+    /* KRDS Label XSmall Bold */
+    font-size: var(--krds-pc-font-size-label-xsmall); /* 1.3rem */
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-subtle);
+    text-transform: uppercase;
+    background: var(--dasan-surface-gray);
+}
+
+.dasan-table td {
+    /* KRDS Body Small */
+    font-size: var(--krds-pc-font-size-body-small); /* 1.5rem */
+    font-weight: var(--krds-font-weight-regular);
+    color: var(--dasan-text-basic);
+}
+
+.dasan-table tbody tr {
+    transition: background-color var(--krds-transition-base);
+}
+
+.dasan-table tbody tr:hover {
+    background: var(--krds-light-color-action-secondary-hover);
+}
+
+.dasan-table .text-right {
+    text-align: right;
+}
+
+.dasan-table .text-center {
+    text-align: center;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .dasan-table th {
+        font-size: var(--krds-mobile-font-size-label-xsmall); /* 1.3rem */
+    }
+
+    .dasan-table td {
+        font-size: var(--krds-mobile-font-size-body-small); /* 1.5rem */
+    }
+}
+
+/* ========================================
+   배지 스타일
+   KRDS 색상 및 형태 토큰 적용
+   ======================================== */
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--krds-size-height-4); /* 2.4rem */
+    height: var(--krds-size-height-4);    /* 2.4rem */
+    padding: 0 var(--krds-padding-2);     /* 0.4rem */
+    /* KRDS Label XSmall Bold */
+    font-size: var(--krds-pc-font-size-label-xsmall); /* 1.3rem */
+    font-weight: var(--krds-font-weight-bold);
+    line-height: var(--krds-line-height-none);
+    color: var(--krds-light-color-text-bolder-inverse);
+    background: var(--dasan-primary);
+    border-radius: var(--dasan-radius-xs); /* 0.2rem */
+}
+
+.rank-badge.top-3 {
+    background: var(--dasan-danger); /* KRDS danger-50 */
+}
+
+/* 트렌드 아이콘 */
+.trend-icon {
+    display: inline-flex;
+    align-items: center;
+    margin-left: var(--krds-gap-2); /* 0.4rem */
+    font-size: var(--krds-pc-font-size-label-xsmall);
+}
+
+.trend-icon.up {
+    color: var(--dasan-danger); /* KRDS danger-50 */
+}
+
+.trend-icon.down {
+    color: var(--dasan-success); /* KRDS success-50 */
+}
+
+.trend-icon.stable {
+    color: var(--dasan-text-disabled); /* KRDS gray-40 */
+}
+
+/* ========================================
+   카테고리 태그
+   KRDS 토큰 기반 스타일
+   ======================================== */
+.category-tag {
+    display: inline-block;
+    padding: var(--krds-padding-1) var(--krds-padding-3); /* 0.2rem 0.8rem */
+    /* KRDS Label XSmall */
+    font-size: var(--krds-pc-font-size-label-xsmall); /* 1.3rem */
+    font-weight: var(--krds-font-weight-regular);
+    line-height: var(--krds-line-height-base);
+    color: var(--dasan-text-subtle);
+    background: var(--dasan-surface-gray);
+    border-radius: var(--dasan-radius-sm); /* 0.4rem */
+}
+
+/* ========================================
+   푸터 커스텀
+   KRDS 색상 토큰 적용
+   ======================================== */
+#krds-footer {
+    background-color: var(--krds-color-light-gray-90); /* KRDS gray-90: #1e2124 */
+}
+
+#krds-footer .f-logo .logo-img {
+    height: var(--krds-size-height-7); /* 4.8rem */
+    width: auto;
+    object-fit: contain;
+}
+
+#krds-footer .f-logo a {
+    display: inline-flex;
+    align-items: center;
+}
+
+#krds-footer .logo-text {
+    /* KRDS Body Large Bold */
+    font-size: var(--krds-pc-font-size-body-large); /* 1.9rem */
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--krds-light-color-text-bolder-inverse);
+}
+
+#krds-footer .info-addr,
+#krds-footer .info-cs,
+#krds-footer .f-menu a,
+#krds-footer .f-copy {
+    color: var(--krds-light-color-text-subtle-inverse); /* KRDS gray-30 */
+}
+
+#krds-footer .info-cs .strong {
+    color: var(--krds-light-color-text-bolder-inverse);
+}
+
+#krds-footer .f-menu a:hover {
+    color: var(--krds-light-color-text-bolder-inverse);
+}
+
+#krds-footer .f-menu .point {
+    color: var(--krds-light-color-text-bolder-inverse);
+    font-weight: var(--krds-font-weight-bold);
+}
+
+/* ========================================
+   반응형 유틸리티
+   KRDS 토큰 기반 반응형 스타일
+   ======================================== */
+/* Mobile: < 768px */
+@media (max-width: 767px) {
+    /* 콘텐츠 섹션 */
+    .content-section {
+        padding: var(--dasan-gap-sm) 0; /* 0.8rem - hero 섹션과 가깝게 */
+    }
+
+    /* 통계 카드 */
+    .stat-card {
+        padding: var(--krds-padding-5); /* 1.4rem */
+    }
+
+    .stat-card .icon-wrap {
+        width: var(--krds-size-height-5); /* 4rem */
+        height: var(--krds-size-height-5);
+    }
+
+    /* 카드 헤더 */
+    .dasan-card .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--krds-gap-1); /* 0.2rem */
+    }
+
+    /* 차트 컨테이너 */
+    .chart-container {
+        height: 250px;
+    }
+
+    /* 워드클라우드 */
+    .wordcloud-container {
+        height: 280px;
+    }
+
+    /* 푸터 */
+    #krds-footer .logo-text {
+        font-size: var(--krds-mobile-font-size-body-large); /* 1.9rem */
+    }
+}
+
+/* ========================================
+   애니메이션
+   KRDS transition 토큰 기반
+   ======================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(var(--krds-number-6)); /* 1rem */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* ========================================
+   로딩 스피너
+   KRDS 토큰 기반 스타일
+   ======================================== */
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+}
+
+.loading-spinner::after {
+    content: '';
+    width: var(--krds-size-height-5); /* 4rem */
+    height: var(--krds-size-height-5);
+    border: var(--krds-number-2) solid var(--dasan-surface-gray); /* 0.2rem */
+    border-top-color: var(--dasan-primary);
+    border-radius: var(--krds-radius-max);
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========================================
+   High Contrast Mode 지원
+   KRDS 선명한 화면 모드 토큰 적용
+   ======================================== */
+[data-krds-mode="high-contrast"] {
+    /* 색상 변수 재정의 */
+    --dasan-primary: var(--krds-color-high-contrast-primary-50);
+    --dasan-primary-light: var(--krds-color-high-contrast-primary-40);
+    --dasan-primary-lighter: var(--krds-color-high-contrast-primary-30);
+    --dasan-primary-dark: var(--krds-color-high-contrast-primary-60);
+
+    --dasan-surface-white: var(--krds-high-contrast-color-surface-white);
+    --dasan-surface-gray: var(--krds-high-contrast-color-surface-gray-subtler);
+    --dasan-background: var(--krds-high-contrast-color-background-white);
+
+    --dasan-text-basic: var(--krds-high-contrast-color-text-basic);
+    --dasan-text-subtle: var(--krds-high-contrast-color-text-subtle);
+    --dasan-text-bolder: var(--krds-high-contrast-color-text-bolder);
+    --dasan-text-disabled: var(--krds-high-contrast-color-text-disabled);
+
+    --dasan-border-light: var(--krds-high-contrast-color-border-gray-light);
+    --dasan-border: var(--krds-high-contrast-color-border-gray);
+    --dasan-divider: var(--krds-high-contrast-color-divider-gray-light);
+
+    --dasan-danger: var(--krds-color-high-contrast-danger-50);
+    --dasan-success: var(--krds-color-high-contrast-success-50);
+    --dasan-warning: var(--krds-color-high-contrast-warning-30);
+    --dasan-info: var(--krds-color-high-contrast-information-50);
+
+    /* 그림자 */
+    --dasan-shadow-sm: 0 0 var(--krds-number-2) 0 var(--krds-high-contrast-color-alpha-shadow1);
+    --dasan-shadow: 0 0 var(--krds-number-2) 0 var(--krds-high-contrast-color-alpha-shadow1),
+                    0 var(--krds-number-3) var(--krds-number-5) 0 var(--krds-high-contrast-color-alpha-shadow2);
+    --dasan-shadow-lg: 0 0 var(--krds-number-3) 0 var(--krds-high-contrast-color-alpha-shadow2),
+                       0 var(--krds-number-5) var(--krds-number-8) 0 var(--krds-high-contrast-color-alpha-shadow3);
+}
+
+/* Dark mode (prefers-color-scheme) */
+@media (prefers-color-scheme: dark) {
+    [data-krds-mode="theme"] {
+        --dasan-primary: var(--krds-color-high-contrast-primary-50);
+        --dasan-primary-light: var(--krds-color-high-contrast-primary-40);
+        --dasan-primary-lighter: var(--krds-color-high-contrast-primary-30);
+        --dasan-primary-dark: var(--krds-color-high-contrast-primary-60);
+
+        --dasan-surface-white: var(--krds-high-contrast-color-surface-white);
+        --dasan-surface-gray: var(--krds-high-contrast-color-surface-gray-subtler);
+        --dasan-background: var(--krds-high-contrast-color-background-white);
+
+        --dasan-text-basic: var(--krds-high-contrast-color-text-basic);
+        --dasan-text-subtle: var(--krds-high-contrast-color-text-subtle);
+        --dasan-text-bolder: var(--krds-high-contrast-color-text-bolder);
+        --dasan-text-disabled: var(--krds-high-contrast-color-text-disabled);
+
+        --dasan-border-light: var(--krds-high-contrast-color-border-gray-light);
+        --dasan-border: var(--krds-high-contrast-color-border-gray);
+        --dasan-divider: var(--krds-high-contrast-color-divider-gray-light);
+
+        --dasan-danger: var(--krds-color-high-contrast-danger-50);
+        --dasan-success: var(--krds-color-high-contrast-success-50);
+        --dasan-warning: var(--krds-color-high-contrast-warning-30);
+        --dasan-info: var(--krds-color-high-contrast-information-50);
+
+        --dasan-shadow-sm: 0 0 var(--krds-number-2) 0 var(--krds-high-contrast-color-alpha-shadow1);
+        --dasan-shadow: 0 0 var(--krds-number-2) 0 var(--krds-high-contrast-color-alpha-shadow1),
+                        0 var(--krds-number-3) var(--krds-number-5) 0 var(--krds-high-contrast-color-alpha-shadow2);
+        --dasan-shadow-lg: 0 0 var(--krds-number-3) 0 var(--krds-high-contrast-color-alpha-shadow2),
+                           0 var(--krds-number-5) var(--krds-number-8) 0 var(--krds-high-contrast-color-alpha-shadow3);
+    }
+}
