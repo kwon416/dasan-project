@@ -1,5 +1,4 @@
 @import "../../css/token/krds_tokens.css";
-@import "./fonts.css";
 :root {
   --krds-font-family-base: var(--krds-typo-font-type);
   --krds-font-size-base: 62.5%;

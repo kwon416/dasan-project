@@ -1,7 +1,22 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-
+<%-- 현재 URL 기반으로 메뉴 상태 자동 설정 --%>
+<c:if test="${empty currentMenu}">
+	<c:set var="requestURI" value="${pageContext.request.requestURI}"/>
+	<c:choose>
+		<c:when test="${fn:contains(requestURI, 'index') || fn:endsWith(requestURI, '/') || fn:contains(requestURI, 'main')}">
+			<c:set var="currentMenu" value="main"/>
+		</c:when>
+		<c:when test="${fn:contains(requestURI, 'callIssue')}">
+			<c:set var="currentMenu" value="callIssue"/>
+		</c:when>
+		<c:when test="${fn:contains(requestURI, 'complaint')}">
+			<c:set var="currentMenu" value="complaint"/>
+		</c:when>
+	</c:choose>
+</c:if>
 
 <!-- official banner -->
 <div id="krds-masthead">
@@ -42,11 +57,12 @@
 					</ul>
 				</div>
 				<div class="header-branding">
-					<a href="<c:url value='/main.do'/>" class="logo-link">
+					<a href="<c:url value='/index.do'/>" class="logo-link">
 						<img src="<c:url value='/resources/img/logo.png'/>" alt="120 다산콜" class="logo-img">
 					</a>
 					<div class="header-actions">
-						<!-- 검색 입력창 -->
+						<c:if test="${currentMenu == 'main'}">
+						<!-- 검색 입력창 (메인 페이지에서만 표시) -->
 						<div class="sch-input">
 							<label for="header-search" class="sr-only">검색어 입력</label>
 							<input type="text" id="header-search" class="krds-input" placeholder="검색어를 입력하세요">
@@ -54,6 +70,7 @@
 								<i class="svg-icon ico-sch" aria-hidden="true"></i>
 							</button>
 						</div>
+						</c:if>
 						<!-- 전체메뉴 버튼 (모바일) -->
 						<button type="button" class="btn-navi all" aria-controls="mobile-nav">전체메뉴</button>
 					</div>
@@ -67,7 +84,7 @@
 			<div class="inner">
 				<ul class="gnb-menu">
 					<li>
-						<a href="<c:url value='/main.do'/>"
+						<a href="<c:url value='/index.do'/>"
 						   class="gnb-main-trigger is-link<c:if test="${currentMenu == 'main'}"> active</c:if>"
 						   data-trigger="gnb"
 						   <c:if test="${currentMenu == 'main'}">aria-current="page"</c:if>>메인</a>
@@ -83,11 +100,11 @@
 								class="gnb-main-trigger<c:if test="${currentMenu == 'complaint'}"> active</c:if>"
 								data-trigger="gnb"
 								aria-expanded="false"
-								aria-haspopup="true">민원</button>
+								aria-haspopup="true">민원 <i class="svg-icon ico-toggle" aria-hidden="true"></i></button>
 						<!-- gnb-toggle-wrap -->
 						<div class="gnb-toggle-wrap" role="region" aria-label="민원 하위 메뉴">
 							<!-- gnb-main-list -->
-							<div class="gnb-main-list">
+							<div class="gnb-main-list" data-has-submenu="true">
 								<!-- gnb-sub-list -->
 								<div class="gnb-sub-list single-list">
 									<div class="gnb-sub-content">
@@ -113,12 +130,6 @@
 						</div>
 						<!-- //gnb-toggle-wrap -->
 					</li>
-					<li>
-						<a href="<c:url value='/admin.do'/>"
-						   class="gnb-main-trigger is-link<c:if test="${currentMenu == 'admin'}"> active</c:if>"
-						   data-trigger="gnb"
-						   <c:if test="${currentMenu == 'admin'}">aria-current="page"</c:if>>관리자</a>
-					</li>
 				</ul>
 			</div>
 		</nav>
@@ -126,7 +137,7 @@
 	</div>
 	<!-- //헤더 컨텐츠 영역 -->
 
-	<!-- 메인메뉴 : 모바일 사이드메뉴 -->
+	<!-- 메인메뉴 : 모바일 -->
 	<div id="mobile-nav" class="krds-main-menu-mobile" role="dialog" aria-modal="true" aria-label="전체 메뉴">
 		<div class="gnb-wrap" tabindex="-1">
 			<!-- gnb-header -->
@@ -136,113 +147,60 @@
 					<span class="site-name">120 다산콜 민원공개시스템</span>
 				</div>
 				<!-- //gnb-login -->
-				<!-- 검색 -->
-				<div class="sch-input">
-					<label for="mobile-menu-search" class="sr-only">메뉴 검색</label>
-					<input type="text" id="mobile-menu-search" class="krds-input" placeholder="찾고자 하는 메뉴명을 입력해 주세요">
-					<button type="button" class="krds-btn medium icon ico-search" aria-label="메뉴 검색">
-						<i class="svg-icon ico-sch" aria-hidden="true"></i>
-					</button>
-				</div>
-				<!-- //검색 -->
 			</div>
 			<!-- //gnb-header -->
 
 			<!-- gnb-body -->
 			<div class="gnb-body">
-				<!-- gnb-menu -->
-				<div class="gnb-menu">
-					<!-- 탭 메뉴 (1뎁스) -->
-					<div class="menu-wrap">
-						<ul role="tablist" aria-label="메뉴 카테고리">
-							<li role="none">
-								<a href="#mGnb-anchor1"
-								   class="gnb-main-trigger<c:if test="${currentMenu == 'main'}"> active</c:if>"
-								   role="tab"
-								   id="tab-main"
-								   aria-controls="mGnb-anchor1"
-								   aria-selected="${currentMenu == 'main' ? 'true' : 'false'}">메인</a>
-							</li>
-							<li role="none">
-								<a href="#mGnb-anchor2"
-								   class="gnb-main-trigger<c:if test="${currentMenu == 'callIssue'}"> active</c:if>"
-								   role="tab"
-								   id="tab-callIssue"
-								   aria-controls="mGnb-anchor2"
-								   aria-selected="${currentMenu == 'callIssue' ? 'true' : 'false'}">콜 이슈</a>
-							</li>
-							<li role="none">
-								<a href="#mGnb-anchor3"
-								   class="gnb-main-trigger<c:if test="${currentMenu == 'complaint'}"> active</c:if>"
-								   role="tab"
-								   id="tab-complaint"
-								   aria-controls="mGnb-anchor3"
-								   aria-selected="${currentMenu == 'complaint' ? 'true' : 'false'}">민원</a>
-							</li>
-							<li role="none">
-								<a href="#mGnb-anchor4"
-								   class="gnb-main-trigger<c:if test="${currentMenu == 'admin'}"> active</c:if>"
-								   role="tab"
-								   id="tab-admin"
-								   aria-controls="mGnb-anchor4"
-								   aria-selected="${currentMenu == 'admin' ? 'true' : 'false'}">관리자</a>
-							</li>
-						</ul>
-					</div>
-					<!-- 서브메뉴 (2뎁스) -->
-					<div class="submenu-wrap">
-						<div class="gnb-sub-list" id="mGnb-anchor1" role="tabpanel" aria-labelledby="tab-main">
-							<h2 class="sub-title">메인</h2>
-							<ul>
+				<!-- gnb-menu: 단순 리스트 형태 -->
+				<nav class="gnb-menu-simple" aria-label="전체 메뉴">
+					<ul class="mobile-menu-list">
+						<!-- 메인 (1뎁스) -->
+						<li>
+							<a href="<c:url value='/index.do'/>"
+							   class="mobile-menu-link<c:if test="${currentMenu == 'main'}"> active</c:if>"
+							   <c:if test="${currentMenu == 'main'}">aria-current="page"</c:if>>
+								<span class="menu-text">메인</span>
+								<i class="svg-icon ico-angle right" aria-hidden="true"></i>
+							</a>
+						</li>
+						<!-- 콜 이슈 (1뎁스) -->
+						<li>
+							<a href="<c:url value='/callIssue.do'/>"
+							   class="mobile-menu-link<c:if test="${currentMenu == 'callIssue'}"> active</c:if>"
+							   <c:if test="${currentMenu == 'callIssue'}">aria-current="page"</c:if>>
+								<span class="menu-text">콜 이슈</span>
+								<i class="svg-icon ico-angle right" aria-hidden="true"></i>
+							</a>
+						</li>
+						<!-- 민원 (2뎁스) -->
+						<li class="has-submenu">
+							<button type="button"
+									class="mobile-menu-link<c:if test="${currentMenu == 'complaint'}"> active</c:if>"
+									aria-expanded="false"
+									aria-controls="mobile-submenu-complaint">
+								<span class="menu-text">민원</span>
+								<i class="svg-icon ico-angle down" aria-hidden="true"></i>
+							</button>
+							<ul id="mobile-submenu-complaint" class="mobile-submenu" aria-label="민원 하위 메뉴">
 								<li>
-									<a href="<c:url value='/main.do'/>" class="gnb-sub-trigger"
-									   <c:if test="${currentMenu == 'main'}">aria-current="page"</c:if>>
-										대시보드
-									</a>
-								</li>
-							</ul>
-						</div>
-						<div class="gnb-sub-list" id="mGnb-anchor2" role="tabpanel" aria-labelledby="tab-callIssue">
-							<h2 class="sub-title">콜 이슈</h2>
-							<ul>
-								<li>
-									<a href="<c:url value='/callIssue.do'/>" class="gnb-sub-trigger"
-									   <c:if test="${currentMenu == 'callIssue'}">aria-current="page"</c:if>>
-										키워드 검색
-									</a>
-								</li>
-							</ul>
-						</div>
-						<div class="gnb-sub-list" id="mGnb-anchor3" role="tabpanel" aria-labelledby="tab-complaint">
-							<h2 class="sub-title">민원</h2>
-							<ul>
-								<li>
-									<a href="<c:url value='/complaint/region.do'/>" class="gnb-sub-trigger"
+									<a href="<c:url value='/complaint/region.do'/>"
+									   class="mobile-submenu-link<c:if test="${currentSubMenu == 'region'}"> active</c:if>"
 									   <c:if test="${currentSubMenu == 'region'}">aria-current="page"</c:if>>
 										지역별 분석
 									</a>
 								</li>
 								<li>
-									<a href="<c:url value='/complaint/period.do'/>" class="gnb-sub-trigger"
+									<a href="<c:url value='/complaint/period.do'/>"
+									   class="mobile-submenu-link<c:if test="${currentSubMenu == 'period'}"> active</c:if>"
 									   <c:if test="${currentSubMenu == 'period'}">aria-current="page"</c:if>>
 										기간별 분석
 									</a>
 								</li>
 							</ul>
-						</div>
-						<div class="gnb-sub-list" id="mGnb-anchor4" role="tabpanel" aria-labelledby="tab-admin">
-							<h2 class="sub-title">관리자</h2>
-							<ul>
-								<li>
-									<a href="<c:url value='/admin.do'/>" class="gnb-sub-trigger"
-									   <c:if test="${currentMenu == 'admin'}">aria-current="page"</c:if>>
-										관리자 페이지
-									</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
+						</li>
+					</ul>
+				</nav>
 				<!-- //gnb-menu -->
 			</div>
 			<!-- //gnb-body -->
@@ -254,7 +212,7 @@
 			<!-- //gnb-close -->
 		</div>
 	</div>
-	<!-- //메인메뉴 : 모바일 사이드메뉴 -->
+	<!-- //메인메뉴 : 모바일 -->
 </header>
 <!-- //header -->
 

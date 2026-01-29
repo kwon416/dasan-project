@@ -1,4 +1,4 @@
-{ 
+{
   "env": {
     "DISCORD_WEBHOOK_URL": "https://discord.com/api/webhooks/1463896753530212372/n0hdlham7uB0nUKWa7EdvcaYNWxkzATCOBSqHtsJtxtd5CrZpChE7EYuNndxdIgFEPXA",
     "DISCORD_NOTIFY_ENABLED": "true"
@@ -13,7 +13,8 @@
       "Bash(powershell -Command \"Start-Sleep -Seconds 20\")",
       "Bash(curl:*)",
       "Bash(powershell -Command \"Start-Sleep -Seconds 25\")",
-      "Bash(powershell -Command:*)"
+      "Bash(powershell -Command:*)",
+      "Bash(dir /b \"C:\\\\eGovFrameDev-4.3.1-64bit\\\\workspace-egov\\\\dasan-project\")"
     ]
   },
   "outputStyle": "Pragmatic Test-Driven Developer"

@@ -4,7 +4,7 @@
 <footer id="krds-footer">
 	<div class="inner">
 		<!-- 서비스 로고 -->
-		<a href="<c:url value='/main.do'/>">
+		<a href="<c:url value='/index.do'/>">
 			<img src="<c:url value='/resources/img/footer_logo.png'/>" alt="120 다산콜재단" class="logo-img">
 		</a>
 		<!-- //서비스 로고 -->

@@ -10,7 +10,7 @@
     <title>${pageTitle} - 120 다산콜 민원공개시스템</title>
 
     <!-- KRDS CSS -->
-    <link rel="stylesheet" href="<c:url value='/resources/css/cdn/krds.min.css'/>">
+    <link rel="stylesheet" href="<c:url value='/resources/cdn/krds.min.css'/>">
     <link rel="stylesheet" href="<c:url value='/resources/css/token/krds_tokens.css'/>">
     <link rel="stylesheet" href="<c:url value='/resources/css/common/common.css'/>">
     <link rel="stylesheet" href="<c:url value='/resources/css/component/component.css'/>">
@@ -199,7 +199,7 @@
 </div><!-- //wrap -->
 
     <!-- KRDS JS -->
-    <script src="<c:url value='/resources/js/cdn/krds.min.js'/>"></script>
+    <script src="<c:url value='/resources/cdn/krds.min.js'/>"></script>
     <script src="<c:url value='/resources/js/component/ui-script.js'/>"></script>
 
     <!-- 글자·화면 설정 -->
