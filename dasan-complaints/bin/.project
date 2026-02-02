@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>dasan-stat</name>
+	<name>dasan-complaints</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -21,6 +21,11 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
+			<name>org.springframework.ide.eclipse.boot.validation.springbootbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>org.eclipse.m2e.core.maven2Builder</name>
 			<arguments>
 			</arguments>
@@ -32,12 +37,12 @@
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>egovframework.dev.imp.ide.natures.egovnature</nature>
+		<nature>egovframework.boot.dev.imp.ide.natures.egovnature</nature>
 		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1769962457429</id>
+			<id>1768753514701</id>
 			<name></name>
 			<type>30</type>
 			<matcher>

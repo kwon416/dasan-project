@@ -14,7 +14,8 @@
       "Bash(curl:*)",
       "Bash(powershell -Command \"Start-Sleep -Seconds 25\")",
       "Bash(powershell -Command:*)",
-      "Bash(dir /b \"C:\\\\eGovFrameDev-4.3.1-64bit\\\\workspace-egov\\\\dasan-project\")"
+      "Bash(dir /b \"C:\\\\eGovFrameDev-4.3.1-64bit\\\\workspace-egov\\\\dasan-project\")",
+      "WebFetch(domain:www.krds.go.kr)"
     ]
   },
   "outputStyle": "Pragmatic Test-Driven Developer"
