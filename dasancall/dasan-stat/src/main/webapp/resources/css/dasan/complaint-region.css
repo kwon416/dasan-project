@@ -1,0 +1,1225 @@
+/**
+ * 지역별 분석 페이지 스타일
+ * KRDS 디자인 시스템 기반
+ */
+
+/* ========================================
+   페이지 헤더
+   ======================================== */
+.region-page-header {
+    background: var(--dasan-surface-white);
+    padding: var(--krds-padding-8) 0;
+    /* border-bottom 제거 */
+}
+
+.region-page-header .inner {
+    max-width: var(--krds-contents-wrap-size);
+    margin: 0 auto;
+    padding: 0 var(--krds-contents-padding-x);
+}
+
+.region-page-header .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--krds-gap-6);
+}
+
+.region-page-header .header-left {
+    flex: 1;
+}
+
+.region-page-header .page-title {
+    font-size: var(--krds-pc-font-size-heading-large);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+    margin: 0 0 var(--krds-gap-2) 0;
+    line-height: 1.3;
+}
+
+.region-page-header .page-description {
+    font-size: var(--krds-pc-font-size-body-medium);
+    color: var(--dasan-text-subtle);
+    margin: 0;
+    line-height: var(--krds-line-height-base);
+}
+
+/* 헤더 통계 카드 */
+.region-page-header .header-right {
+    flex-shrink: 0;
+}
+
+.header-stat-card {
+    text-align: right;
+}
+
+.header-stat-card .stat-label {
+    font-size: var(--krds-pc-font-size-label-small);
+    color: var(--dasan-text-subtle);
+    margin-bottom: var(--krds-gap-1);
+    font-weight: var(--krds-font-weight-medium);
+}
+
+.header-stat-card .stat-value {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--dasan-primary);
+    line-height: 1;
+    display: inline;
+}
+
+.header-stat-card .stat-unit {
+    font-size: var(--krds-pc-font-size-body-large);
+    color: var(--dasan-primary);
+    margin-left: var(--krds-gap-1);
+    display: inline;
+    font-weight: var(--krds-font-weight-bold);
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .region-page-header {
+        padding: var(--krds-padding-6) 0;
+    }
+
+    .region-page-header .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--krds-gap-4);
+    }
+
+    .region-page-header .page-title {
+        font-size: var(--krds-mobile-font-size-heading-large);
+    }
+
+    .region-page-header .page-description {
+        font-size: var(--krds-mobile-font-size-body-medium);
+    }
+
+    .header-stat-card {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: left;
+    }
+
+    .header-stat-card .stat-label {
+        margin-bottom: 0;
+    }
+
+    .header-stat-card .stat-value {
+        font-size: 2rem;
+    }
+}
+
+/* ========================================
+   지역별 분석 페이지 레이아웃
+   사이드바 + 메인 영역 flex 레이아웃
+   ======================================== */
+.complaint-region-page {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 16rem); /* 헤더/푸터 제외 */
+}
+
+.complaint-region-layout {
+    display: flex;
+    flex: 1;
+    max-width: var(--krds-contents-wrap-size);
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ========================================
+   사이드바
+   ======================================== */
+.region-sidebar {
+    width: 32rem;
+    flex-shrink: 0;
+    background: var(--dasan-surface-white);
+    border-right: var(--krds-light-border-width-static-regular) solid var(--dasan-divider);
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    max-height: calc(100vh - 10rem);
+    position: sticky;
+    top: 0;
+    z-index: 50; /* gnb-backdrop(60)보다 낮게 설정 */
+}
+
+.sidebar-section {
+    padding: var(--dasan-padding);
+    border-bottom: var(--krds-light-border-width-static-regular) solid var(--dasan-divider);
+    overflow: visible;
+}
+
+.sidebar-section:last-child {
+    border-bottom: none;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: visible;
+}
+
+.sidebar-title {
+    font-size: var(--krds-pc-font-size-label-large);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+    margin: 0 0 var(--krds-gap-4) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+}
+
+.sidebar-title .icon {
+    width: var(--krds-icon--size-medium);
+    height: var(--krds-icon--size-medium);
+    color: var(--dasan-primary);
+}
+
+/* 기간 선택 섹션 */
+.sidebar-date-picker {
+    display: flex;
+    flex-direction: column;
+    gap: var(--krds-gap-4);
+}
+
+/* 날짜 선택 (KRDS Calendar) */
+.sidebar-date-picker .date-range-picker {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+}
+
+.sidebar-date-picker .date-range-picker .date-separator {
+    color: var(--dasan-text-subtle);
+    font-size: var(--krds-pc-font-size-label-small);
+    padding: 0 var(--krds-gap-1);
+    height: 3.2rem;
+    line-height: 3.2rem;
+}
+
+.sidebar-date-picker .form-conts.calendar-conts {
+    position: relative;
+    flex: 1;
+}
+
+.sidebar-date-picker .calendar-input {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 3.2rem;
+}
+
+.sidebar-date-picker .calendar-input .krds-input.small {
+    width: 100%;
+    height: 3.2rem;
+    min-height: 3.2rem;
+    padding-right: 3.6rem;
+    box-sizing: border-box;
+    font-size: var(--krds-pc-font-size-label-small);
+}
+
+.sidebar-date-picker .calendar-input .krds-btn.small.icon.form-btn-datepicker {
+    position: absolute;
+    right: 0.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.4rem;
+    height: 2.4rem;
+    min-width: 2.4rem;
+    min-height: 2.4rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-date-picker .calendar-input .krds-btn.small.icon.form-btn-datepicker:hover {
+    background-color: var(--krds-light-color-action-secondary-hover);
+    border-radius: var(--dasan-radius-xs);
+}
+
+/* 캘린더 팝업 z-index (사이드바 위에 표시) */
+.sidebar-date-picker .krds-calendar-area {
+    z-index: 100;
+}
+
+/* 빠른 날짜 선택 (KRDS Chip 라디오) */
+.sidebar-date-picker .quick-period-selector {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+    flex-wrap: nowrap; /* 줄바꿈 방지 */
+}
+
+.sidebar-date-picker .quick-period-selector .krds-form-chip {
+    flex: 1;
+    margin: 0;
+    min-width: 0; /* flex 축소 허용 */
+}
+
+.sidebar-date-picker .quick-period-selector .krds-form-chip-outline {
+    width: 100%;
+    height: 3.2rem;
+    min-height: 3.2rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--krds-padding-2);
+    font-size: var(--krds-pc-font-size-label-small);
+    box-sizing: border-box;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+/* ========================================
+   KRDS 캘린더 팝업
+   -> 공통 CSS로 이동: /resources/css/common/krds-datepicker.css
+   ======================================== */
+
+/* 자치구 목록 */
+.district-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.district-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--krds-padding-4) var(--krds-padding-3);
+    border-radius: var(--dasan-radius-sm);
+    cursor: pointer;
+    transition: all var(--krds-transition-base);
+}
+
+.district-item:hover {
+    background: var(--krds-light-color-action-secondary-hover);
+}
+
+.district-item.active {
+    background: var(--dasan-primary);
+    color: #fff;
+}
+
+.district-item .district-name {
+    font-size: var(--krds-pc-font-size-body-medium);
+    font-weight: var(--krds-font-weight-medium);
+}
+
+.district-item .district-count {
+    font-size: var(--krds-pc-font-size-label-small);
+    color: var(--dasan-text-subtle);
+}
+
+.district-item.active .district-count {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* 자치구 검색 - 제거됨 */
+
+/* ========================================
+   메인 영역
+   ======================================== */
+.region-main {
+    flex: 1;
+    padding: var(--dasan-padding);
+    overflow-y: auto;
+    background: var(--dasan-surface-white);
+    position: relative;
+    z-index: 1;
+}
+
+/* ========================================
+   지도 영역
+   ======================================== */
+.map-container {
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius-lg);
+    box-shadow: var(--dasan-shadow);
+    overflow: hidden;
+    margin-bottom: var(--dasan-gap);
+    position: relative; /* 범례, 줌 컨트롤, 행정동 패널 위치 기준 */
+}
+
+.map-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--dasan-padding-sm) var(--dasan-padding);
+    border-bottom: var(--krds-light-border-width-static-regular) solid var(--dasan-divider);
+}
+
+.map-title {
+    font-size: var(--krds-pc-font-size-heading-xsmall);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+    margin: 0;
+}
+
+.map-legend {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-4);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+    font-size: var(--krds-pc-font-size-label-small);
+    color: var(--dasan-text-subtle);
+}
+
+.legend-color {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: var(--dasan-radius-xs);
+}
+
+.legend-color.low { background: #d4edda; }
+.legend-color.medium { background: #fff3cd; }
+.legend-color.high { background: #f8d7da; }
+.legend-color.very-high { background: #dc3545; }
+
+#region-map {
+    height: 50rem;
+    width: 100%;
+    position: relative;
+    background: var(--dasan-surface-gray);
+}
+
+/* ========================================
+   D3.js SVG 지도 스타일
+   ======================================== */
+#region-map svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* 자치구 영역 */
+.district-path {
+    stroke: #fff;
+    stroke-width: 1.5;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.district-path:hover {
+    stroke: #FFB800;
+    stroke-width: 2.5;
+    filter: brightness(1.1);
+}
+
+.district-path.selected {
+    stroke: #0033A0;
+    stroke-width: 3;
+}
+
+/* 자치구 라벨 */
+.district-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    fill: #333;
+    text-anchor: middle;
+    pointer-events: none;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* 행정동 영역 */
+.dong-path {
+    stroke: #fff;
+    stroke-width: 0.8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dong-path:hover {
+    stroke: #FF6B35;
+    stroke-width: 1.5;
+    filter: brightness(1.05);
+}
+
+.dong-path.selected {
+    stroke: #FF6B35;
+    stroke-width: 2;
+}
+
+/* 행정동 라벨 */
+.dong-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    fill: #555;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+/* ========================================
+   지도 범례 (순위 기반) - 지도 위 오버레이
+   ======================================== */
+#map-legend {
+    position: absolute;
+    bottom: 1.6rem;
+    left: 1.6rem;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1.2rem 1.6rem;
+    border-radius: var(--dasan-radius);
+    box-shadow: var(--dasan-shadow);
+    z-index: 10;
+    max-width: 20rem;
+}
+
+#map-legend .legend-title {
+    font-size: var(--krds-pc-font-size-label-small);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--dasan-divider);
+}
+
+#map-legend .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.4rem 0;
+    font-size: 1.2rem;
+    color: var(--dasan-text-basic);
+}
+
+#map-legend .legend-color {
+    width: 2rem;
+    height: 1.2rem;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+#map-legend .legend-label {
+    font-weight: var(--krds-font-weight-medium);
+}
+
+#map-legend .legend-sub {
+    color: var(--dasan-text-subtle);
+    font-size: 1.1rem;
+}
+
+.map-legend {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-4);
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+    font-size: var(--krds-pc-font-size-label-small);
+    color: var(--dasan-text-subtle);
+}
+
+.legend-color {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: var(--dasan-radius-xs);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* 순위 기반 색상 */
+.legend-color.rank-top5 { background: #08306b; }
+.legend-color.rank-top10 { background: #2171b5; }
+.legend-color.rank-top15 { background: #4292c6; }
+.legend-color.rank-top20 { background: #6baed6; }
+.legend-color.rank-bottom { background: #c6dbef; }
+
+/* ========================================
+   지도 줌 컨트롤
+   ======================================== */
+.map-zoom-controls {
+    position: absolute;
+    right: 1.6rem;
+    bottom: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    z-index: 10;
+}
+
+.zoom-btn {
+    width: 3.6rem;
+    height: 3.6rem;
+    background: var(--dasan-surface-white);
+    border: 1px solid var(--dasan-divider);
+    border-radius: var(--dasan-radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--dasan-text-basic);
+    transition: all 0.2s ease;
+    box-shadow: var(--dasan-shadow);
+}
+
+.zoom-btn:hover {
+    background: var(--dasan-primary);
+    color: #fff;
+    border-color: var(--dasan-primary);
+}
+
+.zoom-btn:active {
+    transform: scale(0.95);
+}
+
+/* ========================================
+   지도 툴팁 (자체 구현)
+   ======================================== */
+#map-tooltip {
+    position: absolute;
+    z-index: 9999;
+    pointer-events: none;
+    background: #1a1a1a;
+    color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    padding: 12px 16px;
+    min-width: 120px;
+    max-width: 240px;
+    display: none;
+}
+
+#map-tooltip.show {
+    display: block;
+}
+
+/* 툴팁 화살표 */
+#map-tooltip::before {
+    content: '';
+    position: absolute;
+    border: 8px solid transparent;
+}
+
+/* 아래 방향 툴팁 (화살표가 위를 가리킴) */
+#map-tooltip.arrow-top::before {
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom-color: #1a1a1a;
+}
+
+/* 위 방향 툴팁 (화살표가 아래를 가리킴) */
+#map-tooltip.arrow-bottom::before {
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top-color: #1a1a1a;
+}
+
+/* 툴팁 내용 */
+#map-tooltip .tooltip-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+#map-tooltip .tooltip-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+#map-tooltip .tooltip-label {
+    font-size: 12px;
+    color: #a0a0a0;
+}
+
+#map-tooltip .tooltip-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #7cb3ff;
+}
+
+#map-tooltip .tooltip-rank {
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffd666;
+}
+
+/* ========================================
+   행정동 목록 패널
+   ======================================== */
+.dong-list-panel {
+    position: absolute;
+    left: 1.6rem;
+    top: 1.6rem;
+    width: 20rem;
+    max-height: calc(100% - 3.2rem);
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius);
+    box-shadow: var(--dasan-shadow-lg);
+    z-index: 10;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.dong-list-header {
+    padding: var(--krds-padding-4);
+    border-bottom: 1px solid var(--dasan-divider);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dong-list-title {
+    font-size: var(--krds-pc-font-size-label-large);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+    margin: 0;
+}
+
+.dong-list-close {
+    width: 2.4rem;
+    height: 2.4rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dasan-text-subtle);
+    transition: color 0.2s ease;
+}
+
+.dong-list-close:hover {
+    color: var(--dasan-danger);
+}
+
+.dong-list-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--krds-padding-2);
+}
+
+.dong-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dong-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--krds-padding-3) var(--krds-padding-4);
+    border-radius: var(--dasan-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dong-item:hover {
+    background: var(--krds-light-color-action-secondary-hover);
+}
+
+.dong-item.active {
+    background: #FF6B35;
+    color: #fff;
+}
+
+.dong-item .dong-name {
+    font-size: var(--krds-pc-font-size-body-small);
+    font-weight: var(--krds-font-weight-medium);
+}
+
+.dong-item .dong-count {
+    font-size: var(--krds-pc-font-size-label-xsmall);
+    color: var(--dasan-text-subtle);
+}
+
+.dong-item.active .dong-count {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* 행정동 패널 헤더 */
+.dong-panel-header {
+    padding: 1.4rem 1.6rem;
+    border-bottom: 1px solid var(--dasan-divider);
+    background: linear-gradient(135deg, #0033A0 0%, #1a4eb8 100%);
+    color: #fff;
+}
+
+.dong-panel-title {
+    margin-bottom: 0.4rem;
+}
+
+.dong-panel-title .district-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.dong-panel-total {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+
+.dong-panel-rank {
+    font-size: 1.2rem;
+    opacity: 0.85;
+}
+
+.dong-panel-subtitle {
+    padding: 1rem 1.6rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--dasan-text-subtle);
+    background: var(--dasan-surface-gray);
+    border-bottom: 1px solid var(--dasan-divider);
+}
+
+.dong-list-panel .dong-list {
+    padding: 0.8rem;
+    max-height: 28rem;
+    overflow-y: auto;
+}
+
+.dong-list-panel .dong-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    border-radius: var(--dasan-radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.dong-list-panel .dong-item:hover {
+    background: var(--krds-light-color-action-secondary-hover);
+}
+
+.dong-list-panel .dong-item.active {
+    background: #FF6B35;
+    color: #fff;
+}
+
+.dong-item .dong-color {
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.dong-item .dong-name {
+    flex: 1;
+    font-size: 1.3rem;
+}
+
+.dong-panel-back {
+    display: block;
+    width: calc(100% - 2.4rem);
+    margin: 1.2rem;
+    padding: 1rem;
+    background: var(--dasan-surface-gray);
+    border: 1px solid var(--dasan-divider);
+    border-radius: var(--dasan-radius-sm);
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--dasan-text-basic);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.dong-panel-back:hover {
+    background: var(--dasan-primary);
+    color: #fff;
+    border-color: var(--dasan-primary);
+}
+
+/* 사이드바 자치구 hover 스타일 */
+.district-item.hover {
+    background: rgba(0, 51, 160, 0.08);
+}
+
+.district-item .district-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dasan-text-subtle);
+    background: var(--dasan-surface-gray);
+    border-radius: 50%;
+    margin-right: 0.8rem;
+}
+
+.district-item.total {
+    background: linear-gradient(135deg, #0033A0 0%, #1a4eb8 100%);
+    color: #fff;
+    border-radius: var(--dasan-radius-sm);
+    margin-bottom: 0.8rem;
+}
+
+.district-item.total .district-name {
+    font-weight: 700;
+}
+
+.district-item.total .district-count {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ========================================
+   맵 로딩 상태
+   ======================================== */
+.map-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.map-loading-spinner {
+    width: 4rem;
+    height: 4rem;
+    border: 4px solid var(--dasan-divider);
+    border-top-color: var(--dasan-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   선택된 구 상세 정보 패널
+   ======================================== */
+.district-detail-panel {
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius-lg);
+    box-shadow: var(--dasan-shadow);
+    overflow: hidden;
+}
+
+/* 패널 헤더 */
+.district-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--krds-padding-6) var(--dasan-padding);
+    border-bottom: 1px solid var(--dasan-divider);
+}
+
+.district-panel-title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--krds-gap-2);
+}
+
+.district-name-highlight {
+    font-size: var(--krds-pc-font-size-heading-medium);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-primary);
+}
+
+.panel-title-text {
+    font-size: var(--krds-pc-font-size-body-large);
+    color: var(--dasan-text-basic);
+    margin-left: var(--krds-gap-1);
+}
+
+.panel-total-count {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--dasan-primary);
+    margin-left: var(--krds-gap-4);
+}
+
+.panel-count-unit {
+    font-size: var(--krds-pc-font-size-heading-small);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-primary);
+}
+
+.district-panel-hint {
+    font-size: var(--krds-pc-font-size-body-small);
+    color: var(--dasan-text-subtle);
+}
+
+/* 패널 콘텐츠 - 2컬럼 그리드 */
+.district-panel-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--dasan-gap);
+    padding: var(--dasan-padding);
+}
+
+@media (min-width: 1024px) {
+    .district-panel-content {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--dasan-gap-lg);
+    }
+}
+
+/* 섹션 타이틀 */
+.section-title {
+    font-size: var(--krds-pc-font-size-label-large);
+    font-weight: var(--krds-font-weight-medium);
+    color: var(--dasan-text-bolder);
+    margin: 0 0 var(--krds-gap-4) 0;
+}
+
+/* Top5 섹션 */
+.top5-section {
+    min-width: 0;
+}
+
+/* Top5 키워드 테이블 */
+.top5-keyword-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.top5-keyword-table th,
+.top5-keyword-table td {
+    padding: var(--krds-padding-4) var(--krds-padding-3);
+    text-align: left;
+    border-bottom: 1px solid var(--dasan-divider);
+}
+
+.top5-keyword-table th {
+    font-size: var(--krds-pc-font-size-label-xsmall);
+    font-weight: var(--krds-font-weight-medium);
+    color: var(--dasan-text-subtle);
+    background: var(--dasan-surface-gray);
+}
+
+.top5-keyword-table td {
+    font-size: var(--krds-pc-font-size-body-medium);
+    color: var(--dasan-text-basic);
+}
+
+.top5-keyword-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 키워드 순위 뱃지 */
+.keyword-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 50%;
+    background: var(--dasan-text-subtle);
+}
+
+.keyword-rank.rank-1 { background: #0033A0; }
+.keyword-rank.rank-2 { background: #2563eb; }
+.keyword-rank.rank-3 { background: #059669; }
+.keyword-rank.rank-4 { background: #d97706; }
+.keyword-rank.rank-5 { background: #dc2626; }
+
+/* 키워드 배지 */
+.keyword-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    font-size: var(--krds-pc-font-size-label-small);
+    font-weight: var(--krds-font-weight-medium);
+    border-radius: var(--dasan-radius-sm);
+}
+
+.keyword-badge.blue {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.keyword-badge.orange {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.keyword-badge.green {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.keyword-badge.purple {
+    background: #f3e8ff;
+    color: #7c3aed;
+}
+
+.keyword-badge.pink {
+    background: #fce7f3;
+    color: #be185d;
+}
+
+.keyword-badge.yellow {
+    background: #fef9c3;
+    color: #a16207;
+}
+
+.keyword-badge.red {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.keyword-badge.cyan {
+    background: #cffafe;
+    color: #0e7490;
+}
+
+.keyword-badge.indigo {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.keyword-badge.slate {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.keyword-badge.gray {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+/* 추세 섹션 */
+.trend-section {
+    min-width: 0;
+}
+
+#region-trend-chart {
+    height: 25rem;
+}
+
+/* ========================================
+   Mobile 패널 스타일
+   ======================================== */
+@media (max-width: 767px) {
+    .district-panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--krds-gap-3);
+    }
+
+    .district-panel-title {
+        flex-wrap: wrap;
+    }
+
+    .district-name-highlight {
+        font-size: var(--krds-mobile-font-size-heading-medium);
+    }
+
+    .panel-total-count {
+        font-size: 2.2rem;
+    }
+
+    .district-panel-hint {
+        font-size: var(--krds-mobile-font-size-body-small);
+    }
+
+    #region-trend-chart {
+        height: 20rem;
+    }
+}
+
+/* ========================================
+   Mobile 레이아웃
+   ======================================== */
+@media (max-width: 1023px) {
+    .complaint-region-layout {
+        flex-direction: column;
+    }
+
+    .region-sidebar {
+        width: 100%;
+        max-height: none;
+        position: static;
+        border-right: none;
+        border-bottom: var(--krds-light-border-width-static-regular) solid var(--dasan-divider);
+    }
+
+    .sidebar-section:last-child {
+        max-height: 20rem;
+    }
+
+    #region-map {
+        height: 35rem;
+    }
+
+    .detail-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 767px) {
+    .map-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--krds-gap-3);
+    }
+
+    .map-legend {
+        flex-wrap: wrap;
+        gap: var(--krds-gap-2);
+    }
+
+    #region-map {
+        height: 28rem;
+    }
+
+    .detail-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--krds-gap-2);
+    }
+
+    .detail-stat-item {
+        padding: var(--krds-padding-3);
+    }
+
+    .detail-stat-value {
+        font-size: var(--krds-pc-font-size-body-large);
+    }
+}
+
+/* ========================================
+   High Contrast Mode
+   ======================================== */
+[data-krds-mode="high-contrast"] .district-item.active {
+    background: var(--krds-color-high-contrast-primary-50);
+}
+
+[data-krds-mode="high-contrast"] .top5-rank {
+    background: var(--krds-color-high-contrast-primary-50);
+}
+
+[data-krds-mode="high-contrast"] .top5-rank.rank-1,
+[data-krds-mode="high-contrast"] .top5-rank.rank-2,
+[data-krds-mode="high-contrast"] .top5-rank.rank-3 {
+    background: var(--krds-color-high-contrast-danger-50);
+}

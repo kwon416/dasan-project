@@ -1,0 +1,362 @@
+/**
+ * 기간별 분석 페이지 스타일
+ * KRDS 디자인 시스템 기반
+ */
+
+/* ========================================
+   기간별 분석 페이지 레이아웃
+   ======================================== */
+.complaint-period-page {
+    background: var(--dasan-surface-gray);
+    min-height: calc(100vh - 16rem);
+}
+
+.period-content {
+    max-width: var(--krds-contents-size);
+    margin: 0 auto;
+    padding: var(--dasan-padding);
+}
+
+/* ========================================
+   기간 선택 카드
+   ======================================== */
+.period-select-card {
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius-lg);
+    box-shadow: var(--dasan-shadow);
+    padding: var(--dasan-padding-lg);
+    margin-bottom: var(--dasan-gap-lg);
+}
+
+.period-card-header {
+    margin-bottom: var(--krds-gap-6);
+}
+
+.period-card-title {
+    font-size: var(--krds-pc-font-size-heading-small);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+    margin: 0 0 var(--krds-gap-2) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-3);
+}
+
+.period-card-title .icon {
+    width: var(--krds-icon--size-large);
+    height: var(--krds-icon--size-large);
+    color: var(--dasan-primary);
+}
+
+.period-card-desc {
+    font-size: var(--krds-pc-font-size-body-medium);
+    color: var(--dasan-text-subtle);
+    margin: 0;
+}
+
+/* 기간 선택 섹션 (통합) */
+.period-select-section {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-4);
+    flex-wrap: wrap;
+}
+
+.period-section-label {
+    font-size: var(--krds-pc-font-size-label-medium);
+    font-weight: var(--krds-font-weight-semibold);
+    color: var(--dasan-text-basic);
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* period-date-inputs: 날짜 입력과 빠른 선택을 세로 배치 */
+.period-date-inputs {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--krds-gap-4);
+}
+
+/* 날짜 입력 필드 너비 조정 */
+.period-date-inputs .calendar-input .krds-input.small {
+    width: 13rem;
+}
+
+/* 캘린더 팝업 */
+.period-date-field .krds-calendar-area {
+    z-index: 9999;
+    min-width: 28rem;
+}
+
+/* period-date-separator는 더 이상 사용하지 않음 (date-separator 사용) */
+/* Legacy 호환성을 위해 유지 */
+.period-date-separator {
+    font-size: var(--krds-pc-font-size-heading-small);
+    color: var(--dasan-text-subtle);
+    line-height: 1;
+}
+
+/* 선택된 기간 표시 */
+.period-selected-display {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-4);
+    padding: var(--krds-padding-5);
+    background: linear-gradient(135deg, var(--dasan-primary) 0%, var(--dasan-primary-light) 100%);
+    border-radius: var(--dasan-radius);
+    margin-top: var(--krds-gap-6);
+    color: #fff;
+}
+
+.period-selected-display .icon {
+    width: var(--krds-icon--size-large);
+    height: var(--krds-icon--size-large);
+    opacity: 0.9;
+}
+
+.period-selected-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+}
+
+.period-selected-label {
+    font-size: var(--krds-pc-font-size-body-medium);
+    opacity: 0.9;
+}
+
+.period-selected-range {
+    font-size: var(--krds-pc-font-size-body-medium);
+    font-weight: var(--krds-font-weight-bold);
+}
+
+/* ========================================
+   분석 유형 선택 카드
+   ======================================== */
+.analysis-type-section {
+    margin-top: var(--dasan-gap-lg);
+}
+
+.analysis-section-title {
+    font-size: var(--krds-pc-font-size-heading-small);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+    margin: 0 0 var(--krds-gap-5) 0;
+}
+
+.analysis-type-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--dasan-gap);
+}
+
+@media (min-width: 768px) {
+    .analysis-type-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--dasan-gap-lg);
+    }
+}
+
+/* 분석 유형 카드 */
+.analysis-type-card {
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius-lg);
+    box-shadow: var(--dasan-shadow);
+    padding: var(--dasan-padding-lg);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all var(--krds-transition-base);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.analysis-type-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--dasan-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--krds-transition-base);
+}
+
+.analysis-type-card:hover {
+    border-color: var(--dasan-primary-light);
+    box-shadow: var(--dasan-shadow-lg);
+    transform: translateY(-2px);
+}
+
+.analysis-type-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* 카드 헤더 - 아이콘과 텍스트 수평 배치 */
+.analysis-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--krds-gap-5);
+    flex: 1;
+}
+
+.analysis-card-icon {
+    width: 6.4rem;
+    height: 6.4rem;
+    background: linear-gradient(135deg, var(--dasan-primary) 0%, var(--dasan-primary-light) 100%);
+    border-radius: var(--dasan-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.analysis-card-icon svg,
+.analysis-card-icon .icon {
+    width: 3.2rem;
+    height: 3.2rem;
+    color: #fff;
+}
+
+/* 이미지 아이콘에 흰색 필터 적용 */
+.analysis-card-icon img.icon {
+    filter: brightness(0) invert(1);
+}
+
+.analysis-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 6.4rem;
+}
+
+.analysis-card-title {
+    font-size: var(--krds-pc-font-size-heading-xsmall);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+    margin: 0 0 var(--krds-gap-2) 0;
+}
+
+.analysis-card-desc {
+    font-size: var(--krds-pc-font-size-body-medium);
+    color: var(--dasan-text-subtle);
+    margin: 0;
+    line-height: var(--krds-line-height-relaxed);
+}
+
+.analysis-card-action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: var(--krds-gap-5);
+    padding-top: var(--krds-gap-5);
+    border-top: var(--krds-light-border-width-static-regular) solid var(--dasan-divider);
+}
+
+.analysis-card-action .krds-btn {
+    min-width: 14rem;
+}
+
+/* ========================================
+   Mobile 레이아웃
+   ======================================== */
+@media (max-width: 767px) {
+    .period-content {
+        padding: var(--dasan-padding-sm);
+    }
+
+    .period-select-card {
+        padding: var(--dasan-padding);
+    }
+
+    .period-select-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--krds-gap-3);
+    }
+
+    .period-date-inputs {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .period-date-field {
+        width: 100%;
+    }
+
+    .period-date-field .calendar-input .krds-input {
+        width: 100%;
+    }
+
+    .period-date-separator {
+        display: none;
+    }
+
+    .period-selected-display {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--krds-gap-3);
+    }
+
+    .period-selected-info {
+        flex-direction: column;
+        gap: var(--krds-gap-1);
+    }
+
+    .analysis-type-card {
+        padding: var(--dasan-padding);
+    }
+
+    .analysis-card-header {
+        gap: var(--krds-gap-4);
+    }
+
+    .analysis-card-icon {
+        width: 5rem;
+        height: 5rem;
+    }
+
+    .analysis-card-icon svg,
+    .analysis-card-icon .icon {
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+
+    .analysis-card-content {
+        min-height: 5rem;
+    }
+
+    .analysis-card-action {
+        justify-content: center;
+    }
+
+    .analysis-card-action .krds-btn {
+        width: 100%;
+    }
+}
+
+/* ========================================
+   High Contrast Mode
+   ======================================== */
+
+[data-krds-mode="high-contrast"] .period-selected-display {
+    background: linear-gradient(135deg, var(--krds-color-high-contrast-primary-60) 0%, var(--krds-color-high-contrast-primary-50) 100%);
+}
+
+[data-krds-mode="high-contrast"] .analysis-card-icon {
+    background: linear-gradient(135deg, var(--krds-color-high-contrast-primary-60) 0%, var(--krds-color-high-contrast-primary-50) 100%);
+}
+
+[data-krds-mode="high-contrast"] .analysis-type-card:hover {
+    border-color: var(--krds-color-high-contrast-primary-40);
+}
+
+[data-krds-mode="high-contrast"] .analysis-type-card::before {
+    background: var(--krds-color-high-contrast-primary-50);
+}

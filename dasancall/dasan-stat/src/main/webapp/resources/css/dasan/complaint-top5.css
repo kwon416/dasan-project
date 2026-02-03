@@ -1,0 +1,351 @@
+/**
+ * Top5 키워드 통계 페이지 스타일
+ * KRDS 디자인 시스템 기반
+ */
+
+/* ========================================
+   페이지 레이아웃
+   ======================================== */
+.top5-content {
+    max-width: var(--krds-contents-size);
+    margin: 0 auto;
+    padding: var(--dasan-padding);
+}
+
+/* 페이지 헤더 */
+.page-header-nav {
+    margin-bottom: var(--krds-gap-4);
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--krds-gap-1);
+    font-size: var(--krds-pc-font-size-body-small);
+    color: var(--dasan-text-subtle);
+    text-decoration: none;
+    padding: var(--krds-padding-2) var(--krds-padding-3);
+    border-radius: var(--dasan-radius-sm);
+    transition: all var(--krds-transition-base);
+    margin-left: calc(var(--krds-padding-2) * -1);
+}
+
+.back-button:hover {
+    background: var(--dasan-surface-gray);
+    color: var(--dasan-text-basic);
+}
+
+.page-header-main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--krds-gap-5);
+}
+
+.page-header-actions {
+    display: flex;
+    gap: var(--krds-gap-2);
+    flex-shrink: 0;
+}
+
+/* period-info-bar 스타일은 complaint-common.css에서 제공 */
+
+/* ========================================
+   Top5 키워드 카드 그리드
+   ======================================== */
+.top5-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--krds-gap-3);
+    margin-bottom: var(--dasan-gap);
+}
+
+@media (min-width: 768px) {
+    .top5-card-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+.top5-card {
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius);
+    box-shadow: var(--dasan-shadow);
+    overflow: hidden;
+    position: relative;
+}
+
+.top5-card-bar {
+    height: 4px;
+}
+
+.top5-card-body {
+    padding: var(--krds-padding-4);
+}
+
+.top5-card-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--krds-padding-1) var(--krds-padding-2);
+    font-size: var(--krds-pc-font-size-label-xsmall);
+    font-weight: var(--krds-font-weight-bold);
+    color: #fff;
+    border-radius: var(--dasan-radius-sm);
+    margin-bottom: var(--krds-gap-2);
+}
+
+.top5-card-keyword {
+    font-size: var(--krds-pc-font-size-body-small);
+    font-weight: var(--krds-font-weight-semibold);
+    color: var(--dasan-text-bolder);
+    margin-bottom: var(--krds-gap-1);
+}
+
+.top5-card-count {
+    font-size: var(--krds-pc-font-size-heading-xsmall);
+    font-weight: var(--krds-font-weight-bold);
+}
+
+/* ========================================
+   키워드 범례
+   ======================================== */
+.keyword-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--krds-gap-4);
+    padding: var(--krds-padding-4);
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius);
+    box-shadow: var(--dasan-shadow);
+    margin-bottom: var(--dasan-gap-lg);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+}
+
+.legend-color {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: var(--dasan-radius-sm);
+}
+
+.legend-text {
+    font-size: var(--krds-pc-font-size-body-small);
+    font-weight: var(--krds-font-weight-medium);
+    color: var(--dasan-text-basic);
+}
+
+/* ========================================
+   차트 섹션
+   ======================================== */
+.chart-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dasan-gap);
+}
+
+.chart-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--dasan-gap);
+}
+
+@media (min-width: 1024px) {
+    .chart-grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.chart-card {
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius-lg);
+    box-shadow: var(--dasan-shadow);
+    overflow: hidden;
+}
+
+.chart-card.full-width {
+    width: 100%;
+}
+
+.chart-card-header {
+    padding: var(--dasan-padding-sm) var(--dasan-padding);
+    border-bottom: 1px solid var(--dasan-divider);
+}
+
+.chart-card-title {
+    font-size: var(--krds-pc-font-size-body-large);
+    font-weight: var(--krds-font-weight-semibold);
+    color: var(--dasan-text-bolder);
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+    margin-bottom: var(--krds-gap-1);
+}
+
+.chart-card-title .icon-blue { color: #5B97FF; }
+.chart-card-title .icon-green { color: #6FCF97; }
+.chart-card-title .icon-orange { color: #FFA94D; }
+.chart-card-title .icon-purple { color: #A78BFA; }
+.chart-card-title .icon-indigo { color: #818CF8; }
+
+.chart-card-desc {
+    font-size: var(--krds-pc-font-size-body-small);
+    color: var(--dasan-text-subtle);
+    margin: 0;
+}
+
+.chart-card-body {
+    padding: var(--dasan-padding);
+}
+
+.chart-card-body.no-padding {
+    padding: 0;
+}
+
+.chart-container {
+    position: relative;
+}
+
+/* ========================================
+   통계 테이블
+   ======================================== */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--krds-pc-font-size-body-small);
+}
+
+.stats-table th,
+.stats-table td {
+    padding: var(--krds-padding-4);
+    border-bottom: 1px solid var(--dasan-divider);
+}
+
+.stats-table th {
+    background: var(--dasan-surface-gray);
+    font-weight: var(--krds-font-weight-semibold);
+    color: var(--dasan-text-basic);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.stats-table td {
+    color: var(--dasan-text-basic);
+}
+
+.stats-table tr:hover td {
+    background: var(--krds-light-color-action-secondary-hover);
+}
+
+.stats-table tr:last-child td {
+    border-bottom: none;
+}
+
+.stats-table .text-right {
+    text-align: right;
+}
+
+.keyword-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+}
+
+.keyword-color-dot {
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: var(--dasan-radius-sm);
+    flex-shrink: 0;
+}
+
+.keyword-name {
+    font-weight: var(--krds-font-weight-medium);
+}
+
+.count-cell {
+    font-weight: var(--krds-font-weight-bold);
+}
+
+/* ========================================
+   Mobile 레이아웃
+   ======================================== */
+@media (max-width: 767px) {
+    .top5-content {
+        padding: var(--dasan-padding-sm);
+    }
+
+    .page-header-main {
+        flex-direction: column;
+        gap: var(--krds-gap-4);
+    }
+
+    .page-header-actions {
+        width: 100%;
+    }
+
+    .page-header-actions .krds-btn {
+        flex: 1;
+    }
+
+    .period-info-bar {
+        flex-wrap: wrap;
+        padding: var(--krds-padding-3) var(--krds-padding-4);
+    }
+
+    .period-info-text {
+        flex-basis: 100%;
+        order: 2;
+        margin-top: var(--krds-gap-2);
+    }
+
+    .period-change-link {
+        order: 3;
+    }
+
+    .top5-card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .top5-card-body {
+        padding: var(--krds-padding-3);
+    }
+
+    .keyword-legend {
+        gap: var(--krds-gap-3);
+        padding: var(--krds-padding-3);
+    }
+
+    .legend-item {
+        gap: var(--krds-gap-1);
+    }
+
+    .legend-color {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+
+    .legend-text {
+        font-size: var(--krds-pc-font-size-label-small);
+    }
+
+    .chart-card-header,
+    .chart-card-body {
+        padding: var(--krds-padding-4);
+    }
+
+    .stats-table th,
+    .stats-table td {
+        padding: var(--krds-padding-3);
+        font-size: var(--krds-pc-font-size-label-small);
+    }
+}
+
+/* High Contrast Mode - period-info-bar는 complaint-common.css에서 제공 */

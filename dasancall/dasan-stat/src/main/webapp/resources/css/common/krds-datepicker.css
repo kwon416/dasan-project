@@ -1,0 +1,488 @@
+/**
+ * KRDS DatePicker 공통 스타일 (BEM 방식 리팩토링)
+ *
+ * Block: krds-datepicker
+ * Modifiers:
+ *   - krds-datepicker--vertical: 세로 배치 (사이드바용)
+ *   - krds-datepicker--inline: 인라인 배치 + 고정 너비
+ *   - krds-datepicker--wrap: 반응형 래핑
+ *
+ * 사용처:
+ * - region.do (지역별 분석) - vertical modifier
+ * - period.do (기간별 분석) - wrap modifier
+ * - callIssue.do (콜 이슈) - inline modifier
+ */
+
+/* ========================================
+   Base: DatePicker 컨테이너
+   ======================================== */
+.krds-datepicker {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--krds-gap-4);
+}
+
+/* Modifier: 세로 배치 (사이드바용) */
+.krds-datepicker--vertical {
+    flex-direction: column;
+}
+
+/* Modifier: 반응형 래핑 */
+.krds-datepicker--wrap {
+    flex-wrap: wrap;
+}
+
+/* Modifier: 인라인 배치 */
+.krds-datepicker--inline {
+    flex-direction: row;
+    align-items: center;
+}
+
+/* ========================================
+   Base: 날짜 범위 선택 영역
+   ======================================== */
+.krds-datepicker .date-range-picker {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+}
+
+.krds-datepicker .date-separator {
+    color: var(--dasan-text-subtle);
+    font-size: var(--krds-pc-font-size-label-small);
+    padding: 0 var(--krds-gap-1);
+    height: 3.2rem;
+    line-height: 3.2rem;
+}
+
+/* ========================================
+   Base: 캘린더 입력 컨테이너
+   ======================================== */
+.krds-datepicker .form-conts.calendar-conts {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.krds-datepicker .calendar-input {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 3.2rem;
+}
+
+.krds-datepicker .calendar-input .krds-input.small {
+    width: 100%;
+    height: 3.2rem;
+    min-height: 3.2rem;
+    padding-right: 3.6rem;
+    box-sizing: border-box;
+    font-size: var(--krds-pc-font-size-label-small);
+}
+
+/* Modifier: 인라인 스타일 - 고정 너비 + 중앙 정렬 */
+.krds-datepicker--inline .calendar-input .krds-input.small {
+    width: 13rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ========================================
+   Base: 캘린더 버튼
+   ======================================== */
+.krds-datepicker .calendar-input .krds-btn.small.icon.form-btn-datepicker {
+    position: absolute;
+    right: 0.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.4rem;
+    height: 2.4rem;
+    min-width: 2.4rem;
+    min-height: 2.4rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.krds-datepicker .calendar-input .krds-btn.small.icon.form-btn-datepicker:hover {
+    background-color: var(--krds-light-color-action-secondary-hover);
+    border-radius: var(--dasan-radius-xs);
+}
+
+/* ========================================
+   Base: 빠른 날짜 선택
+   ======================================== */
+.krds-datepicker .quick-period-selector {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+}
+
+.krds-datepicker .quick-period-selector .krds-form-chip {
+    flex: 1;
+    margin: 0;
+}
+
+.krds-datepicker .quick-period-selector .krds-form-chip-outline {
+    width: 100%;
+    height: 3.2rem;
+    min-height: 3.2rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--krds-padding-3);
+    font-size: var(--krds-pc-font-size-label-small);
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+/* Base: 일반 버튼 스타일 빠른 선택 */
+.krds-datepicker .quick-period-buttons {
+    display: flex;
+    gap: var(--krds-gap-2);
+}
+
+.krds-datepicker .period-quick-btn {
+    height: 3.2rem;
+    padding: 0 var(--krds-padding-3);
+    font-size: var(--krds-pc-font-size-label-small);
+    border: 1px solid var(--dasan-border);
+    background: var(--dasan-surface-white);
+    color: var(--dasan-text-basic);
+    border-radius: var(--dasan-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.krds-datepicker .period-quick-btn:hover {
+    background: var(--krds-light-color-action-secondary-hover);
+}
+
+.krds-datepicker .period-quick-btn.active {
+    background: var(--dasan-primary);
+    color: #fff;
+    border-color: var(--dasan-primary);
+}
+
+/* ========================================
+   KRDS 캘린더 팝업
+   ======================================== */
+/* 모든 컨텍스트에서 캘린더 영역 스타일 적용 */
+.krds-calendar-area {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 9999;
+    margin-top: 0.4rem;
+    background: var(--dasan-surface-white, #fff);
+    border: 1px solid var(--dasan-border, #e5e7eb);
+    border-radius: var(--dasan-radius, 0.8rem);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    width: 34rem;
+    min-width: 34rem;
+}
+
+.krds-calendar-area.open {
+    display: block;
+}
+
+/* 캘린더 래퍼 */
+.krds-calendar-wrap {
+    width: 34rem;
+    min-width: 34rem;
+    box-sizing: border-box;
+}
+
+.krds-calendar-wrap * {
+    box-sizing: border-box;
+}
+
+/* 캘린더 헤더 */
+.krds-calendar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid var(--dasan-divider, #e5e7eb);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.krds-calendar-switch-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+}
+
+.krds-calendar-title {
+    font-size: var(--krds-pc-font-size-label-large);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+}
+
+/* 이전/다음 달 버튼 */
+.btn-cal-move {
+    width: 3.2rem;
+    height: 3.2rem;
+    background: none;
+    border: 1px solid var(--dasan-border);
+    border-radius: var(--dasan-radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.btn-cal-move:hover {
+    background: var(--krds-light-color-action-secondary-hover);
+}
+
+.btn-cal-move.prev::before {
+    content: '';
+    width: 0.8rem;
+    height: 0.8rem;
+    border-left: 2px solid var(--dasan-text-basic);
+    border-bottom: 2px solid var(--dasan-text-basic);
+    transform: rotate(45deg);
+    margin-left: 0.2rem;
+}
+
+.btn-cal-move.next::before {
+    content: '';
+    width: 0.8rem;
+    height: 0.8rem;
+    border-right: 2px solid var(--dasan-text-basic);
+    border-top: 2px solid var(--dasan-text-basic);
+    transform: rotate(45deg);
+    margin-right: 0.2rem;
+}
+
+/* 캘린더 바디 */
+.krds-calendar-body {
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.krds-calendar-table-wrap {
+    overflow: hidden;
+}
+
+.krds-calendar-tbl {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+.krds-calendar-tbl caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.krds-calendar-tbl th {
+    padding: 0.6rem 0.4rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--dasan-text-subtle, #6b7280);
+    text-align: center;
+    width: 4rem;
+}
+
+.krds-calendar-tbl th:first-child {
+    color: var(--dasan-danger, #dc2626);
+}
+
+.krds-calendar-tbl td {
+    padding: 0.2rem;
+    text-align: center;
+    width: 4rem;
+    height: 4rem;
+}
+
+.krds-calendar-tbl td.old,
+.krds-calendar-tbl td.new {
+    opacity: 0.3;
+}
+
+/* 날짜 선택 버튼 */
+.btn-set-date {
+    width: 3.6rem;
+    height: 3.6rem;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.4rem;
+    color: var(--dasan-text-basic, #374151);
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-set-date:hover:not(:disabled) {
+    background: var(--krds-light-color-action-secondary-hover);
+}
+
+.btn-set-date:disabled {
+    cursor: default;
+    opacity: 0.3;
+}
+
+.krds-calendar-tbl td.day-off .btn-set-date {
+    color: var(--dasan-danger);
+}
+
+.krds-calendar-tbl td.today .btn-set-date {
+    background: none !important;
+    color: var(--dasan-primary) !important;
+    font-weight: 700;
+    border: 2px solid var(--dasan-primary) !important;
+}
+
+.krds-calendar-tbl td.today .btn-set-date span {
+    color: var(--dasan-primary) !important;
+}
+
+.krds-calendar-tbl td.selected .btn-set-date {
+    background: #FFB800 !important;
+    color: #000 !important;
+    font-weight: 700;
+}
+
+.krds-calendar-tbl td.selected .btn-set-date span {
+    color: #000 !important;
+}
+
+/* 오늘 날짜가 선택된 경우 - selected 스타일 우선 */
+.krds-calendar-tbl td.today.selected .btn-set-date {
+    background: #FFB800 !important;
+    color: #000 !important;
+    font-weight: 700;
+    border: 2px solid #FFB800 !important;
+}
+
+.krds-calendar-tbl td.today.selected .btn-set-date span {
+    color: #000 !important;
+}
+
+/* 캘린더 푸터 */
+.krds-calendar-footer {
+    padding: 0.8rem 1rem;
+    border-top: 1px solid var(--dasan-divider, #e5e7eb);
+    background: var(--dasan-surface-white, #fff);
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom-left-radius: var(--dasan-radius, 0.8rem);
+    border-bottom-right-radius: var(--dasan-radius, 0.8rem);
+}
+
+.krds-calendar-btn-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.8rem;
+}
+
+.krds-calendar-btn-wrap .btn-cal-today {
+    margin-right: auto;
+}
+
+.krds-calendar-btn-wrap .krds-btn {
+    min-width: 5rem;
+    height: 3rem;
+    font-size: 1.3rem;
+    padding: 0 1rem;
+}
+
+/* ========================================
+   Legacy 클래스 호환성 (deprecated, 새 코드에서는 사용하지 마세요)
+   ======================================== */
+/* sidebar-date-picker는 krds-datepicker krds-datepicker--vertical로 대체 */
+.sidebar-date-picker {
+    display: flex;
+    flex-direction: column;
+    gap: var(--krds-gap-4);
+}
+
+.sidebar-date-picker .form-conts.calendar-conts {
+    flex: 1;
+    min-width: 0;
+}
+
+/* inline-datepicker는 krds-datepicker krds-datepicker--inline로 대체 */
+.inline-datepicker {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+}
+
+.inline-datepicker .calendar-input .krds-input.small {
+    width: 13rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ========================================
+   모바일 반응형
+   ======================================== */
+@media (max-width: 767px) {
+    .krds-datepicker .date-range-picker {
+        flex-wrap: wrap;
+    }
+
+    .krds-datepicker .form-conts.calendar-conts {
+        min-width: 12rem;
+    }
+
+    .krds-datepicker .quick-period-selector {
+        flex-wrap: wrap;
+    }
+
+    .inline-datepicker {
+        flex-wrap: wrap;
+    }
+
+    .inline-datepicker .calendar-input .krds-input.small {
+        width: 100%;
+        min-width: 10rem;
+    }
+
+    .inline-datepicker .quick-period-btns {
+        margin-left: 0;
+        margin-top: var(--krds-gap-2);
+    }
+}
+
+/* ========================================
+   High Contrast Mode
+   ======================================== */
+[data-krds-mode="high-contrast"] .btn-set-date:hover:not(:disabled) {
+    background: var(--krds-color-high-contrast-primary-20);
+}
+
+[data-krds-mode="high-contrast"] .krds-calendar-tbl td.today .btn-set-date {
+    background: none !important;
+    border: 3px solid #0033A0 !important;
+    color: #0033A0 !important;
+}
+
+[data-krds-mode="high-contrast"] .krds-calendar-tbl td.selected .btn-set-date {
+    background: #FFB800 !important;
+    color: #000 !important;
+}
+
+[data-krds-mode="high-contrast"] .inline-datepicker .quick-period-btns .krds-btn.active {
+    background-color: var(--krds-color-high-contrast-primary-60);
+}

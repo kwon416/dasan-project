@@ -1,0 +1,490 @@
+/**
+ * 키워드 검색 페이지 스타일
+ * KRDS 디자인 시스템 기반
+ */
+
+/* ========================================
+   페이지 레이아웃
+   ======================================== */
+.keyword-content {
+    max-width: var(--krds-contents-size);
+    margin: 0 auto;
+    padding: var(--dasan-padding);
+}
+
+/* 뒤로가기 네비게이션 */
+.page-header-nav {
+    margin-bottom: var(--krds-gap-4);
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--krds-gap-1);
+    font-size: var(--krds-pc-font-size-body-small);
+    color: var(--dasan-text-subtle);
+    text-decoration: none;
+    padding: var(--krds-padding-2) var(--krds-padding-3);
+    border-radius: var(--dasan-radius-sm);
+    transition: all var(--krds-transition-base);
+    margin-left: calc(var(--krds-padding-2) * -1);
+}
+
+.back-button:hover {
+    background: var(--dasan-surface-gray);
+    color: var(--dasan-text-basic);
+}
+
+/* period-info-bar 스타일은 complaint-common.css에서 제공 */
+
+/* ========================================
+   검색 카드
+   ======================================== */
+.search-card {
+    margin-bottom: var(--dasan-gap);
+}
+
+.search-card .card-body {
+    padding: var(--krds-padding-5); /* 1.4rem */
+}
+
+.search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input-wrap .search-icon {
+    position: absolute;
+    left: var(--krds-padding-5); /* 1.4rem */
+    width: var(--krds-icon--size-medium); /* 2rem */
+    height: var(--krds-icon--size-medium);
+    color: var(--dasan-text-subtle);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.search-input-wrap .krds-input {
+    flex: 1;
+    padding-left: calc(var(--krds-padding-5) + var(--krds-icon--size-medium) + var(--krds-gap-3)); /* 아이콘 공간 확보 */
+    padding-right: calc(var(--krds-padding-5) + var(--krds-icon--size-medium) + var(--krds-gap-3)); /* 지우기 버튼 공간 */
+}
+
+.search-input-wrap .btn-clear-search {
+    position: absolute;
+    right: var(--krds-gap-2); /* 0.4rem */
+    background: transparent;
+    border: none;
+    padding: var(--krds-padding-2);
+    cursor: pointer;
+    color: var(--dasan-text-subtle);
+    border-radius: var(--krds-radius-max);
+    transition: background-color var(--krds-transition-base);
+}
+
+.search-input-wrap .btn-clear-search:hover {
+    background-color: var(--dasan-surface-gray);
+    color: var(--dasan-text-basic);
+}
+
+/* ========================================
+   결과 카드
+   ======================================== */
+.result-card {
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius-lg);
+    box-shadow: var(--dasan-shadow);
+    overflow: hidden;
+}
+
+.result-header {
+    padding: var(--dasan-padding-sm) var(--dasan-padding);
+    border-bottom: 1px solid var(--dasan-divider);
+}
+
+.result-title {
+    font-size: var(--krds-pc-font-size-body-large);
+    font-weight: var(--krds-font-weight-semibold);
+    color: var(--dasan-text-bolder);
+    margin: 0;
+}
+
+.result-body {
+    /* 패딩 없음 - 키워드 아이템이 전체 너비 사용 */
+}
+
+/* ========================================
+   키워드 리스트
+   ======================================== */
+.keyword-list {
+    /* 구분선은 각 아이템에서 처리 */
+}
+
+.keyword-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--krds-padding-4) var(--dasan-padding);
+    cursor: pointer;
+    transition: background var(--krds-transition-base);
+    border-bottom: 1px solid var(--dasan-divider);
+}
+
+.keyword-item:last-child {
+    border-bottom: none;
+}
+
+.keyword-item:hover {
+    background: var(--krds-light-color-action-secondary-hover);
+}
+
+.keyword-item.expanded {
+    background: var(--dasan-surface-gray);
+}
+
+.keyword-info {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-3);
+    flex: 1;
+}
+
+.keyword-rank {
+    width: 2.8rem;
+    height: 2.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dasan-primary);
+    color: #fff;
+    font-size: var(--krds-pc-font-size-label-small);
+    font-weight: var(--krds-font-weight-bold);
+    border-radius: var(--dasan-radius-sm);
+}
+
+.keyword-rank.secondary {
+    background: var(--dasan-surface-gray);
+    color: var(--dasan-text-subtle);
+}
+
+.keyword-text {
+    font-size: var(--krds-pc-font-size-body-medium);
+    font-weight: var(--krds-font-weight-medium);
+    color: var(--dasan-text-bolder);
+}
+
+.keyword-text .highlight {
+    color: var(--dasan-primary);
+    font-weight: var(--krds-font-weight-bold);
+}
+
+.keyword-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-4);
+}
+
+.keyword-count {
+    font-size: var(--krds-pc-font-size-body-small);
+    color: var(--dasan-text-subtle);
+}
+
+.keyword-expand-icon {
+    color: var(--dasan-text-subtle);
+    transition: transform var(--krds-transition-base);
+}
+
+.keyword-item.expanded .keyword-expand-icon {
+    transform: rotate(180deg);
+}
+
+/* 키워드 확장 콘텐츠 (인라인) */
+.keyword-detail {
+    display: none;
+    background: var(--dasan-surface-gray);
+    border-bottom: 1px solid var(--dasan-divider);
+    padding: var(--dasan-padding);
+}
+
+.keyword-detail.show {
+    display: block;
+}
+
+.keyword-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--krds-gap-5);
+}
+
+.keyword-detail-title {
+    font-size: var(--krds-pc-font-size-heading-xsmall);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-primary);
+    margin: 0;
+}
+
+.keyword-detail-actions {
+    display: flex;
+    gap: var(--krds-gap-2);
+}
+
+/* 차트 컨테이너 */
+.chart-container {
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius);
+    padding: var(--dasan-padding);
+    margin-bottom: var(--krds-gap-5);
+    height: 28rem;
+}
+
+/* 통계 그리드 */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--krds-gap-3);
+}
+
+@media (min-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.stat-item {
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius);
+    padding: var(--krds-padding-4);
+    border: 1px solid var(--dasan-border-light);
+}
+
+.stat-label {
+    display: block;
+    font-size: var(--krds-pc-font-size-label-small);
+    color: var(--dasan-text-subtle);
+    margin-bottom: var(--krds-gap-1);
+}
+
+.stat-value {
+    font-size: var(--krds-pc-font-size-heading-xsmall);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-text-bolder);
+}
+
+.stat-value.primary {
+    color: var(--dasan-primary);
+}
+
+.stat-value.danger {
+    color: var(--dasan-danger);
+}
+
+.stat-value.info {
+    color: var(--dasan-info);
+}
+
+/* ========================================
+   빈 결과
+   ======================================== */
+.empty-state {
+    text-align: center;
+    padding: var(--krds-padding-10) var(--krds-padding-6); /* 4rem 1.6rem */
+}
+
+.empty-state p {
+    /* KRDS Body Medium */
+    font-size: var(--krds-pc-font-size-body-medium);
+    color: var(--dasan-text-subtle);
+    margin: 0;
+    line-height: var(--krds-line-height-base);
+}
+
+/* ========================================
+   모달
+   ======================================== */
+.keyword-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+}
+
+.keyword-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    position: relative;
+    background: var(--dasan-surface-white);
+    border-radius: var(--dasan-radius-lg);
+    box-shadow: var(--dasan-shadow-lg);
+    width: 90%;
+    max-width: 80rem;
+    max-height: 90vh;
+    overflow: auto;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--dasan-padding);
+    border-bottom: 1px solid var(--dasan-divider);
+    position: sticky;
+    top: 0;
+    background: var(--dasan-surface-white);
+    z-index: 1;
+}
+
+.modal-title {
+    font-size: var(--krds-pc-font-size-heading-xsmall);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--dasan-primary);
+    margin: 0;
+}
+
+.modal-close {
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--dasan-text-subtle);
+    cursor: pointer;
+    border-radius: var(--dasan-radius);
+    transition: all var(--krds-transition-base);
+}
+
+.modal-close:hover {
+    background: var(--dasan-surface-gray);
+    color: var(--dasan-text-basic);
+}
+
+.modal-body {
+    padding: var(--dasan-padding);
+}
+
+.modal-actions {
+    display: flex;
+    gap: var(--krds-gap-3);
+    margin-top: var(--krds-gap-5);
+    justify-content: flex-end;
+}
+
+/* ========================================
+   Mobile 레이아웃
+   ======================================== */
+@media (max-width: 767px) {
+    .keyword-content {
+        padding: var(--dasan-padding-sm);
+    }
+
+    .period-info-bar {
+        flex-wrap: wrap;
+        padding: var(--krds-padding-3) var(--krds-padding-4);
+    }
+
+    .period-info-text {
+        flex-basis: 100%;
+        order: 2;
+        margin-top: var(--krds-gap-2);
+    }
+
+    .period-change-link {
+        order: 3;
+    }
+
+    .search-card {
+        padding: var(--krds-padding-4);
+    }
+
+    .search-input-wrapper .krds-input {
+        height: 4.4rem;
+        font-size: var(--krds-mobile-font-size-body-medium);
+    }
+
+    .keyword-item {
+        padding: var(--krds-padding-3) var(--krds-padding-4);
+    }
+
+    .keyword-info {
+        gap: var(--krds-gap-2);
+    }
+
+    .keyword-rank {
+        width: 2.4rem;
+        height: 2.4rem;
+        font-size: var(--krds-pc-font-size-label-xsmall);
+    }
+
+    .keyword-detail {
+        padding: var(--krds-padding-4);
+    }
+
+    .chart-container {
+        height: 22rem;
+        padding: var(--krds-padding-3);
+    }
+
+    .modal-content {
+        width: 95%;
+        max-height: 85vh;
+    }
+
+    .modal-header,
+    .modal-body {
+        padding: var(--krds-padding-4);
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .modal-actions .krds-btn {
+        width: 100%;
+    }
+}
+
+/* ========================================
+   High Contrast Mode
+   ======================================== */
+[data-krds-mode="high-contrast"] .period-info-bar {
+    background: var(--krds-color-high-contrast-info-10);
+    border-color: var(--krds-color-high-contrast-info-50);
+}
+
+[data-krds-mode="high-contrast"] .keyword-rank {
+    background: var(--krds-color-high-contrast-primary-50);
+}
+
+[data-krds-mode="high-contrast"] .keyword-text .highlight {
+    color: var(--krds-color-high-contrast-primary-50);
+}
+
+[data-krds-mode="high-contrast"] .stat-value.primary {
+    color: var(--krds-color-high-contrast-primary-50);
+}
+
+[data-krds-mode="high-contrast"] .stat-value.danger {
+    color: var(--krds-color-high-contrast-danger-50);
+}
+
+[data-krds-mode="high-contrast"] .stat-value.info {
+    color: var(--krds-color-high-contrast-info-50);
+}
