@@ -24,6 +24,16 @@
         <property name="url" value="jdbc:log4jdbc:mariadb://172.31.31.3:53306/dasandb" />
         <property name="username" value="dasanapp"/>
         <property name="password" value="dasanapp12#$"/>
+        <!-- 커넥션 풀 -->
+<!--         <property name="initialSize" value="5"/>
+        <property name="maxActive" value="20"/>
+        <property name="maxIdle" value="10"/>
+        <property name="minIdle" value="5"/>
+        <property name="maxWait" value="3000"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="timeBetweenEvictionRunsMillis" value="30000"/>
+        <property name="minEvictableIdleTimeMillis" value="60000"/> -->
     </bean>
 
 	<bean id="batchdb.dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

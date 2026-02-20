@@ -47,6 +47,9 @@
     <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"
 	    p:viewClass="org.springframework.web.servlet.view.JstlView"
 	    p:prefix="/WEB-INF/jsp/dasan/" p:suffix=".jsp"/>
+<!--     <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"
+	    p:viewClass="org.springframework.web.servlet.view.InternalResourceView"
+	    p:prefix="/WEB-INF/html/" p:suffix=".html"/> -->
 
 <!-- 	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
 		<property name="viewResolvers">

@@ -52,8 +52,8 @@
 			</list>
 		</property>
 	</bean>
-
-	<bean id="egovHandler" class="egovframework.example.cmmn.EgovSampleExcepHndlr" />
-	<bean id="otherHandler" class="egovframework.example.cmmn.EgovSampleOthersExcepHndlr" />	
+	<!-- 이클립스 빌드 시 클래스 못찾아서 추가 -->
+	<bean id="egovHandler" class="kr.or.dasancall.cmmn.DasanExcepHndlr" />
+	<bean id="otherHandler" class="kr.or.dasancall.cmmn.DasanOthersExcepHndlr" />	
 	
 </beans>

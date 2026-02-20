@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>120다산콜재단 민원공개시스템 - 데이터 검색 대시보드</title>
+  <link rel="stylesheet" href="assets/krds/krds.min.css" />
+  <link rel="stylesheet" href="search.css" />
+</head>
+<body>
+  <div id="dashboardShell" class="dashboard-shell">
+    <nav class="nav-bar">
+      <div class="nav-inner">
+        <div class="identity">
+          <a href="#" class="nav-logo">
+            <img src="assets/index/logo.png" alt="120다산콜재단">
+          </a>
+          <p class="brand-title">120다산콜재단 민원공개시스템</p>
+        </div>
+        <div class="home-btn">
+          <a href="">홈으로 이동</a>
+        </div>
+      </div>
+    </nav>
+
+    <header class="hero-card">
+      <p class="hero-kicker">PUBLIC SEARCH</p>
+      <h1 class="hero-title">키워드 기반 민원 데이터 인사이트</h1>
+      <p class="hero-subtitle">검색 조건을 설정하고 기간 대비 증감률(PoP) 중심으로 추세를 확인합니다.</p>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="card search-strip" aria-labelledby="searchStripTitle">
+        <div class="card-head search-head">
+          <h2 id="searchStripTitle" class="card-title">통합 검색</h2>
+          <p id="filterStatus" class="card-subtitle" aria-live="polite"></p>
+        </div>
+
+        <div class="strip-controls" role="search" aria-label="데이터 검색">
+          <div class="search-row-top">
+            <div class="district-field">
+              <label for="districtSelect" class="sr-only">구 선택</label>
+              <select id="districtSelect" class="krds-form-select" title="자치구 선택">
+                <option value="all" selected>서울시 전체</option>
+                <option value="강남구">강남구</option>
+                <option value="강동구">강동구</option>
+                <option value="강북구">강북구</option>
+                <option value="강서구">강서구</option>
+                <option value="관악구">관악구</option>
+                <option value="광진구">광진구</option>
+                <option value="구로구">구로구</option>
+                <option value="금천구">금천구</option>
+                <option value="노원구">노원구</option>
+                <option value="도봉구">도봉구</option>
+                <option value="동대문구">동대문구</option>
+                <option value="동작구">동작구</option>
+                <option value="마포구">마포구</option>
+                <option value="서대문구">서대문구</option>
+                <option value="서초구">서초구</option>
+                <option value="성동구">성동구</option>
+                <option value="성북구">성북구</option>
+                <option value="송파구">송파구</option>
+                <option value="양천구">양천구</option>
+                <option value="영등포구">영등포구</option>
+                <option value="용산구">용산구</option>
+                <option value="은평구">은평구</option>
+                <option value="종로구">종로구</option>
+                <option value="중구">중구</option>
+                <option value="중랑구">중랑구</option>
+              </select>
+            </div>
+
+            <div class="search-input-field">
+              <label for="searchInput" class="sr-only">검색어</label>
+              <input id="searchInput" type="text" class="krds-input" placeholder="검색어를 입력해주세요." autocomplete="off" />
+            </div>
+
+            <div class="action-buttons">
+              <button id="resetButton" type="button" class="krds-btn medium tertiary reset-btn">초기화</button>
+              <button id="searchButton" type="button" class="krds-btn medium search-btn">분석 시작</button>
+            </div>
+          </div>
+
+          <div class="search-row-bottom">
+            <div class="period-presets">
+              <span class="sr-only">기간 프리셋</span>
+              <div id="quickPresetGroup" class="preset-group" role="group" aria-label="기간 프리셋">
+                <button type="button" class="preset-btn" data-preset="d1">전일</button>
+                <button type="button" class="preset-btn" data-preset="m3">3개월</button>
+                <button type="button" class="preset-btn" data-preset="m6">6개월</button>
+                <button type="button" class="preset-btn" data-preset="y1">1년</button>
+              </div>
+            </div>
+
+            <div class="period-range">
+              <label for="startDate" class="sr-only">기간 범위</label>
+              <div class="date-range-field" aria-label="시작일과 종료일">
+                <input id="startDate" type="date" class="krds-input date-input" title="시작일" />
+                <span class="range-separator" aria-hidden="true">~</span>
+                <input id="endDate" type="date" class="krds-input date-input" title="종료일" />
+                <button id="datePickerButton" type="button" class="calendar-trigger hidden" aria-label="달력 열기">
+                  <svg viewBox="0 0 24 24" fill="none" focusable="false" aria-hidden="true">
+                    <path d="M7 3v3M17 3v3M4 9h16M6 5h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p class="search-note">*검색기간에 따라 많은 시간이 소요될 수 있습니다.</p>
+          <p id="searchError" class="search-error" role="alert" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="insight-grid" aria-label="TOP10 데이터 인사이트">
+        <article class="card widget-card" aria-labelledby="risingTitle">
+          <div class="card-head widget-head">
+            <div class="widget-title-row">
+              <h2 id="risingTitle" class="card-title">서울시 급상승 키워드 TOP10</h2>
+              <span class="tooltip-container">
+                <button type="button" class="tooltip-trigger" aria-label="급상승 키워드 설명">i</button>
+                <span class="tooltip-text">[데이터 집계 기준]<br>• 전일: 전일 대비 증감량<br>• 3개월/6개월: 전년 동기 대비 증감량 (계절성 반영)<br>• 1년: 직전 1년 대비 증감량<br>* 증감률(%)은 소수점 첫째 자리까지 표기됩니다.</span>
+              </span>
+            </div>
+            <p id="risingUpdated" class="card-subtitle" aria-live="polite">마지막 집계: -</p>
+          </div>
+          <ol id="risingList" class="widget-list" aria-label="급상승 키워드 목록"></ol>
+        </article>
+
+        <article class="card widget-card" aria-labelledby="rankingTitle">
+          <div class="card-head widget-head">
+            <div class="widget-title-row">
+              <h2 id="rankingTitle" class="card-title">서울시 검색 키워드 순위 TOP10</h2>
+              <span class="tooltip-container">
+                <button type="button" class="tooltip-trigger" aria-label="검색순위 설명">i</button>
+                <span class="tooltip-text">[데이터 집계 기준]<br>• 전일: 전일 대비 증감량<br>• 3개월/6개월: 전년 동기 대비 증감량 (계절성 반영)<br>• 1년: 직전 1년 대비 증감량<br>* 증감률(%)은 소수점 첫째 자리까지 표기됩니다.</span>
+              </span>
+            </div>
+            <p id="rankingUpdated" class="card-subtitle" aria-live="polite">마지막 집계: -</p>
+          </div>
+          <ol id="rankingList" class="widget-list" aria-label="검색 키워드 순위 목록"></ol>
+        </article>
+      </section>
+
+      <section class="card recommend-card" aria-labelledby="recommendTitle">
+        <div class="card-head">
+          <h2 id="recommendTitle" class="card-title">키워드 추천</h2>
+          <p class="card-subtitle">L자형 추천 영역에서 유형과 세부 키워드를 선택하세요.</p>
+        </div>
+
+        <div class="recommend-layout">
+          <aside class="category-sidebar" aria-label="1단계 유형 필터">
+            <div id="categorySidebar" class="category-nav" role="tablist" aria-orientation="vertical"></div>
+          </aside>
+          <div class="keyword-panel" aria-label="2단계 세부 키워드">
+            <div id="keywordTagGrid" class="keyword-grid"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="analysisModal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="analysisModalTitle">
+    <div class="confirm-modal">
+      <h3 id="analysisModalTitle" class="modal-title">대량 데이터를 정밀 분석하시겠습니까?</h3>
+      <p class="modal-text">선택한 기간과 키워드 조건에 따라 최대 5분까지 시간이 소요될 수 있습니다.</p>
+      <div class="modal-actions">
+        <button id="analysisConfirm" type="button" class="krds-btn medium">확인</button>
+        <button id="analysisCancel" type="button" class="krds-btn medium tertiary">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="analysisOverlay" class="analysis-overlay is-hidden" aria-live="assertive" aria-busy="true">
+    <div class="analysis-panel">
+      <span class="loader-spinner" aria-hidden="true"></span>
+      <p class="analysis-title">데이터 분석 및 시계열 패턴 추출 중...</p>
+      <p class="analysis-sub">필터 조건에 맞는 민원 데이터를 정밀 계산하고 있습니다.</p>
+    </div>
+  </div>
+
+  <script src="assets/krds/krds.min.js"></script>
+  <script src="search.js"></script>
+</body>
+</html>

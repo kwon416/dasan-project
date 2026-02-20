@@ -1,0 +1,1055 @@
+/* ============================================================
+ * 메인 대시보드 (POST /data/dashboard.do)
+ * ============================================================ */
+
+// ========== 전역 데이터 & 상태 ==========
+
+var dashboardData = null; // API 응답 저장
+
+const state = {
+  gu: null,              // 선택 자치구 (null = 서울시 전체)
+  keyword: null,         // 선택 키워드 (null = 전체 키워드)
+  today: "2026-01-15",           // 조회 날짜 (null = 오늘) TODO: 개발용 날짜 고정
+  sort: "rise",          // "rise" (급상승) | "freq" (빈도)
+  normalize: "total",    // "total" (총량) | "capita" (인구 1만명당)
+  top: 0,               // 바 차트 표시 개수 (0 = 전체, 10 = TOP10)
+  keywordSearch: "",     // 키워드 풀 검색어
+  poolCategory: "all"    // 키워드 풀 카테고리
+};
+
+// ========== DOM 참조 ==========
+
+const mapSvg = document.getElementById("mapSvg");
+const districtSelect = document.getElementById("district");
+const resetDistrictBtn = document.getElementById("resetDistrict");
+const chip = document.getElementById("conditionText");
+const kpiCard1Title = document.getElementById("kpiCard1Title");
+const kpiTotalValue = document.getElementById("kpiTotalValue");
+const kpiTotalDeltaValue = document.getElementById("kpiTotalDeltaValue");
+const kpiIntensityValue = document.getElementById("kpiIntensityValue");
+const kpiIntensityStatus = document.getElementById("kpiIntensityStatus");
+const kpiAvgTotalValue = document.getElementById("kpiAvgTotalValue");
+const kpiAvgIntensityValue = document.getElementById("kpiAvgIntensityValue");
+const kpiAvgDeltaValue = document.getElementById("kpiAvgDeltaValue");
+const kpiAvgStatus = document.getElementById("kpiAvgStatus");
+const kpiTrendTitle = document.getElementById("kpiTrendTitle");
+const kpiTrendMain = document.getElementById("kpiTrendMain");
+const kpiTrendTotal = document.getElementById("kpiTrendTotal");
+const kpiTrendDelta = document.getElementById("kpiTrendDelta");
+const kpiTrendSecondLabel = document.getElementById("kpiTrendSecondLabel");
+const kpiTrendSecondDelta = document.getElementById("kpiTrendSecondDelta");
+const kpiTrendThirdLabel = document.getElementById("kpiTrendThirdLabel");
+const kpiTrendThirdDelta = document.getElementById("kpiTrendThirdDelta");
+const kpiVolumeTitle = document.getElementById("kpiVolumeTitle");
+const kpiVolumeMain = document.getElementById("kpiVolumeMain");
+const kpiVolumeTotal = document.getElementById("kpiVolumeTotal");
+const kpiVolumeDelta = document.getElementById("kpiVolumeDelta");
+const kpiVolumeSecondLabel = document.getElementById("kpiVolumeSecondLabel");
+const kpiVolumeSecondDelta = document.getElementById("kpiVolumeSecondDelta");
+const kpiVolumeThirdLabel = document.getElementById("kpiVolumeThirdLabel");
+const kpiVolumeThirdDelta = document.getElementById("kpiVolumeThirdDelta");
+const rankingList = document.getElementById("rankingList");
+const rankingTitle = document.getElementById("rankingTitle");
+const wordcloud = document.getElementById("wordcloud");
+const keywordPanelTitle = document.getElementById("keywordPanelTitle");
+const keywordPanelSub = document.getElementById("keywordPanelSub");
+const keywordPanelTip = document.getElementById("keywordPanelTip");
+const keywordPoolTitle = document.getElementById("keywordPoolTitle");
+const mapSvgWrap = document.querySelector(".map-svg-wrap");
+const mapPanelTitle = document.getElementById("mapPanelTitle");
+const barChart = document.getElementById("barChart");
+const row3Sub = document.getElementById("row3Sub");
+const row3Title = document.getElementById("row3Title");
+const filterStatus = document.getElementById("filterStatus");
+const clearAllButton = document.getElementById("clearAll");
+const populationTableBody = document.querySelector("#populationTable tbody");
+const populationMeta = document.getElementById("populationMeta");
+const keywordTags = document.getElementById("keywordTags");
+const keywordSearch = document.getElementById("keywordSearch");
+const categorySidebar = document.getElementById("categorySidebar");
+const keywordTagGrid = document.getElementById("keywordTagGrid");
+const legendTitle = document.getElementById("legendTitle");
+const legendMin = document.getElementById("legendMin");
+const legendMax = document.getElementById("legendMax");
+
+// ========== API 호출 ==========
+
+var _dashboardTimer = null;
+var _dashboardXhr = null;
+
+function loadDashboard() {
+  // 디바운싱: 150ms 내 연속 호출 시 마지막 요청만 실행
+  if (_dashboardTimer) clearTimeout(_dashboardTimer);
+  _dashboardTimer = setTimeout(_execDashboardRequest, 150);
+}
+
+function _execDashboardRequest() {
+  // 이전 요청이 진행 중이면 취소
+  if (_dashboardXhr && _dashboardXhr.readyState < 4) _dashboardXhr.abort();
+
+  const params = {};
+  if (state.gu) params.gu = state.gu;
+  if (state.keyword) params.keyword = state.keyword;
+  if (state.today) params.today = state.today;
+
+  _dashboardXhr = $.ajax({
+    url: "/dasan-stat/data/dashboard.do",
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(params),
+    dataType: "json",
+    success: function (data) {
+      if (data.error) {
+        console.error("Dashboard API error:", data.error);
+        return;
+      }
+      dashboardData = data;
+      renderAll();
+    },
+    error: function (xhr, status, error) {
+      if (status === "abort") return; // 의도적 취소는 무시
+      console.error("Dashboard API request failed:", status, error);
+    }
+  });
+}
+
+// ========== 유틸리티 ==========
+
+function formatNumber(value, digits) {
+  digits = digits || 0;
+  const num = Number(value);
+  if (Number.isNaN(num)) return String(value);
+  const fixed = num.toFixed(digits);
+  const parts = fixed.split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.length > 1 ? parts[0] + "." + parts[1] : parts[0];
+}
+
+function currentValue(district) {
+  if (!district) return 0;
+  return state.normalize === "capita" ? district.capitaRate : district.totalCount;
+}
+
+function getThresholds(values) {
+  const min = Math.min.apply(null, values);
+  const max = Math.max.apply(null, values);
+  const step = (max - min) / 5 || 1;
+  return [min + step, min + step * 2, min + step * 3, min + step * 4];
+}
+
+function getLevel(value, thresholds) {
+  if (value <= thresholds[0]) return 1;
+  if (value <= thresholds[1]) return 2;
+  if (value <= thresholds[2]) return 3;
+  if (value <= thresholds[3]) return 4;
+  return 5;
+}
+
+function applyDeltaState(element, value) {
+  if (!element) return;
+  const isUp = value > 0;
+  const isDown = value < 0;
+  element.classList.toggle("up", isUp);
+  element.classList.toggle("down", isDown);
+  element.classList.toggle("neutral", !isUp && !isDown);
+}
+
+function findDistrict(name) {
+  if (!dashboardData || !dashboardData.districts) return null;
+  return dashboardData.districts.find(function (d) { return d.gu === name; });
+}
+
+function getSortedKeywords() {
+  if (!dashboardData || !dashboardData.keywords) return [];
+  var kw = dashboardData.keywords;
+  return state.sort === "freq" ? (kw.volume || []) : (kw.trending || []);
+}
+
+// ========== SVG 지도 상호작용 (기존 로직 유지) ==========
+
+function seedFromText(text) {
+  return Array.from(text).reduce(function (acc, ch) { return acc + ch.charCodeAt(0); }, 0);
+}
+
+function makePaddedBox(x, y, width, height, padding) {
+  return { x: x - padding, y: y - padding, w: width + padding * 2, h: height + padding * 2 };
+}
+
+function boxesOverlap(a, b) {
+  return !(a.x + a.w < b.x || a.x > b.x + b.w || a.y + a.h < b.y || a.y > b.y + b.h);
+}
+
+function findSpiralPosition(width, height, placed, containerWidth, containerHeight, padding) {
+  const centerX = containerWidth / 2 - width / 2;
+  const centerY = containerHeight / 2 - height / 2;
+  const maxSteps = 520;
+  for (let i = 0; i < maxSteps; i += 1) {
+    const angle = i * 0.35;
+    const radius = i * 1.8;
+    const x = centerX + Math.cos(angle) * radius;
+    const y = centerY + Math.sin(angle) * radius;
+    const box = makePaddedBox(x, y, width, height, padding);
+    const withinBounds = box.x >= 0 && box.y >= 0 && box.x + box.w <= containerWidth && box.y + box.h <= containerHeight;
+    if (!withinBounds) continue;
+    const overlaps = placed.some(function (p) { return boxesOverlap(box, p); });
+    if (!overlaps) return { x: x, y: y, box: box };
+  }
+  return null;
+}
+
+function findGridPosition(width, height, placed, containerWidth, containerHeight, padding) {
+  const step = 8;
+  for (let y = padding; y <= containerHeight - height - padding; y += step) {
+    for (let x = padding; x <= containerWidth - width - padding; x += step) {
+      const box = makePaddedBox(x, y, width, height, padding);
+      const overlaps = placed.some(function (p) { return boxesOverlap(box, p); });
+      if (!overlaps) return { x: x, y: y, box: box };
+    }
+  }
+  return null;
+}
+
+function fallbackPosition(term, maxWidth, maxHeight, wordWidth, wordHeight, padding) {
+  const sum = seedFromText(term);
+  const xRatio = ((sum % 97) + 13) / 110;
+  const yRatio = ((sum % 67) + 17) / 90;
+  const x = padding + xRatio * Math.max(0, maxWidth - wordWidth - padding * 2);
+  const y = padding + yRatio * Math.max(0, maxHeight - wordHeight - padding * 2);
+  return { x: x, y: y };
+}
+
+function parseMatrixPoint(transform) {
+  const match = /matrix\(([^)]+)\)/.exec(transform || "");
+  if (!match) return null;
+  const values = match[1].split(/[\s,]+/).map(Number);
+  if (values.length < 6 || values.some(function (n) { return Number.isNaN(n); })) return null;
+  return { x: values[4], y: values[5] };
+}
+
+function makeSvgPoint(svg, x, y) {
+  if (!svg) return null;
+  if (typeof svg.createSVGPoint === "function") {
+    const point = svg.createSVGPoint();
+    point.x = x;
+    point.y = y;
+    return point;
+  }
+  if (typeof DOMPoint !== "undefined") return new DOMPoint(x, y);
+  return null;
+}
+
+function pointInPath(path, x, y) {
+  if (!path) return false;
+  const point = makeSvgPoint(mapSvg, x, y);
+  if (!point) return false;
+  const ctm = typeof path.getCTM === "function" ? path.getCTM() : null;
+  const localPoint = ctm ? point.matrixTransform(ctm.inverse()) : point;
+  if (typeof path.isPointInFill === "function") {
+    try { return path.isPointInFill(localPoint); } catch (err) { /* fallback */ }
+  }
+  const box = path.getBBox();
+  const inLocal = localPoint && localPoint.x >= box.x && localPoint.x <= box.x + box.width && localPoint.y >= box.y && localPoint.y <= box.y + box.height;
+  const inSvg = x >= box.x && x <= box.x + box.width && y >= box.y && y <= box.y + box.height;
+  return inLocal || inSvg;
+}
+
+function getTextPoint(textEl) {
+  try {
+    const box = textEl.getBBox();
+    if (box && (box.width || box.height)) return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+  } catch (err) { /* ignore */ }
+  const matrixPoint = parseMatrixPoint(textEl.getAttribute("transform"));
+  if (matrixPoint) return matrixPoint;
+  return { x: Number(textEl.getAttribute("x") || 0), y: Number(textEl.getAttribute("y") || 0) };
+}
+
+function getViewBoxSize(svg) {
+  if (!svg) return null;
+  const viewBox = svg.viewBox && svg.viewBox.baseVal;
+  if (viewBox && viewBox.width && viewBox.height) return { width: viewBox.width, height: viewBox.height };
+  const attr = svg.getAttribute("viewBox");
+  if (!attr) return null;
+  const parts = attr.split(/[\s,]+/).map(Number);
+  if (parts.length < 4 || parts.some(function (n) { return Number.isNaN(n); })) return null;
+  return { width: parts[2], height: parts[3] };
+}
+
+function assignDistrictsToPaths() {
+  if (!mapSvg) return [];
+  const viewBox = getViewBoxSize(mapSvg);
+  const viewBoxArea = viewBox ? viewBox.width * viewBox.height : null;
+  const labelNodes = Array.from(mapSvg.querySelectorAll("text")).map(function (textEl) {
+    const name = textEl.textContent.trim();
+    if (!name) return null;
+    const point = getTextPoint(textEl);
+    return { name: name, x: point.x, y: point.y, el: textEl };
+  }).filter(Boolean);
+
+  const allPaths = Array.from(mapSvg.querySelectorAll("path"));
+  const candidatePaths = allPaths.filter(function (path) {
+    return (path.getAttribute("fill") || "").toLowerCase() !== "none";
+  });
+  const candidateSet = new Set(candidatePaths);
+  const pathBoxes = candidatePaths.map(function (path) {
+    const box = path.getBBox();
+    return { path: path, box: box, area: box.width * box.height };
+  }).filter(function (item) {
+    if (!viewBoxArea) return true;
+    return item.area < viewBoxArea * 0.65;
+  });
+
+  const remaining = pathBoxes.slice();
+  const assigned = [];
+  const assignedSet = new Set();
+
+  const assignPathToLabel = function (path, label) {
+    if (!path || assignedSet.has(path)) return false;
+    path.classList.add("district-path");
+    path.dataset.district = label.name;
+    label.el.setAttribute("data-district", label.name);
+    assigned.push(path);
+    assignedSet.add(path);
+    return true;
+  };
+
+  labelNodes.forEach(function (label) {
+    let resolvedPath = null;
+    const rect = label.el.getBoundingClientRect();
+    if (rect && (rect.width || rect.height)) {
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const hit = document.elementFromPoint(cx, cy);
+      const hitPath = hit && hit.closest ? hit.closest("path") : null;
+      if (hitPath && candidateSet.has(hitPath) && !assignedSet.has(hitPath)) resolvedPath = hitPath;
+    }
+    if (resolvedPath) {
+      const index = remaining.findIndex(function (item) { return item.path === resolvedPath; });
+      if (index >= 0) remaining.splice(index, 1);
+      assignPathToLabel(resolvedPath, label);
+      return;
+    }
+    let bestIndex = -1;
+    let bestScore = Infinity;
+    const insideCandidates = remaining.map(function (item, index) { return { item: item, index: index }; })
+      .filter(function (obj) { return pointInPath(obj.item.path, label.x, label.y); });
+    if (insideCandidates.length) {
+      insideCandidates.forEach(function (obj) { if (obj.item.area < bestScore) { bestScore = obj.item.area; bestIndex = obj.index; } });
+    } else {
+      const withinBox = remaining.map(function (item, index) { return { item: item, index: index }; })
+        .filter(function (obj) {
+          return label.x >= obj.item.box.x && label.x <= obj.item.box.x + obj.item.box.width &&
+                 label.y >= obj.item.box.y && label.y <= obj.item.box.y + obj.item.box.height;
+        });
+      const candidates = withinBox.length ? withinBox : remaining.map(function (item, index) { return { item: item, index: index }; });
+      candidates.forEach(function (obj) {
+        const box = obj.item.box;
+        let score = Math.hypot(label.x - (box.x + box.width / 2), label.y - (box.y + box.height / 2));
+        if (withinBox.length) score *= 0.5;
+        if (score < bestScore) { bestScore = score; bestIndex = obj.index; }
+      });
+    }
+    if (bestIndex >= 0) { assignPathToLabel(remaining.splice(bestIndex, 1)[0].path, label); }
+  });
+
+  return assigned;
+}
+
+let hoveredDistrict = null;
+let mapLabelPoints = [];
+let mapDistrictPaths = [];
+let mapBounds = null;
+
+function updateMapLabels() {
+  if (!mapSvg) return;
+  mapSvg.querySelectorAll("text[data-district]").forEach(function (textEl) {
+    const name = textEl.dataset.district;
+    textEl.classList.toggle("is-selected", state.gu === name);
+    textEl.classList.toggle("is-active", hoveredDistrict === name);
+  });
+}
+
+function collectMapLabels() {
+  if (!mapSvg) return [];
+  mapLabelPoints = Array.from(mapSvg.querySelectorAll("text")).map(function (textEl) {
+    const name = textEl.textContent.trim();
+    if (!name) return null;
+    const point = getTextPoint(textEl);
+    return { name: name, x: point.x, y: point.y };
+  }).filter(Boolean);
+  return mapLabelPoints;
+}
+
+function computeMapBounds(paths) {
+  if (!paths || !paths.length) return null;
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  paths.forEach(function (path) {
+    try {
+      const box = path.getBBox();
+      if (!box) return;
+      minX = Math.min(minX, box.x); minY = Math.min(minY, box.y);
+      maxX = Math.max(maxX, box.x + box.width); maxY = Math.max(maxY, box.y + box.height);
+    } catch (err) { /* ignore */ }
+  });
+  if (!Number.isFinite(minX)) return null;
+  return { minX: minX, minY: minY, maxX: maxX, maxY: maxY };
+}
+
+function getSvgPoint(svg, clientX, clientY) {
+  if (!svg) return null;
+  const point = makeSvgPoint(svg, clientX, clientY);
+  if (!point) return null;
+  const ctm = svg.getScreenCTM();
+  if (!ctm) return null;
+  return point.matrixTransform(ctm.inverse());
+}
+
+function findDistrictByPoint(svg, clientX, clientY) {
+  const svgPoint = getSvgPoint(svg, clientX, clientY);
+  if (!svgPoint) return null;
+  const candidates = mapDistrictPaths.length ? mapDistrictPaths : Array.from(mapSvg.querySelectorAll(".district-path"));
+  for (let i = 0; i < candidates.length; i += 1) {
+    if (pointInPath(candidates[i], svgPoint.x, svgPoint.y)) return candidates[i].dataset.district || null;
+  }
+  return null;
+}
+
+function initMapSvg() {
+  if (!mapSvg) return;
+  mapDistrictPaths = assignDistrictsToPaths();
+  collectMapLabels();
+  mapBounds = computeMapBounds(mapDistrictPaths.length ? mapDistrictPaths : mapSvg.querySelectorAll(".district-path"));
+
+  mapDistrictPaths.forEach(function (path) {
+    path.addEventListener("click", function (event) {
+      event.stopPropagation();
+      if (!path.dataset.district) return;
+      setDistrict(path.dataset.district);
+    });
+    path.addEventListener("mouseenter", function () { hoveredDistrict = path.dataset.district; updateMapLabels(); });
+    path.addEventListener("mouseleave", function () { hoveredDistrict = null; updateMapLabels(); });
+  });
+
+  mapSvg.addEventListener("click", function (event) {
+    const target = event.target;
+    const direct = (target && target.dataset && target.dataset.district) ||
+      (target && target.closest && target.closest(".district-path") && target.closest(".district-path").dataset.district);
+    if (direct) { setDistrict(direct); return; }
+    setDistrict(null);
+  });
+
+  if (mapSvgWrap) {
+    mapSvgWrap.addEventListener("click", function (event) {
+      if (event.target && event.target.closest && event.target.closest("#mapSvg")) return;
+      setDistrict(null);
+    });
+  }
+}
+
+// ========== 상태 변경 & API 재호출 ==========
+
+function setDistrict(name) {
+  state.gu = name || null;
+  state.keyword = name ? state.keyword : null;
+  if (districtSelect) districtSelect.value = name || "all";
+  loadDashboard();
+}
+
+function selectKeyword(term) {
+  state.keyword = (state.keyword === term) ? null : term;
+  loadDashboard();
+}
+
+function resetAll() {
+  state.gu = null;
+  state.keyword = null;
+  state.today = null;
+  state.sort = "rise";
+  state.normalize = "total";
+  state.top = 0;
+  state.keywordSearch = "";
+  state.poolCategory = "all";
+
+  if (districtSelect) districtSelect.value = "all";
+  if (keywordSearch) keywordSearch.value = "";
+
+  document.querySelectorAll("[data-sort]").forEach(function (btn) {
+    btn.classList.toggle("active", btn.dataset.sort === "rise");
+  });
+  document.querySelectorAll("[data-normalize]").forEach(function (btn) {
+    btn.classList.toggle("active", btn.dataset.normalize === "total");
+  });
+
+  loadDashboard();
+}
+
+// ========== 렌더 함수 (전체) ==========
+
+function renderAll() {
+  if (!dashboardData) return;
+  updateMeta();
+  updateChips();
+  updateMapHeader();
+  updateRow3Header();
+  updateKeywordPanel();
+  updateKpis();
+  renderDistrictSelect();
+  renderMap();
+  renderWordcloud();
+  renderRanking();
+  renderRow3();
+  renderPopulationTable();
+  renderKeywordTags();
+  updateLegend();
+}
+
+// ========== meta & 헤더 업데이트 ==========
+
+function updateMeta() {
+  const meta = dashboardData.meta;
+  const metaLines = document.querySelectorAll(".meta-line");
+  if (metaLines.length >= 1) {
+    metaLines[0].textContent = "데이터 기준: " + meta.dataDate + " " + meta.tmZnLabel + " (6시간 단위 갱신)";
+  }
+  if (metaLines.length >= 2) {
+    metaLines[1].textContent = "집계 범위: " + meta.tmZnLabel;
+  }
+}
+
+function updateChips() {
+  if (!chip) return;
+  const guLabel = state.gu || "서울시 전체";
+  const kwLabel = state.keyword || "전체 키워드";
+  chip.textContent = guLabel + " · " + kwLabel;
+}
+
+function updateMapHeader() {
+  if (!mapPanelTitle) return;
+  const guLabel = state.gu || "서울시 전체";
+  const kwLabel = state.keyword || "전체 키워드";
+  mapPanelTitle.textContent = guLabel + " " + kwLabel + " 현황";
+}
+
+function updateRow3Header() {
+  if (!row3Title) return;
+  const kwLabel = state.keyword || "전체 키워드";
+  row3Title.textContent = kwLabel + " 자치구 순위";
+  if (row3Sub) {
+    row3Sub.textContent = state.normalize === "capita" ? "기준: 인구 1만명당" : "기준: 총량";
+  }
+}
+
+function updateKeywordPanel() {
+  if (!keywordPanelTitle && !keywordPanelTip) return;
+  const guLabel = state.gu || "서울시 전체";
+  const modeLabel = state.sort === "freq" ? "최다 발생 키워드" : "급상승 키워드";
+  if (keywordPanelTitle) keywordPanelTitle.textContent = guLabel + " " + modeLabel;
+  const syncText = state.sort === "freq"
+    ? "워드클라우드 + 랭킹 동기화 (빈도 기준)"
+    : "워드클라우드 + 랭킹 동기화 (급상승 기준)";
+  if (keywordPanelSub) keywordPanelSub.textContent = "";
+  if (keywordPanelTip) keywordPanelTip.textContent = syncText;
+}
+
+// ========== KPI 카드 렌더링 ==========
+
+function updateKpis() {
+  const kpi = dashboardData.kpi;
+  const sel = kpi.selected;
+  const avg = kpi.average;
+  const kw = dashboardData.keywords || {};
+
+  // Card 1: 선택 지역 현황
+  if (kpiCard1Title) kpiCard1Title.textContent = sel.label + " 현황";
+  if (kpiTotalValue) kpiTotalValue.textContent = "일간 민원 : 총 " + formatNumber(sel.totalCount) + "건";
+  if (kpiTotalDeltaValue) {
+    const sign = sel.deltaCount >= 0 ? "+" : "";
+    const arrow = sel.deltaPct > 0 ? "▲" : sel.deltaPct < 0 ? "▼" : "-";
+    applyDeltaState(kpiTotalDeltaValue, sel.deltaPct);
+    kpiTotalDeltaValue.textContent = sign + formatNumber(Math.abs(sel.deltaCount)) + "건 " + arrow + " " + formatNumber(Math.abs(sel.deltaPct), 1) + "%";
+  }
+  if (kpiIntensityValue) kpiIntensityValue.textContent = "인구 1만명당 " + formatNumber(sel.capitaRate, 1) + "건";
+  if (kpiIntensityStatus) {
+    kpiIntensityStatus.textContent = sel.capitaRank
+      ? "서울 내 " + sel.capitaRank + "위 / 25위"
+      : "25개 자치구 전체 합계";
+  }
+
+  // Card 2: 서울시 평균
+  if (kpiAvgTotalValue) kpiAvgTotalValue.textContent = "평균 민원 : 총 " + formatNumber(avg.totalCount) + "건";
+  if (kpiAvgIntensityValue) kpiAvgIntensityValue.textContent = "인구 1만명당 " + formatNumber(avg.capitaRate, 1) + "건";
+  if (kpiAvgDeltaValue) {
+    const sign = avg.deltaCount >= 0 ? "+" : "";
+    const arrow = avg.deltaPct > 0 ? "▲" : avg.deltaPct < 0 ? "▼" : "-";
+    applyDeltaState(kpiAvgDeltaValue, avg.deltaPct);
+    kpiAvgDeltaValue.textContent = sign + formatNumber(Math.abs(avg.deltaCount)) + "건 " + arrow + " " + formatNumber(Math.abs(avg.deltaPct), 1) + "%";
+  }
+  if (kpiAvgStatus) kpiAvgStatus.textContent = "전체평균";
+
+  // Card 3: 급상승 키워드 Top 3 (deltaPct 내림차순, 백엔드 정렬 완료)
+  const trendList = (kw.trending || []).slice(0, 3);
+  const guLabel = state.gu || "서울시 전체";
+  if (kpiTrendTitle) kpiTrendTitle.textContent = guLabel + " 급상승 키워드";
+  renderKpiKeywordCard(trendList, kpiTrendMain, kpiTrendTotal, kpiTrendDelta,
+    kpiTrendSecondLabel, kpiTrendSecondDelta, kpiTrendThirdLabel, kpiTrendThirdDelta, "count");
+
+  // Card 4: 최다 발생 키워드 Top 3 (dayCount 내림차순, 백엔드 정렬 완료)
+  const volumeList = (kw.volume || []).slice(0, 3);
+  if (kpiVolumeTitle) kpiVolumeTitle.textContent = guLabel + " 최다 발생 키워드";
+  renderKpiKeywordCard(volumeList, kpiVolumeMain, kpiVolumeTotal, kpiVolumeDelta,
+    kpiVolumeSecondLabel, kpiVolumeSecondDelta, kpiVolumeThirdLabel, kpiVolumeThirdDelta, "dayCount", "volume");
+}
+
+function renderKpiKeywordCard(list, mainEl, totalEl, deltaEl, secondLabelEl, secondDeltaEl, thirdLabelEl, thirdDeltaEl, countField, deltaMode) {
+  var isVolume = deltaMode === "volume";
+  var getDeltaPct = function (item) { return item ? (isVolume ? item.volumeDeltaPct : item.deltaPct) : 0; };
+  var getDeltaCount = function (item) { return item ? (isVolume ? item.volumeDelta : item.deltaCount) : 0; };
+
+  var formatDelta = function (item) {
+    if (!item) return "데이터 없음";
+    var pct = getDeltaPct(item);
+    var cnt = getDeltaCount(item);
+    var arrow = pct > 0 ? "▲" : pct < 0 ? "▼" : "-";
+    var sign = cnt >= 0 ? "+" : "";
+    return "전일비 " + sign + formatNumber(Math.abs(cnt)) + "건 " + arrow + " " + formatNumber(Math.abs(pct), 1) + "%";
+  };
+  var formatTotal = function (item) {
+    if (!item) return "(+0건) - 0%";
+    var pct = getDeltaPct(item);
+    var cnt = getDeltaCount(item);
+    var arrow = pct > 0 ? "▲" : pct < 0 ? "▼" : "-";
+    var sign = cnt >= 0 ? "+" : "";
+    return "(" + sign + formatNumber(Math.abs(cnt)) + "건) " + arrow + " " + formatNumber(Math.abs(pct), 1) + "%";
+  };
+
+  if (mainEl) mainEl.textContent = list[0] ? list[0].term : "-";
+  if (totalEl) totalEl.textContent = list[0] ? "총 " + formatNumber(list[0][countField]) + "건" : "-";
+  if (deltaEl) { applyDeltaState(deltaEl, list[0] ? getDeltaPct(list[0]) : 0); deltaEl.textContent = list[0] ? formatTotal(list[0]) : ""; }
+
+  if (secondLabelEl) secondLabelEl.textContent = list[1] ? "2위 " + list[1].term + " " + formatNumber(list[1][countField]) + "건" : "2위 데이터 없음";
+  if (secondDeltaEl) { secondDeltaEl.textContent = formatDelta(list[1]); applyDeltaState(secondDeltaEl, getDeltaPct(list[1])); }
+  if (thirdLabelEl) thirdLabelEl.textContent = list[2] ? "3위 " + list[2].term + " " + formatNumber(list[2][countField]) + "건" : "3위 데이터 없음";
+  if (thirdDeltaEl) { thirdDeltaEl.textContent = formatDelta(list[2]); applyDeltaState(thirdDeltaEl, getDeltaPct(list[2])); }
+}
+
+// ========== 지도 렌더링 ==========
+
+function updateLegend() {
+  if (!dashboardData || !dashboardData.districts) return;
+  const values = dashboardData.districts.map(function (d) { return currentValue(d); });
+  const min = Math.min.apply(null, values);
+  const max = Math.max.apply(null, values);
+  const digits = state.normalize === "capita" ? 1 : 0;
+  const unit = state.normalize === "capita" ? "(건/1만명)" : "(건)";
+  if (legendMin) legendMin.textContent = formatNumber(min, digits) + unit;
+  if (legendMax) legendMax.textContent = formatNumber(max, digits) + unit;
+  if (legendTitle) legendTitle.textContent = state.normalize === "capita" ? "범례 (1만명당)" : "범례 (건수)";
+}
+
+function renderMap() {
+  if (!mapSvg || !dashboardData || !dashboardData.districts) return;
+  const districts = dashboardData.districts;
+  const values = districts.map(function (d) { return currentValue(d); });
+  const thresholds = getThresholds(values);
+  updateLegend();
+  const unitLabel = state.normalize === "capita" ? "건/1만명" : "건";
+
+  mapSvg.querySelectorAll(".district-path").forEach(function (path) {
+    const name = path.dataset.district;
+    const district = findDistrict(name);
+    if (!district) return;
+    const value = currentValue(district);
+    const level = getLevel(value, thresholds);
+    path.setAttribute("data-level", String(level));
+    path.classList.toggle("selected", state.gu === name);
+
+    let title = path.querySelector("title");
+    if (!title) {
+      title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+      path.appendChild(title);
+    }
+    title.textContent = name + " · " + formatNumber(value) + unitLabel + " · 전일 동시간 " + (district.deltaPct >= 0 ? "+" : "") + formatNumber(district.deltaPct, 1) + "%";
+  });
+
+  updateMapLabels();
+}
+
+function renderDistrictSelect() {
+  if (!districtSelect || !dashboardData) return;
+  // 기존 옵션 유지 (첫번째 "서울시 전체")
+  while (districtSelect.options.length > 1) districtSelect.remove(1);
+  dashboardData.districts.forEach(function (d) {
+    const option = document.createElement("option");
+    option.value = d.gu;
+    option.textContent = d.gu;
+    districtSelect.appendChild(option);
+  });
+  districtSelect.value = state.gu || "all";
+}
+
+// ========== 워드클라우드 + 랭킹 ==========
+
+function renderWordcloud() {
+  if (!wordcloud) return;
+  const data = getSortedKeywords().slice(0, 10);
+  if (!data.length) { wordcloud.innerHTML = ""; return; }
+
+  const valueKey = state.sort === "freq" ? "dayCount" : "deltaPct";
+  const max = Math.max.apply(null, data.map(function (k) { return k[valueKey]; }));
+  const min = Math.min.apply(null, data.map(function (k) { return k[valueKey]; }));
+
+  wordcloud.innerHTML = "";
+  const containerWidth = wordcloud.clientWidth || 360;
+  const containerHeight = wordcloud.clientHeight || 320;
+  const placed = [];
+  const padding = 4;
+
+  data.forEach(function (keyword, index) {
+    const value = keyword[valueKey];
+    let size = 16 + ((value - min) / (max - min || 1)) * 16;
+    if (index === 0) size *= 1.5;
+
+    const btn = document.createElement("button");
+    btn.className = "word";
+    btn.dataset.term = keyword.term;
+    const isTop = index < 3;
+    btn.classList.toggle("top", isTop);
+    btn.classList.toggle("dim", !isTop);
+    if (isTop) {
+      btn.classList.toggle("up", keyword.deltaPct > 0);
+      btn.classList.toggle("down", keyword.deltaPct < 0);
+      btn.classList.toggle("neutral", keyword.deltaPct === 0);
+    }
+    btn.style.fontSize = size.toFixed(0) + "px";
+    btn.style.setProperty("--rot", "0deg");
+    btn.textContent = keyword.term;
+    btn.style.visibility = "hidden";
+    if (state.keyword === keyword.term) btn.classList.add("selected");
+    btn.addEventListener("mouseenter", function () { setHover(keyword.term); });
+    btn.addEventListener("mouseleave", function () { clearHover(); });
+    btn.addEventListener("click", function () { selectKeyword(keyword.term); });
+    wordcloud.appendChild(btn);
+
+    let placedPos = null;
+    let finalBox = null;
+    for (let attempt = 0; attempt < 2 && !placedPos; attempt += 1) {
+      btn.style.fontSize = size.toFixed(0) + "px";
+      const rect = btn.getBoundingClientRect();
+      const spiral = findSpiralPosition(rect.width, rect.height, placed, containerWidth, containerHeight, padding);
+      if (spiral) { placedPos = { x: spiral.x, y: spiral.y }; finalBox = spiral.box; }
+      else {
+        const grid = findGridPosition(rect.width, rect.height, placed, containerWidth, containerHeight, padding);
+        if (grid) { placedPos = { x: grid.x, y: grid.y }; finalBox = grid.box; }
+      }
+      if (!placedPos) size *= 0.9;
+    }
+    if (!placedPos) {
+      const fb = fallbackPosition(keyword.term, containerWidth, containerHeight, btn.getBoundingClientRect().width, btn.getBoundingClientRect().height, padding);
+      placedPos = { x: fb.x, y: fb.y };
+      finalBox = makePaddedBox(fb.x, fb.y, btn.getBoundingClientRect().width, btn.getBoundingClientRect().height, padding);
+    }
+    btn.style.left = placedPos.x + "px";
+    btn.style.top = placedPos.y + "px";
+    btn.style.visibility = "visible";
+    if (finalBox) placed.push(finalBox);
+  });
+}
+
+function renderRanking() {
+  if (!rankingList) return;
+  const data = getSortedKeywords().slice(0, 10);
+  rankingList.innerHTML = "";
+  if (rankingTitle) rankingTitle.textContent = state.sort === "freq" ? "빈도 순위" : "급상승 순위";
+
+  data.forEach(function (keyword, index) {
+    const item = document.createElement("li");
+    item.className = "ranking-item";
+    item.dataset.term = keyword.term;
+    if (state.keyword === keyword.term) item.classList.add("selected");
+
+    const rank = document.createElement("span");
+    rank.className = "rank-num";
+    rank.textContent = index + 1;
+
+    const term = document.createElement("span");
+    term.className = "rank-term";
+    term.textContent = keyword.term;
+
+    const metrics = document.createElement("span");
+    metrics.className = "rank-metrics";
+    const label = document.createElement("span");
+    label.className = "rank-label";
+    label.textContent = "전일비";
+    const delta = document.createElement("span");
+    delta.className = "delta";
+    const isFreq = state.sort === "freq";
+    const pct = isFreq ? keyword.volumeDeltaPct : keyword.deltaPct;
+    const cnt = isFreq ? keyword.volumeDelta : keyword.deltaCount;
+    const sign = pct > 0 ? "▲" : pct < 0 ? "▼" : "-";
+    const riseSign = cnt >= 0 ? "+" : "";
+    delta.textContent = riseSign + formatNumber(Math.abs(cnt)) + "건 " + sign + " " + formatNumber(Math.abs(pct), 1) + "%";
+    applyDeltaState(delta, pct);
+    const total = document.createElement("span");
+    total.className = "rank-total";
+    total.textContent = "(총 " + formatNumber(isFreq ? keyword.dayCount : keyword.count) + "건)";
+
+    metrics.append(label, delta, total);
+    item.append(rank, term, metrics);
+    item.addEventListener("mouseenter", function () { setHover(keyword.term); });
+    item.addEventListener("mouseleave", function () { clearHover(); });
+    item.addEventListener("click", function () { selectKeyword(keyword.term); });
+    rankingList.appendChild(item);
+  });
+}
+
+// ========== 바 차트 (Row 3) ==========
+
+function renderRow3() {
+  if (!barChart || !dashboardData) return;
+  const districts = dashboardData.districts;
+  const values = districts.map(function (d) { return currentValue(d); });
+  const maxValue = Math.max.apply(null, values);
+  const avgValue = values.reduce(function (s, v) { return s + v; }, 0) / values.length;
+  const avgRatio = maxValue > 0 ? avgValue / maxValue : 0;
+  barChart.style.setProperty("--avg-ratio", avgRatio.toFixed(4));
+
+  let rows = districts.map(function (d) { return { name: d.gu, value: currentValue(d) }; });
+  rows.sort(function (a, b) { return b.value - a.value; });
+  if (state.top > 0) rows = rows.slice(0, state.top);
+
+  barChart.innerHTML = "";
+  const avgLabel = document.createElement("div");
+  avgLabel.className = "avg-label";
+  avgLabel.textContent = "서울시 평균";
+  barChart.appendChild(avgLabel);
+
+  rows.forEach(function (row) {
+    const barRow = document.createElement("div");
+    barRow.className = "bar-row";
+    if (state.gu === row.name) barRow.classList.add("selected");
+
+    const label = document.createElement("div");
+    label.className = "bar-label";
+    label.textContent = row.name;
+    const track = document.createElement("div");
+    track.className = "bar-track";
+    const fill = document.createElement("div");
+    fill.className = "bar-fill";
+    fill.style.setProperty("--pct", ((row.value / maxValue) * 100) + "%");
+    track.appendChild(fill);
+    const value = document.createElement("div");
+    value.className = "bar-value";
+    value.textContent = formatNumber(row.value) + "건";
+
+    barRow.append(label, track, value);
+    barRow.addEventListener("click", function () { setDistrict(row.name); });
+    barChart.appendChild(barRow);
+  });
+}
+
+// ========== 인구 테이블 ==========
+
+function renderPopulationTable() {
+  if (!populationTableBody || !dashboardData) return;
+  let rows = dashboardData.districts.slice();
+  rows.sort(function (a, b) { return b.totalCount - a.totalCount; });
+
+  populationTableBody.innerHTML = "";
+  rows.forEach(function (row, index) {
+    const tr = document.createElement("tr");
+    if (state.gu === row.gu) tr.classList.add("selected");
+    tr.innerHTML = "<td>" + (index + 1) + "</td>" +
+      "<td>" + row.gu + "</td>" +
+      '<td class="num">' + formatNumber(row.population) + "</td>" +
+      '<td class="num">' + formatNumber(row.totalCount) + "</td>" +
+      '<td class="num">' + formatNumber(row.capitaRate, 1) + "</td>";
+    tr.addEventListener("click", function () { setDistrict(row.gu); });
+    populationTableBody.appendChild(tr);
+  });
+
+  if (populationMeta) {
+    const totalPop = dashboardData.districts.reduce(function (s, d) { return s + d.population; }, 0);
+    const totalCnt = dashboardData.districts.reduce(function (s, d) { return s + d.totalCount; }, 0);
+    populationMeta.textContent = "총인구 " + formatNumber(totalPop) + "명 · 민원 " + formatNumber(totalCnt) + "건";
+  }
+}
+
+// ========== 키워드 풀 (Row 4 - 카테고리 사이드바 + 태그 그리드) ==========
+
+function getPoolTermsByCategory(category) {
+  if (!dashboardData || !dashboardData.keywordPool) return [];
+  var items = dashboardData.keywordPool.items || [];
+  if (category === "all") return items;
+  return items.filter(function (item) { return item.category === category; });
+}
+
+function renderCategorySidebar() {
+  if (!categorySidebar || !dashboardData || !dashboardData.keywordPool) return;
+  var categories = dashboardData.keywordPool.categories || [];
+
+  categorySidebar.innerHTML = "";
+  categories.forEach(function (cat) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "category-btn";
+    btn.setAttribute("role", "tab");
+    btn.setAttribute("aria-selected", String(cat.id === state.poolCategory));
+    btn.dataset.category = cat.id;
+    if (cat.id === state.poolCategory) btn.classList.add("is-active");
+    btn.textContent = cat.label;
+    btn.addEventListener("click", function () {
+      if (state.poolCategory === cat.id) return;
+      state.poolCategory = cat.id;
+      renderCategorySidebar();
+      renderKeywordTagGrid();
+    });
+    categorySidebar.appendChild(btn);
+  });
+}
+
+function renderKeywordTagGrid() {
+  if (!keywordTagGrid || !dashboardData || !dashboardData.keywordPool) return;
+  var items = getPoolTermsByCategory(state.poolCategory);
+  var query = state.keywordSearch.trim();
+  if (query) items = items.filter(function (item) { return item.term.includes(query); });
+
+  // 중복 제거
+  var seen = {};
+  var unique = [];
+  items.forEach(function (item) {
+    if (!seen[item.term]) { seen[item.term] = true; unique.push(item); }
+  });
+
+  var totalCount = (dashboardData.keywordPool.items || []).length;
+  if (keywordPoolTitle) keywordPoolTitle.textContent = "민원 키워드 풀 (총 " + formatNumber(totalCount) + "개)";
+
+  keywordTagGrid.innerHTML = "";
+  if (!unique.length) {
+    var empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.textContent = "검색 결과가 없습니다.";
+    keywordTagGrid.appendChild(empty);
+    return;
+  }
+
+  unique.forEach(function (item) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "keyword-tag";
+    btn.dataset.tag = item.term;
+    if (state.keyword === item.term) btn.classList.add("is-active");
+    btn.textContent = item.term;
+    btn.addEventListener("click", function () { selectKeyword(item.term); });
+    btn.addEventListener("mouseenter", function () { setHover(item.term); });
+    btn.addEventListener("mouseleave", function () { clearHover(); });
+    keywordTagGrid.appendChild(btn);
+  });
+}
+
+function renderKeywordTags() {
+  renderCategorySidebar();
+  renderKeywordTagGrid();
+}
+
+// ========== 호버 하이라이트 ==========
+
+function setHover(term) {
+  document.querySelectorAll(".word, .ranking-item, .tag, .keyword-tag").forEach(function (el) {
+    var elTerm = el.dataset.term || el.dataset.tag;
+    el.classList.toggle("hovered", elTerm === term);
+  });
+}
+
+function clearHover() {
+  document.querySelectorAll(".word, .ranking-item, .tag, .keyword-tag").forEach(function (el) {
+    el.classList.remove("hovered");
+  });
+}
+
+// ========== 팁 초기화 ==========
+
+function initTips() {
+  const tipHosts = Array.from(document.querySelectorAll(".has-tip"));
+  if (!tipHosts.length) return;
+  const clearOthers = function (current) {
+    tipHosts.forEach(function (host) { if (host !== current) host.classList.remove("show-tip"); });
+  };
+  tipHosts.forEach(function (host) {
+    host.addEventListener("mouseenter", function () { clearOthers(host); host.classList.add("show-tip"); });
+    host.addEventListener("mouseleave", function () { host.classList.remove("show-tip"); });
+    host.addEventListener("focusin", function (e) { if (e.target !== host) return; clearOthers(host); host.classList.add("show-tip"); });
+    host.addEventListener("focusout", function (e) { if (e.target !== host) return; host.classList.remove("show-tip"); });
+  });
+}
+
+// ========== 이벤트 핸들러 ==========
+
+function initControls() {
+  // 급상승/빈도 정렬 (API 재호출 불필요)
+  document.querySelectorAll("[data-sort]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll("[data-sort]").forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      state.sort = btn.dataset.sort;
+      updateKeywordPanel();
+      renderWordcloud();
+      renderRanking();
+    });
+  });
+
+  // TOP10/전체 토글 (API 재호출 불필요)
+  document.querySelectorAll("[data-top]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      state.top = Number(btn.dataset.top) || 0;
+      document.querySelectorAll("[data-top]").forEach(function (b) {
+        b.classList.toggle("active", b === btn);
+      });
+      renderRow3();
+    });
+  });
+
+  // 총량/인구 1만명당 정규화 (API 재호출 불필요)
+  document.querySelectorAll("[data-normalize]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      state.normalize = btn.dataset.normalize;
+      document.querySelectorAll("[data-normalize]").forEach(function (b) {
+        b.classList.toggle("active", b.dataset.normalize === state.normalize);
+      });
+      updateRow3Header();
+      renderMap();
+      renderRow3();
+    });
+  });
+
+  // 자치구 드롭다운 (API 재호출)
+  if (districtSelect) {
+    districtSelect.addEventListener("change", function (event) {
+      const value = event.target.value;
+      setDistrict(value === "all" ? null : value);
+    });
+  }
+
+  // 전체 초기화
+  if (resetDistrictBtn) resetDistrictBtn.addEventListener("click", resetAll);
+  if (clearAllButton) clearAllButton.addEventListener("click", resetAll);
+
+  // 키워드 검색 (클라이언트 필터링)
+  if (keywordSearch) {
+    keywordSearch.addEventListener("input", function (event) {
+      state.keywordSearch = event.target.value;
+      renderKeywordTags();
+    });
+  }
+}
+
+// ========== 초기화 ==========
+
+initMapSvg();
+initControls();
+initTips();
+loadDashboard();
+
+let wordcloudResizeTimer;
+window.addEventListener("resize", function () {
+  clearTimeout(wordcloudResizeTimer);
+  wordcloudResizeTimer = setTimeout(function () { renderWordcloud(); }, 120);
+});

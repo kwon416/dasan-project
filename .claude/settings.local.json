@@ -15,8 +15,10 @@
       "Bash(powershell -Command \"Start-Sleep -Seconds 25\")",
       "Bash(powershell -Command:*)",
       "Bash(dir /b \"C:\\\\eGovFrameDev-4.3.1-64bit\\\\workspace-egov\\\\dasan-project\")",
-      "WebFetch(domain:www.krds.go.kr)"
+      "WebFetch(domain:www.krds.go.kr)",
+      "Bash(ls \"C:\\\\eGovFrameDev-4.3.1-64bit\\\\workspace-egov\\\\dasan-project\\\\dasancall\\\\dasan-stat\\\\src\\\\main\\\\webapp\\\\resources\\\\css\\\\dasan\"\" 2>/dev/null; echo \"---\"; ls \"C:eGovFrameDev-4.3.1-64bitworkspace-egovdasan-projectdasancalldasan-statsrcmainwebappresourcesjsdasan\"\")",
+      "Bash(mvn compile:*)"
     ]
   },
-  "outputStyle": "Pragmatic Test-Driven Developer"
+  "outputStyle": "Explanatory"
 }
